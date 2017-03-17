@@ -1,0 +1,15 @@
+﻿cl : Command line warning D9002: ignoring unknown option '-g'
+  FocusStack.cpp
+FocusStack.cpp(43): warning C4189: 'probThreshold': local variable is initialized but not referenced
+FocusStack.cpp(39): warning C4101: 'maxI': unreferenced local variable
+FocusStack.cpp(116): warning C4189: 'kernel_length': local variable is initialized but not referenced
+FocusStack.cpp(43): warning C4189: 'EnergyThreshold': local variable is initialized but not referenced
+FocusStack.cpp(173): warning C4189: 'EnergyThreshold': local variable is initialized but not referenced
+FocusStack.cpp(298): warning C4189: 'regionSize': local variable is initialized but not referenced
+  haar.cpp
+haar.cpp(142): warning C4101: 'y': unreferenced local variable
+haar.cpp(142): warning C4101: 'x': unreferenced local variable
+  Generating Code...
+h:\codeprojects\qtprojects\targeter-msvc\focusstack.cpp(549): warning C4700: uninitialized local variable 'y' used
+h:\codeprojects\qtprojects\targeter-msvc\focusstack.cpp(549): warning C4700: uninitialized local variable 'x' used
+  Targeter.vcxproj -> H:\CodeProjects\QTProjects\Targeter-msvc\release\Targeter.exe

@@ -1,0 +1,488 @@
+\hypertarget{class_helper_functions}{}\section{Helper\+Functions Class Reference}
+\label{class_helper_functions}\index{Helper\+Functions@{Helper\+Functions}}
+
+
+{\ttfamily \#include $<$Helper\+Functions.\+h$>$}
+
+
+
+Collaboration diagram for Helper\+Functions\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{class_helper_functions__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static cv\+::\+Mat \hyperlink{class_helper_functions_a5c5283b1bdbfff78c4381a93161effe5}{display\+Histogram} (int hist\+Size, cv\+::\+Mat b\+\_\+hist, int hist\+\_\+w=512, int hist\+\_\+h=400)
+\item 
+static cv\+::\+Mat \hyperlink{class_helper_functions_ad960d64773884aa54332b6b72ab5b876}{put\+Mat\+Scale} (cv\+::\+Mat im, bool scale=true, bool b\+Red=true)
+\item 
+static void \hyperlink{class_helper_functions_a7afac4bb91186ab522a3a1d640589e7e}{resize\+Image\+Preserve} (cv\+::\+Mat \&image\+In, cv\+::\+Mat \&image\+Out, int new\+Width, int new\+Height)
+\item 
+static void \hyperlink{class_helper_functions_a375b456c83eb7d8b7746a700e1ec38d1}{Debug\+Print\+Mat} (cv\+::\+Mat mat)
+\item 
+\mbox{\Hypertarget{class_helper_functions_a9f86f713dcf72f162c085e88e26c9d08}\label{class_helper_functions_a9f86f713dcf72f162c085e88e26c9d08}} 
+static cv\+::\+Mat {\bfseries test\+Return} (cv\+::\+Mat \&im)
+\item 
+static int \hyperlink{class_helper_functions_af83ef83dc647e660335bf5564f5fdda7}{reflect} (int M, int x)
+\item 
+static std\+::string \hyperlink{class_helper_functions_a0b9d882eaf6b7d85aad907ee3e94d197}{type2str} (int type)
+\item 
+static bool \hyperlink{class_helper_functions_aa04bae06c901791851f8d84607927001}{is\+Gray\+Image} (cv\+::\+Mat img)
+\item 
+static Q\+Image \hyperlink{class_helper_functions_a905e9fa464584f31d1537a84d8d348ae}{make\+Q\+Image} (cv\+::\+Mat im, bool b\+R\+G\+B\+Swap=true)
+\item 
+static Q\+Image\+::\+Format \hyperlink{class_helper_functions_a64c4fa7fceb347bc87600d926ab9a6dc}{get\+Format} (int type)
+\item 
+{\footnotesize template$<$typename T $>$ }\\static cv\+::\+Mat \hyperlink{class_helper_functions_a3bd3b4664ce50153abfb3b75a6fc51ba}{put\+Image\+Scale} (T $\ast$im, int w, int h)
+\item 
+{\footnotesize template$<$typename T $>$ }\\static cv\+::\+Mat \hyperlink{class_helper_functions_ae2a270fba6b59601060ec8ab2e338cc1}{put\+Image} (T $\ast$im, int width, int height)
+\item 
+{\footnotesize template$<$typename T $>$ }\\static T $\ast$ \hyperlink{class_helper_functions_a1d33065de9de137025c132c3c9766130}{get\+Image} (cv\+::\+Mat \&m)
+\item 
+{\footnotesize template$<$typename T $>$ }\\static void \hyperlink{class_helper_functions_a7807daf795fa0056e924f191be8abaf9}{rescale} (T $\ast$im, int w, int h)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class for useful helper image manipulation functions 
+
+Definition at line 11 of file Helper\+Functions.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_helper_functions_a375b456c83eb7d8b7746a700e1ec38d1}\label{class_helper_functions_a375b456c83eb7d8b7746a700e1ec38d1}} 
+\index{Helper\+Functions@{Helper\+Functions}!Debug\+Print\+Mat@{Debug\+Print\+Mat}}
+\index{Debug\+Print\+Mat@{Debug\+Print\+Mat}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{Debug\+Print\+Mat()}{DebugPrintMat()}}
+{\footnotesize\ttfamily void Helper\+Functions\+::\+Debug\+Print\+Mat (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{mat }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+prints 2D matrix to screen
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a375b456c83eb7d8b7746a700e1ec38d1}{Helper\+Functions\+::\+Debug\+Print\+Mat} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & mat \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 342 of file Helper\+Functions.\+cpp.
+
+\mbox{\Hypertarget{class_helper_functions_a5c5283b1bdbfff78c4381a93161effe5}\label{class_helper_functions_a5c5283b1bdbfff78c4381a93161effe5}} 
+\index{Helper\+Functions@{Helper\+Functions}!display\+Histogram@{display\+Histogram}}
+\index{display\+Histogram@{display\+Histogram}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{display\+Histogram()}{displayHistogram()}}
+{\footnotesize\ttfamily cv\+::\+Mat Helper\+Functions\+::display\+Histogram (\begin{DoxyParamCaption}\item[{int}]{hist\+Size,  }\item[{cv\+::\+Mat}]{b\+\_\+hist,  }\item[{int}]{hist\+\_\+w = {\ttfamily 512},  }\item[{int}]{hist\+\_\+h = {\ttfamily 400} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns an Open\+CV image from a histogram (b\+\_\+hist)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a5c5283b1bdbfff78c4381a93161effe5}{Helper\+Functions\+::display\+Histogram} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & hist\+Size \\
+\hline
+{\em cv\+::\+Mat} & b\+\_\+hist \\
+\hline
+{\em int} & hist\+\_\+w \\
+\hline
+{\em int} & hist\+\_\+h \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public 
+\end{DoxyReturn}
+Draw for each channel
+
+Draw for each channel 
+
+Definition at line 71 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_a5c5283b1bdbfff78c4381a93161effe5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_helper_functions_a64c4fa7fceb347bc87600d926ab9a6dc}\label{class_helper_functions_a64c4fa7fceb347bc87600d926ab9a6dc}} 
+\index{Helper\+Functions@{Helper\+Functions}!get\+Format@{get\+Format}}
+\index{get\+Format@{get\+Format}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{get\+Format()}{getFormat()}}
+{\footnotesize\ttfamily Q\+Image\+::\+Format Helper\+Functions\+::get\+Format (\begin{DoxyParamCaption}\item[{int}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns QT Image type for Open\+CV type
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a64c4fa7fceb347bc87600d926ab9a6dc}{Helper\+Functions\+::get\+Format} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Q\+T\+\_\+\+N\+A\+M\+E\+S\+P\+A\+C\+E\+::\+Q\+Image\+::\+Format Access public 
+\end{DoxyReturn}
+
+
+Definition at line 207 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_a64c4fa7fceb347bc87600d926ab9a6dc_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_helper_functions_a1d33065de9de137025c132c3c9766130}\label{class_helper_functions_a1d33065de9de137025c132c3c9766130}} 
+\index{Helper\+Functions@{Helper\+Functions}!get\+Image@{get\+Image}}
+\index{get\+Image@{get\+Image}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{get\+Image()}{getImage()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static T$\ast$ Helper\+Functions\+::get\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{m }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Returns a greyscale 1D int$\ast$ image array from an Open\+CV image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a1d33065de9de137025c132c3c9766130}{Helper\+Functions\+::get\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & \& m \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+T$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 135 of file Helper\+Functions.\+h.
+
+\mbox{\Hypertarget{class_helper_functions_aa04bae06c901791851f8d84607927001}\label{class_helper_functions_aa04bae06c901791851f8d84607927001}} 
+\index{Helper\+Functions@{Helper\+Functions}!is\+Gray\+Image@{is\+Gray\+Image}}
+\index{is\+Gray\+Image@{is\+Gray\+Image}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{is\+Gray\+Image()}{isGrayImage()}}
+{\footnotesize\ttfamily bool Helper\+Functions\+::is\+Gray\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{img }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+determines if image is greyscale
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_aa04bae06c901791851f8d84607927001}{Helper\+Functions\+::is\+Gray\+Image} Qualifier // returns true if the given 3 channel image is B = G = R 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & img \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 242 of file Helper\+Functions.\+cpp.
+
+\mbox{\Hypertarget{class_helper_functions_a905e9fa464584f31d1537a84d8d348ae}\label{class_helper_functions_a905e9fa464584f31d1537a84d8d348ae}} 
+\index{Helper\+Functions@{Helper\+Functions}!make\+Q\+Image@{make\+Q\+Image}}
+\index{make\+Q\+Image@{make\+Q\+Image}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{make\+Q\+Image()}{makeQImage()}}
+{\footnotesize\ttfamily Q\+Image Helper\+Functions\+::make\+Q\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{bool}]{b\+R\+G\+B\+Swap = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+make Q\+Image from Open\+CV image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a905e9fa464584f31d1537a84d8d348ae}{Helper\+Functions\+::make\+Q\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+{\em bool} & b\+R\+G\+B\+Swap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Q\+T\+\_\+\+N\+A\+M\+E\+S\+P\+A\+C\+E\+::\+Q\+Image Access public 
+\end{DoxyReturn}
+
+
+Definition at line 181 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_a905e9fa464584f31d1537a84d8d348ae_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_helper_functions_ae2a270fba6b59601060ec8ab2e338cc1}\label{class_helper_functions_ae2a270fba6b59601060ec8ab2e338cc1}} 
+\index{Helper\+Functions@{Helper\+Functions}!put\+Image@{put\+Image}}
+\index{put\+Image@{put\+Image}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{put\+Image()}{putImage()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static cv\+::\+Mat Helper\+Functions\+::put\+Image (\begin{DoxyParamCaption}\item[{T $\ast$}]{im,  }\item[{int}]{width,  }\item[{int}]{height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+creates a opencv image from int$\ast$ 1D image array
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name put\+Image Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ im \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public static 
+\end{DoxyReturn}
+
+
+Definition at line 104 of file Helper\+Functions.\+h.
+
+\mbox{\Hypertarget{class_helper_functions_a3bd3b4664ce50153abfb3b75a6fc51ba}\label{class_helper_functions_a3bd3b4664ce50153abfb3b75a6fc51ba}} 
+\index{Helper\+Functions@{Helper\+Functions}!put\+Image\+Scale@{put\+Image\+Scale}}
+\index{put\+Image\+Scale@{put\+Image\+Scale}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{put\+Image\+Scale()}{putImageScale()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static cv\+::\+Mat Helper\+Functions\+::put\+Image\+Scale (\begin{DoxyParamCaption}\item[{T $\ast$}]{im,  }\item[{int}]{w,  }\item[{int}]{h }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+creates a scaled opencv image from int$\ast$ 1D image array
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name put\+Image\+Scale Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ im \\
+\hline
+{\em int} & w \\
+\hline
+{\em int} & h \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public static 
+\end{DoxyReturn}
+
+
+Definition at line 51 of file Helper\+Functions.\+h.
+
+\mbox{\Hypertarget{class_helper_functions_ad960d64773884aa54332b6b72ab5b876}\label{class_helper_functions_ad960d64773884aa54332b6b72ab5b876}} 
+\index{Helper\+Functions@{Helper\+Functions}!put\+Mat\+Scale@{put\+Mat\+Scale}}
+\index{put\+Mat\+Scale@{put\+Mat\+Scale}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{put\+Mat\+Scale()}{putMatScale()}}
+{\footnotesize\ttfamily cv\+::\+Mat Helper\+Functions\+::put\+Mat\+Scale (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{bool}]{scale = {\ttfamily true},  }\item[{bool}]{b\+Red = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+returns a 0-\/255 scaled opencv image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_ad960d64773884aa54332b6b72ab5b876}{Helper\+Functions\+::put\+Mat\+Scale} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+{\em bool} & scale \\
+\hline
+{\em bool} & b\+Red \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public 
+\end{DoxyReturn}
+
+
+Definition at line 301 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_ad960d64773884aa54332b6b72ab5b876_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_helper_functions_af83ef83dc647e660335bf5564f5fdda7}\label{class_helper_functions_af83ef83dc647e660335bf5564f5fdda7}} 
+\index{Helper\+Functions@{Helper\+Functions}!reflect@{reflect}}
+\index{reflect@{reflect}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{reflect()}{reflect()}}
+{\footnotesize\ttfamily int Helper\+Functions\+::reflect (\begin{DoxyParamCaption}\item[{int}]{M,  }\item[{int}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Handles vector boundaries by reflecting values
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_af83ef83dc647e660335bf5564f5fdda7}{Helper\+Functions\+::reflect} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & M \\
+\hline
+{\em int} & x \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int Access public 
+\end{DoxyReturn}
+
+
+Definition at line 271 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_af83ef83dc647e660335bf5564f5fdda7_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_helper_functions_a7807daf795fa0056e924f191be8abaf9}\label{class_helper_functions_a7807daf795fa0056e924f191be8abaf9}} 
+\index{Helper\+Functions@{Helper\+Functions}!rescale@{rescale}}
+\index{rescale@{rescale}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{rescale()}{rescale()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void Helper\+Functions\+::rescale (\begin{DoxyParamCaption}\item[{T $\ast$}]{im,  }\item[{int}]{w,  }\item[{int}]{h }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+rescales image pixel values
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a7807daf795fa0056e924f191be8abaf9}{Helper\+Functions\+::rescale} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ im \\
+\hline
+{\em int} & w \\
+\hline
+{\em int} & h \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 182 of file Helper\+Functions.\+h.
+
+\mbox{\Hypertarget{class_helper_functions_a7afac4bb91186ab522a3a1d640589e7e}\label{class_helper_functions_a7afac4bb91186ab522a3a1d640589e7e}} 
+\index{Helper\+Functions@{Helper\+Functions}!resize\+Image\+Preserve@{resize\+Image\+Preserve}}
+\index{resize\+Image\+Preserve@{resize\+Image\+Preserve}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{resize\+Image\+Preserve()}{resizeImagePreserve()}}
+{\footnotesize\ttfamily void Helper\+Functions\+::resize\+Image\+Preserve (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{image\+In,  }\item[{cv\+::\+Mat \&}]{image\+Out,  }\item[{int}]{new\+Width,  }\item[{int}]{new\+Height }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Resizes image while preserving aspect ratio
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a7afac4bb91186ab522a3a1d640589e7e}{Helper\+Functions\+::resize\+Image\+Preserve} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & \& image\+In \\
+\hline
+{\em cv\+::\+Mat} & \& image\+Out \\
+\hline
+{\em int} & new\+Width \\
+\hline
+{\em int} & new\+Height \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 151 of file Helper\+Functions.\+cpp.
+
+\mbox{\Hypertarget{class_helper_functions_a0b9d882eaf6b7d85aad907ee3e94d197}\label{class_helper_functions_a0b9d882eaf6b7d85aad907ee3e94d197}} 
+\index{Helper\+Functions@{Helper\+Functions}!type2str@{type2str}}
+\index{type2str@{type2str}!Helper\+Functions@{Helper\+Functions}}
+\subsubsection{\texorpdfstring{type2str()}{type2str()}}
+{\footnotesize\ttfamily string Helper\+Functions\+::type2str (\begin{DoxyParamCaption}\item[{int}]{type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns a string representation of the opencv image type
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_helper_functions_a0b9d882eaf6b7d85aad907ee3e94d197}{Helper\+Functions\+::type2str} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::string Access public 
+\end{DoxyReturn}
+
+
+Definition at line 31 of file Helper\+Functions.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_helper_functions_a0b9d882eaf6b7d85aad907ee3e94d197_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/Helper\+Functions.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/Helper\+Functions.\+cpp\end{DoxyCompactItemize}

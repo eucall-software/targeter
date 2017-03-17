@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/24/targeter.png</file>
+        <file>icons/24/trashcan.png</file>
+        <file>icons/24/focus.png</file>
+        <file>icons/24/camera.png</file>
+        <file>icons/24/minus.png</file>
+        <file>icons/24/plus.png</file>
+        <file>icons/24/polygon.png</file>
+        <file>icons/24/circ.png</file>
+        <file>icons/24/rect.png</file>
+        <file>icons/24/grabhand.ico</file>
+        <file>icons/24/polygonmask.ico</file>
+        <file>icons/24/polygonmask.png</file>
+        <file>icons/24/settings.png</file>
+        <file>icons/24/threshold.png</file>
+        <file>icons/24/findcenters.png</file>
+        <file>icons/24/mergeimage.png</file>
+        <file>icons/24/scoreimage.png</file>
+        <file>icons/24/connectedcomponents.png</file>
+        <file>icons/24/invert.png</file>
+        <file>icons/24/filter.png</file>
+        <file>icons/24/marks.png</file>
+    </qresource>
+</RCC>

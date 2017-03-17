@@ -1,0 +1,4 @@
+IDI_ICON1               ICON    DISCARDABLE     "target.ico"
+IDI_ICON2               ICON    DISCARDABLE     "trashcan.ico"
+IDI_ICON3               ICON    DISCARDABLE     "focus.ico"
+IDI_ICON4				ICON	DISCARDABLE		"camera.ico"

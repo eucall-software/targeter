@@ -1,0 +1,819 @@
+.TH "PaintQLabel" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PaintQLabel
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <paintqlabel\&.h>\fP
+.PP
+Inherits QLabel\&.
+.SS "Signals"
+
+.in +1c
+.ti -1c
+.RI "void \fBdisablePanButton\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetTargetArea\fP (\fBdrawingShape\fP shape)"
+.br
+.ti -1c
+.RI "void \fBunsetDrawingButtons\fP ()"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPaintQLabel\fP (QWidget *parent=0)"
+.br
+.ti -1c
+.RI "\fB~PaintQLabel\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayRect\fP (QRect r)"
+.br
+.ti -1c
+.RI "void \fBgetDisplayRect\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetImage\fP (QImage im)"
+.br
+.ti -1c
+.RI "void \fBzoomToPoint\fP (QPoint windowClick, int zoomAmount)"
+.br
+.ti -1c
+.RI "void \fBgetPolygonRect\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetDrawingMode\fP (drawingMode::drawingMode mode)"
+.br
+.ti -1c
+.RI "void \fBsetPanMode\fP (bool bChecked)"
+.br
+.ti -1c
+.RI "bool \fBcheckForPolygonClose\fP (QPoint mp)"
+.br
+.ti -1c
+.RI "void \fBstartPanning\fP (drawingMode::drawingMode mode, QPoint pos)"
+.br
+.ti -1c
+.RI "bool \fBinEllipse\fP (QRect r, QPoint p)"
+.br
+.ti -1c
+.RI "bool \fBinRect\fP (QRect r, QPoint p)"
+.br
+.ti -1c
+.RI "bool \fBinPoly\fP (QVector< QPoint > verts, QPoint p)"
+.br
+.ti -1c
+.RI "void \fBdeleteSelectedDrawingObject\fP ()"
+.br
+.ti -1c
+.RI "void \fBgetTargetImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBresetDrawingObjects\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBm_scale\fP"
+.br
+.ti -1c
+.RI "QRect \fBm_displayRect\fP"
+.br
+.ti -1c
+.RI "QRect \fBm_imageRect\fP"
+.br
+.ti -1c
+.RI "double \fBm_aspectRatio\fP"
+.br
+.ti -1c
+.RI "QImage \fBm_Image\fP"
+.br
+.ti -1c
+.RI "QVector< QPoint > \fBm_PolygonPoints\fP"
+.br
+.ti -1c
+.RI "bool \fBm_bLoopClosed\fP"
+.br
+.ti -1c
+.RI "QRect \fBm_boundingPolygon\fP"
+.br
+.ti -1c
+.RI "QRect \fBm_boundingRectangle\fP"
+.br
+.ti -1c
+.RI "QRect \fBm_boundingEllipse\fP"
+.br
+.ti -1c
+.RI "int \fBm_image_c_x\fP"
+.br
+.ti -1c
+.RI "int \fBm_image_c_y\fP"
+.br
+.in -1c
+.SS "Protected Slots"
+
+.in +1c
+.ti -1c
+.RI "virtual void \fBenterEvent\fP (QEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBleaveEvent\fP (QEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBmouseMoveEvent\fP (QMouseEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBmousePressEvent\fP (QMouseEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBmouseReleaseEvent\fP (QMouseEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBwheelEvent\fP (QWheelEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBpaintEvent\fP (QPaintEvent *event)"
+.br
+.ti -1c
+.RI "virtual void \fBresizeEvent\fP (QResizeEvent *event)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "drawingMode::drawingMode \fBm_drawingMode\fP"
+.br
+.ti -1c
+.RI "drawingMode::drawingMode \fBm_clickedRegionItem\fP"
+.br
+.ti -1c
+.RI "drawingMode::drawingMode \fBm_hitObject\fP"
+.br
+.ti -1c
+.RI "bool \fBm_panMode\fP"
+.br
+.ti -1c
+.RI "bool \fBm_isPanning\fP"
+.br
+.ti -1c
+.RI "bool \fBm_mouseDown\fP"
+.br
+.ti -1c
+.RI "QPoint \fBm_mouseStartPos\fP"
+.br
+.ti -1c
+.RI "QPoint \fBm_mouseEndPos\fP"
+.br
+.ti -1c
+.RI "QPoint \fBm_imageDragOffset\fP"
+.br
+.ti -1c
+.RI "QPoint \fBm_drawingObjectOffset\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class to manage display of images in Qlabel, manages scaling, panning, drawing objects etc\&. 
+.PP
+Definition at line 10 of file paintqlabel\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PaintQLabel::PaintQLabel (QWidget * parent = \fC0\fP)\fC [explicit]\fP"
+class constructor
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::PaintQLabel\fP Qualifier : QLabel(parent) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQWidget\fP * parent 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 24 of file paintqlabel\&.cpp\&.
+.SS "PaintQLabel::~PaintQLabel ()"
+class destructor
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::~PaintQLabel\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 83 of file paintqlabel\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "bool PaintQLabel::checkForPolygonClose (QPoint mp)"
+checks to see if point is in a closed polygon remove point if not
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::checkForPolygonClose\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQPoint\fP mp 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 191 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::deleteSelectedDrawingObject ()"
+delete drawing object
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::deleteSelectedDrawingObject\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 895 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::displayRect (QRect r)"
+calculate size of rectangle for display of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::displayRect\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQRect\fP r 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 746 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::getDisplayRect ()"
+repaint at new display size
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::getDisplayRect\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 717 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::getPolygonRect ()"
+gets polygon's enclosing rectangle
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::getPolygonRect\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 543 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::getTargetImage ()"
+gets target image from drawing shape region
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::getTargetImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 808 of file paintqlabel\&.cpp\&.
+.SS "bool PaintQLabel::inEllipse (QRect r, QPoint p)"
+checks if point is in ellipse
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::inEllipse\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQRect\fP r 
+.br
+\fIQPoint\fP p 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 430 of file paintqlabel\&.cpp\&.
+.SS "bool PaintQLabel::inPoly (QVector< QPoint > verts, QPoint p)"
+checks to see if point is in polygon
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::inPoly\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQVector<QPoint>\fP verts 
+.br
+\fIQPoint\fP p 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 163 of file paintqlabel\&.cpp\&.
+.SS "bool PaintQLabel::inRect (QRect r, QPoint p)"
+checks if point is in rectangle
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::inRect\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQRect\fP r 
+.br
+\fIQPoint\fP p 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 403 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::mouseMoveEvent (QMouseEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+mouse move event, updates drawing of objects / panning of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::mouseMoveEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQMouseEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 468 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::mousePressEvent (QMouseEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+mouse down event, start drawing/panning etc
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::mousePressEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQMouseEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 265 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::mouseReleaseEvent (QMouseEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+mouse up event, stop drawing/panning etc
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::mouseReleaseEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQMouseEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 332 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::paintEvent (QPaintEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+overridden paint event of widget, draws all objects and image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::paintEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQPaintEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 932 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::resetDrawingObjects ()"
+Resets drawing objects
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::resetDrawingObjects\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 47 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::resizeEvent (QResizeEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+resize image if control resized
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::resizeEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQResizeEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 700 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::setDrawingMode (drawingMode::drawingMode mode)"
+sets drawing mode for panning/zooming
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::setDrawingMode\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBdrawingMode\fP\fP mode 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 111 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::setImage (QImage im)"
+sets image of widget
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::setImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQImage\fP im 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 573 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::setPanMode (bool bChecked)"
+sets mode to panning image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::setPanMode\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbool\fP bChecked 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 141 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::startPanning (drawingMode::drawingMode mode, QPoint pos)"
+initialises panning parameters
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::startPanning\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBdrawingMode\fP\fP mode 
+.br
+\fIQPoint\fP pos 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 227 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::wheelEvent (QWheelEvent * event)\fC [protected]\fP, \fC [virtual]\fP, \fC [slot]\fP"
+zoom on mouse wheel movement
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::wheelEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQWheelEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access virtual protected 
+.RE
+.PP
+
+.PP
+Definition at line 663 of file paintqlabel\&.cpp\&.
+.SS "void PaintQLabel::zoomToPoint (QPoint windowClick, int zoomAmount)"
+google maps style, zoom in/out to a mouse point
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBPaintQLabel::zoomToPoint\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQPoint\fP windowClick 
+.br
+\fIint\fP zoomAmount 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 599 of file paintqlabel\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

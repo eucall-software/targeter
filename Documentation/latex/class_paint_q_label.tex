@@ -1,0 +1,958 @@
+\hypertarget{class_paint_q_label}{}\section{Paint\+Q\+Label Class Reference}
+\label{class_paint_q_label}\index{Paint\+Q\+Label@{Paint\+Q\+Label}}
+
+
+{\ttfamily \#include $<$paintqlabel.\+h$>$}
+
+
+
+Inheritance diagram for Paint\+Q\+Label\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_paint_q_label__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Paint\+Q\+Label\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_paint_q_label__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_aef10b2d14a17cf5b838106d076fdfce4}\label{class_paint_q_label_aef10b2d14a17cf5b838106d076fdfce4}} 
+void {\bfseries disable\+Pan\+Button} ()
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a0aabd575fa4e3774689bbc0aafdc6fdb}\label{class_paint_q_label_a0aabd575fa4e3774689bbc0aafdc6fdb}} 
+void {\bfseries set\+Target\+Area} (\hyperlink{structdrawing_shape}{drawing\+Shape} shape)
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a84be2f2ab4315ae3d0d128c648d9933b}\label{class_paint_q_label_a84be2f2ab4315ae3d0d128c648d9933b}} 
+void {\bfseries unset\+Drawing\+Buttons} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_paint_q_label_a079e85cd5d1ec31f20f3c0bb8b510ec2}{Paint\+Q\+Label} (Q\+Widget $\ast$parent=0)
+\item 
+\hyperlink{class_paint_q_label_a837d8485a5da3e3fc87a30a4ada47cf2}{$\sim$\+Paint\+Q\+Label} ()
+\item 
+void \hyperlink{class_paint_q_label_abe77c4ddb9e176c54374718d1e782af0}{display\+Rect} (Q\+Rect r)
+\item 
+void \hyperlink{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91}{get\+Display\+Rect} ()
+\item 
+void \hyperlink{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a}{set\+Image} (Q\+Image im)
+\item 
+void \hyperlink{class_paint_q_label_a30afcb97e84548909b882e0514111e03}{zoom\+To\+Point} (Q\+Point window\+Click, int zoom\+Amount)
+\item 
+void \hyperlink{class_paint_q_label_a332bf0f6137c8613fbdeac4bd0c1516e}{get\+Polygon\+Rect} ()
+\item 
+void \hyperlink{class_paint_q_label_a15478ad03c1c6254c3474ab8deb0428f}{set\+Drawing\+Mode} (drawing\+Mode\+::drawing\+Mode mode)
+\item 
+void \hyperlink{class_paint_q_label_a9f76a4b2851a0906aee6738c91c76969}{set\+Pan\+Mode} (bool b\+Checked)
+\item 
+bool \hyperlink{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a}{check\+For\+Polygon\+Close} (Q\+Point mp)
+\item 
+void \hyperlink{class_paint_q_label_a76f7bb92d5971c324ff0998babd5a70f}{start\+Panning} (drawing\+Mode\+::drawing\+Mode mode, Q\+Point pos)
+\item 
+bool \hyperlink{class_paint_q_label_a2ba7f833ed473795ad0e9f1ccb0f29b3}{in\+Ellipse} (Q\+Rect r, Q\+Point p)
+\item 
+bool \hyperlink{class_paint_q_label_aa01fed3a13d42241b4769d14290a85e6}{in\+Rect} (Q\+Rect r, Q\+Point p)
+\item 
+bool \hyperlink{class_paint_q_label_af6562b147730457b828f0c776ff001e6}{in\+Poly} (Q\+Vector$<$ Q\+Point $>$ verts, Q\+Point p)
+\item 
+void \hyperlink{class_paint_q_label_a56784c6095f3ff7938ccc1c76feb7ad6}{delete\+Selected\+Drawing\+Object} ()
+\item 
+void \hyperlink{class_paint_q_label_a409e0869a3115968f025878ad49d9883}{get\+Target\+Image} ()
+\item 
+void \hyperlink{class_paint_q_label_aeac060e87e6671f65fb3a5ff4e3f15f4}{reset\+Drawing\+Objects} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a2f14ccc35abc58b1b5f675def203f1a5}\label{class_paint_q_label_a2f14ccc35abc58b1b5f675def203f1a5}} 
+int {\bfseries m\+\_\+scale}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a82a12e67b0c4d0916736d6ab686b5274}\label{class_paint_q_label_a82a12e67b0c4d0916736d6ab686b5274}} 
+Q\+Rect {\bfseries m\+\_\+display\+Rect}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a5c521eb8af035302726ceb30d3865325}\label{class_paint_q_label_a5c521eb8af035302726ceb30d3865325}} 
+Q\+Rect {\bfseries m\+\_\+image\+Rect}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_aa317523c692351ba275ab8d961877332}\label{class_paint_q_label_aa317523c692351ba275ab8d961877332}} 
+double {\bfseries m\+\_\+aspect\+Ratio}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a98346a1eb5b6dd9fe5b07e293142b63f}\label{class_paint_q_label_a98346a1eb5b6dd9fe5b07e293142b63f}} 
+Q\+Image {\bfseries m\+\_\+\+Image}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a2f5060008173c178f3bff4718b668a22}\label{class_paint_q_label_a2f5060008173c178f3bff4718b668a22}} 
+Q\+Vector$<$ Q\+Point $>$ {\bfseries m\+\_\+\+Polygon\+Points}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ad0d70f6b959cce938e2015413945353c}\label{class_paint_q_label_ad0d70f6b959cce938e2015413945353c}} 
+bool {\bfseries m\+\_\+b\+Loop\+Closed}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ab98fc5e0aafa68de5b0f0a2775c0c346}\label{class_paint_q_label_ab98fc5e0aafa68de5b0f0a2775c0c346}} 
+Q\+Rect {\bfseries m\+\_\+bounding\+Polygon}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a82c7a19109e2e455c1af992a312c5809}\label{class_paint_q_label_a82c7a19109e2e455c1af992a312c5809}} 
+Q\+Rect {\bfseries m\+\_\+bounding\+Rectangle}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a463e17ba1635d2d23ba5fa35d0927e84}\label{class_paint_q_label_a463e17ba1635d2d23ba5fa35d0927e84}} 
+Q\+Rect {\bfseries m\+\_\+bounding\+Ellipse}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ae8ba280e39ab0f61d2f2fc3db88845fe}\label{class_paint_q_label_ae8ba280e39ab0f61d2f2fc3db88845fe}} 
+int {\bfseries m\+\_\+image\+\_\+c\+\_\+x}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_af3dcff15c48f0fadadb07a334b22fafe}\label{class_paint_q_label_af3dcff15c48f0fadadb07a334b22fafe}} 
+int {\bfseries m\+\_\+image\+\_\+c\+\_\+y}
+\end{DoxyCompactItemize}
+\subsection*{Protected Slots}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_acd3f55d30aa890678038ec613aad2834}\label{class_paint_q_label_acd3f55d30aa890678038ec613aad2834}} 
+virtual void {\bfseries enter\+Event} (Q\+Event $\ast$event)
+\item 
+\mbox{\Hypertarget{class_paint_q_label_abc3c503a911edd5df1a3d21aec89d583}\label{class_paint_q_label_abc3c503a911edd5df1a3d21aec89d583}} 
+virtual void {\bfseries leave\+Event} (Q\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_ae91b4ba28c7f30de7bfe0ece3011b8d6}{mouse\+Move\+Event} (Q\+Mouse\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_a222bf479767638c91bb0b8b655e9794b}{mouse\+Press\+Event} (Q\+Mouse\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_a16f35714b89231d55c733ef94f583ff4}{mouse\+Release\+Event} (Q\+Mouse\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_adcf7154233dfb4462c1cdd4531ab74ba}{wheel\+Event} (Q\+Wheel\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_adc08981924e300cd568881da8d321083}{paint\+Event} (Q\+Paint\+Event $\ast$event)
+\item 
+virtual void \hyperlink{class_paint_q_label_aec6344135e411064b52d5376650b48ef}{resize\+Event} (Q\+Resize\+Event $\ast$event)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ad84973ceabbc9544594caa4ffafacebe}\label{class_paint_q_label_ad84973ceabbc9544594caa4ffafacebe}} 
+drawing\+Mode\+::drawing\+Mode {\bfseries m\+\_\+drawing\+Mode}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a873b6b1577d51e74e5c3f6a6b4b43288}\label{class_paint_q_label_a873b6b1577d51e74e5c3f6a6b4b43288}} 
+drawing\+Mode\+::drawing\+Mode {\bfseries m\+\_\+clicked\+Region\+Item}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a148b9dd3ed31146008c34e2b07265c58}\label{class_paint_q_label_a148b9dd3ed31146008c34e2b07265c58}} 
+drawing\+Mode\+::drawing\+Mode {\bfseries m\+\_\+hit\+Object}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_abfd7945edf58ef75b69819472512152c}\label{class_paint_q_label_abfd7945edf58ef75b69819472512152c}} 
+bool {\bfseries m\+\_\+pan\+Mode}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ae501978fd768bdf7650a19795d4f6982}\label{class_paint_q_label_ae501978fd768bdf7650a19795d4f6982}} 
+bool {\bfseries m\+\_\+is\+Panning}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a259be50c06cf9788eddcf3b660deafa5}\label{class_paint_q_label_a259be50c06cf9788eddcf3b660deafa5}} 
+bool {\bfseries m\+\_\+mouse\+Down}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_abcd0f2f7a72475cc6e0367cc075a03ee}\label{class_paint_q_label_abcd0f2f7a72475cc6e0367cc075a03ee}} 
+Q\+Point {\bfseries m\+\_\+mouse\+Start\+Pos}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a8bd70c097f0b296fe8567101f6af3a43}\label{class_paint_q_label_a8bd70c097f0b296fe8567101f6af3a43}} 
+Q\+Point {\bfseries m\+\_\+mouse\+End\+Pos}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_ae9c0765bb296330176651d8bcf6beb1d}\label{class_paint_q_label_ae9c0765bb296330176651d8bcf6beb1d}} 
+Q\+Point {\bfseries m\+\_\+image\+Drag\+Offset}
+\item 
+\mbox{\Hypertarget{class_paint_q_label_a83b2f10f11b4d13e3ada1d504eb58a1e}\label{class_paint_q_label_a83b2f10f11b4d13e3ada1d504eb58a1e}} 
+Q\+Point {\bfseries m\+\_\+drawing\+Object\+Offset}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class to manage display of images in Qlabel, manages scaling, panning, drawing objects etc. 
+
+Definition at line 10 of file paintqlabel.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_paint_q_label_a079e85cd5d1ec31f20f3c0bb8b510ec2}\label{class_paint_q_label_a079e85cd5d1ec31f20f3c0bb8b510ec2}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{Paint\+Q\+Label()}{PaintQLabel()}}
+{\footnotesize\ttfamily Paint\+Q\+Label\+::\+Paint\+Q\+Label (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+class constructor
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a079e85cd5d1ec31f20f3c0bb8b510ec2}{Paint\+Q\+Label\+::\+Paint\+Q\+Label} Qualifier \+: Q\+Label(parent) 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Widget} & $\ast$ parent \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 24 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a079e85cd5d1ec31f20f3c0bb8b510ec2_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a837d8485a5da3e3fc87a30a4ada47cf2}\label{class_paint_q_label_a837d8485a5da3e3fc87a30a4ada47cf2}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!````~Paint\+Q\+Label@{$\sim$\+Paint\+Q\+Label}}
+\index{````~Paint\+Q\+Label@{$\sim$\+Paint\+Q\+Label}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{$\sim$\+Paint\+Q\+Label()}{~PaintQLabel()}}
+{\footnotesize\ttfamily Paint\+Q\+Label\+::$\sim$\+Paint\+Q\+Label (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+class destructor
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a837d8485a5da3e3fc87a30a4ada47cf2}{Paint\+Q\+Label\+::$\sim$\+Paint\+Q\+Label} Qualifier \begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 83 of file paintqlabel.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a}\label{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!check\+For\+Polygon\+Close@{check\+For\+Polygon\+Close}}
+\index{check\+For\+Polygon\+Close@{check\+For\+Polygon\+Close}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{check\+For\+Polygon\+Close()}{checkForPolygonClose()}}
+{\footnotesize\ttfamily bool Paint\+Q\+Label\+::check\+For\+Polygon\+Close (\begin{DoxyParamCaption}\item[{Q\+Point}]{mp }\end{DoxyParamCaption})}
+
+checks to see if point is in a closed polygon remove point if not
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a}{Paint\+Q\+Label\+::check\+For\+Polygon\+Close} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Point} & mp \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 191 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_aa8b3fe000a0123047ef6b2c884db979a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a56784c6095f3ff7938ccc1c76feb7ad6}\label{class_paint_q_label_a56784c6095f3ff7938ccc1c76feb7ad6}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!delete\+Selected\+Drawing\+Object@{delete\+Selected\+Drawing\+Object}}
+\index{delete\+Selected\+Drawing\+Object@{delete\+Selected\+Drawing\+Object}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{delete\+Selected\+Drawing\+Object()}{deleteSelectedDrawingObject()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::delete\+Selected\+Drawing\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+delete drawing object
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a56784c6095f3ff7938ccc1c76feb7ad6}{Paint\+Q\+Label\+::delete\+Selected\+Drawing\+Object} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 895 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a56784c6095f3ff7938ccc1c76feb7ad6_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_abe77c4ddb9e176c54374718d1e782af0}\label{class_paint_q_label_abe77c4ddb9e176c54374718d1e782af0}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!display\+Rect@{display\+Rect}}
+\index{display\+Rect@{display\+Rect}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{display\+Rect()}{displayRect()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::display\+Rect (\begin{DoxyParamCaption}\item[{Q\+Rect}]{r }\end{DoxyParamCaption})}
+
+calculate size of rectangle for display of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_abe77c4ddb9e176c54374718d1e782af0}{Paint\+Q\+Label\+::display\+Rect} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Rect} & r \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 746 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_abe77c4ddb9e176c54374718d1e782af0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91}\label{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!get\+Display\+Rect@{get\+Display\+Rect}}
+\index{get\+Display\+Rect@{get\+Display\+Rect}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{get\+Display\+Rect()}{getDisplayRect()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::get\+Display\+Rect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+repaint at new display size
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91}{Paint\+Q\+Label\+::get\+Display\+Rect} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 717 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a58a4d1f0765a00967529fcbb9cecbc91_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a332bf0f6137c8613fbdeac4bd0c1516e}\label{class_paint_q_label_a332bf0f6137c8613fbdeac4bd0c1516e}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!get\+Polygon\+Rect@{get\+Polygon\+Rect}}
+\index{get\+Polygon\+Rect@{get\+Polygon\+Rect}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{get\+Polygon\+Rect()}{getPolygonRect()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::get\+Polygon\+Rect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+gets polygon\textquotesingle{}s enclosing rectangle
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a332bf0f6137c8613fbdeac4bd0c1516e}{Paint\+Q\+Label\+::get\+Polygon\+Rect} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 543 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a332bf0f6137c8613fbdeac4bd0c1516e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a409e0869a3115968f025878ad49d9883}\label{class_paint_q_label_a409e0869a3115968f025878ad49d9883}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!get\+Target\+Image@{get\+Target\+Image}}
+\index{get\+Target\+Image@{get\+Target\+Image}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{get\+Target\+Image()}{getTargetImage()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::get\+Target\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+gets target image from drawing shape region
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a409e0869a3115968f025878ad49d9883}{Paint\+Q\+Label\+::get\+Target\+Image} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 808 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a409e0869a3115968f025878ad49d9883_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a409e0869a3115968f025878ad49d9883_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a2ba7f833ed473795ad0e9f1ccb0f29b3}\label{class_paint_q_label_a2ba7f833ed473795ad0e9f1ccb0f29b3}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!in\+Ellipse@{in\+Ellipse}}
+\index{in\+Ellipse@{in\+Ellipse}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{in\+Ellipse()}{inEllipse()}}
+{\footnotesize\ttfamily bool Paint\+Q\+Label\+::in\+Ellipse (\begin{DoxyParamCaption}\item[{Q\+Rect}]{r,  }\item[{Q\+Point}]{p }\end{DoxyParamCaption})}
+
+checks if point is in ellipse
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a2ba7f833ed473795ad0e9f1ccb0f29b3}{Paint\+Q\+Label\+::in\+Ellipse} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Rect} & r \\
+\hline
+{\em Q\+Point} & p \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 430 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a2ba7f833ed473795ad0e9f1ccb0f29b3_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_af6562b147730457b828f0c776ff001e6}\label{class_paint_q_label_af6562b147730457b828f0c776ff001e6}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!in\+Poly@{in\+Poly}}
+\index{in\+Poly@{in\+Poly}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{in\+Poly()}{inPoly()}}
+{\footnotesize\ttfamily bool Paint\+Q\+Label\+::in\+Poly (\begin{DoxyParamCaption}\item[{Q\+Vector$<$ Q\+Point $>$}]{verts,  }\item[{Q\+Point}]{p }\end{DoxyParamCaption})}
+
+checks to see if point is in polygon
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_af6562b147730457b828f0c776ff001e6}{Paint\+Q\+Label\+::in\+Poly} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Vector$<$\+Q\+Point$>$} & verts \\
+\hline
+{\em Q\+Point} & p \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 163 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_af6562b147730457b828f0c776ff001e6_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_aa01fed3a13d42241b4769d14290a85e6}\label{class_paint_q_label_aa01fed3a13d42241b4769d14290a85e6}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!in\+Rect@{in\+Rect}}
+\index{in\+Rect@{in\+Rect}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{in\+Rect()}{inRect()}}
+{\footnotesize\ttfamily bool Paint\+Q\+Label\+::in\+Rect (\begin{DoxyParamCaption}\item[{Q\+Rect}]{r,  }\item[{Q\+Point}]{p }\end{DoxyParamCaption})}
+
+checks if point is in rectangle
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_aa01fed3a13d42241b4769d14290a85e6}{Paint\+Q\+Label\+::in\+Rect} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Rect} & r \\
+\hline
+{\em Q\+Point} & p \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 403 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_aa01fed3a13d42241b4769d14290a85e6_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_ae91b4ba28c7f30de7bfe0ece3011b8d6}\label{class_paint_q_label_ae91b4ba28c7f30de7bfe0ece3011b8d6}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!mouse\+Move\+Event@{mouse\+Move\+Event}}
+\index{mouse\+Move\+Event@{mouse\+Move\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{mouse\+Move\+Event}{mouseMoveEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::mouse\+Move\+Event (\begin{DoxyParamCaption}\item[{Q\+Mouse\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+mouse move event, updates drawing of objects / panning of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_ae91b4ba28c7f30de7bfe0ece3011b8d6}{Paint\+Q\+Label\+::mouse\+Move\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Mouse\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 468 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_ae91b4ba28c7f30de7bfe0ece3011b8d6_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a222bf479767638c91bb0b8b655e9794b}\label{class_paint_q_label_a222bf479767638c91bb0b8b655e9794b}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!mouse\+Press\+Event@{mouse\+Press\+Event}}
+\index{mouse\+Press\+Event@{mouse\+Press\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{mouse\+Press\+Event}{mousePressEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::mouse\+Press\+Event (\begin{DoxyParamCaption}\item[{Q\+Mouse\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+mouse down event, start drawing/panning etc
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a222bf479767638c91bb0b8b655e9794b}{Paint\+Q\+Label\+::mouse\+Press\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Mouse\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 265 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a222bf479767638c91bb0b8b655e9794b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a16f35714b89231d55c733ef94f583ff4}\label{class_paint_q_label_a16f35714b89231d55c733ef94f583ff4}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!mouse\+Release\+Event@{mouse\+Release\+Event}}
+\index{mouse\+Release\+Event@{mouse\+Release\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{mouse\+Release\+Event}{mouseReleaseEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::mouse\+Release\+Event (\begin{DoxyParamCaption}\item[{Q\+Mouse\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+mouse up event, stop drawing/panning etc
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a16f35714b89231d55c733ef94f583ff4}{Paint\+Q\+Label\+::mouse\+Release\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Mouse\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 332 of file paintqlabel.\+cpp.
+
+\mbox{\Hypertarget{class_paint_q_label_adc08981924e300cd568881da8d321083}\label{class_paint_q_label_adc08981924e300cd568881da8d321083}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!paint\+Event@{paint\+Event}}
+\index{paint\+Event@{paint\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{paint\+Event}{paintEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::paint\+Event (\begin{DoxyParamCaption}\item[{Q\+Paint\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+overridden paint event of widget, draws all objects and image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_adc08981924e300cd568881da8d321083}{Paint\+Q\+Label\+::paint\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Paint\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 932 of file paintqlabel.\+cpp.
+
+\mbox{\Hypertarget{class_paint_q_label_aeac060e87e6671f65fb3a5ff4e3f15f4}\label{class_paint_q_label_aeac060e87e6671f65fb3a5ff4e3f15f4}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!reset\+Drawing\+Objects@{reset\+Drawing\+Objects}}
+\index{reset\+Drawing\+Objects@{reset\+Drawing\+Objects}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{reset\+Drawing\+Objects()}{resetDrawingObjects()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::reset\+Drawing\+Objects (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Resets drawing objects
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_aeac060e87e6671f65fb3a5ff4e3f15f4}{Paint\+Q\+Label\+::reset\+Drawing\+Objects} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 47 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_aeac060e87e6671f65fb3a5ff4e3f15f4_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_aec6344135e411064b52d5376650b48ef}\label{class_paint_q_label_aec6344135e411064b52d5376650b48ef}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!resize\+Event@{resize\+Event}}
+\index{resize\+Event@{resize\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{resize\+Event}{resizeEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::resize\+Event (\begin{DoxyParamCaption}\item[{Q\+Resize\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+resize image if control resized
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_aec6344135e411064b52d5376650b48ef}{Paint\+Q\+Label\+::resize\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Resize\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 700 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_aec6344135e411064b52d5376650b48ef_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a15478ad03c1c6254c3474ab8deb0428f}\label{class_paint_q_label_a15478ad03c1c6254c3474ab8deb0428f}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!set\+Drawing\+Mode@{set\+Drawing\+Mode}}
+\index{set\+Drawing\+Mode@{set\+Drawing\+Mode}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{set\+Drawing\+Mode()}{setDrawingMode()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::set\+Drawing\+Mode (\begin{DoxyParamCaption}\item[{drawing\+Mode\+::drawing\+Mode}]{mode }\end{DoxyParamCaption})}
+
+sets drawing mode for panning/zooming
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a15478ad03c1c6254c3474ab8deb0428f}{Paint\+Q\+Label\+::set\+Drawing\+Mode} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{namespacedrawing_mode}{drawing\+Mode}} & mode \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 111 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a15478ad03c1c6254c3474ab8deb0428f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a}\label{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!set\+Image@{set\+Image}}
+\index{set\+Image@{set\+Image}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{set\+Image()}{setImage()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::set\+Image (\begin{DoxyParamCaption}\item[{Q\+Image}]{im }\end{DoxyParamCaption})}
+
+sets image of widget
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a}{Paint\+Q\+Label\+::set\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Image} & im \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 573 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a18ac8d49bd128e0ce565b588a6e8b66a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a9f76a4b2851a0906aee6738c91c76969}\label{class_paint_q_label_a9f76a4b2851a0906aee6738c91c76969}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!set\+Pan\+Mode@{set\+Pan\+Mode}}
+\index{set\+Pan\+Mode@{set\+Pan\+Mode}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{set\+Pan\+Mode()}{setPanMode()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::set\+Pan\+Mode (\begin{DoxyParamCaption}\item[{bool}]{b\+Checked }\end{DoxyParamCaption})}
+
+sets mode to panning image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a9f76a4b2851a0906aee6738c91c76969}{Paint\+Q\+Label\+::set\+Pan\+Mode} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em bool} & b\+Checked \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 141 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a9f76a4b2851a0906aee6738c91c76969_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a76f7bb92d5971c324ff0998babd5a70f}\label{class_paint_q_label_a76f7bb92d5971c324ff0998babd5a70f}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!start\+Panning@{start\+Panning}}
+\index{start\+Panning@{start\+Panning}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{start\+Panning()}{startPanning()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::start\+Panning (\begin{DoxyParamCaption}\item[{drawing\+Mode\+::drawing\+Mode}]{mode,  }\item[{Q\+Point}]{pos }\end{DoxyParamCaption})}
+
+initialises panning parameters
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a76f7bb92d5971c324ff0998babd5a70f}{Paint\+Q\+Label\+::start\+Panning} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{namespacedrawing_mode}{drawing\+Mode}} & mode \\
+\hline
+{\em Q\+Point} & pos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 227 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a76f7bb92d5971c324ff0998babd5a70f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_adcf7154233dfb4462c1cdd4531ab74ba}\label{class_paint_q_label_adcf7154233dfb4462c1cdd4531ab74ba}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!wheel\+Event@{wheel\+Event}}
+\index{wheel\+Event@{wheel\+Event}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{wheel\+Event}{wheelEvent}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::wheel\+Event (\begin{DoxyParamCaption}\item[{Q\+Wheel\+Event $\ast$}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}, {\ttfamily [slot]}}
+
+zoom on mouse wheel movement
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_adcf7154233dfb4462c1cdd4531ab74ba}{Paint\+Q\+Label\+::wheel\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Wheel\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access virtual protected 
+\end{DoxyReturn}
+
+
+Definition at line 663 of file paintqlabel.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_adcf7154233dfb4462c1cdd4531ab74ba_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_paint_q_label_a30afcb97e84548909b882e0514111e03}\label{class_paint_q_label_a30afcb97e84548909b882e0514111e03}} 
+\index{Paint\+Q\+Label@{Paint\+Q\+Label}!zoom\+To\+Point@{zoom\+To\+Point}}
+\index{zoom\+To\+Point@{zoom\+To\+Point}!Paint\+Q\+Label@{Paint\+Q\+Label}}
+\subsubsection{\texorpdfstring{zoom\+To\+Point()}{zoomToPoint()}}
+{\footnotesize\ttfamily void Paint\+Q\+Label\+::zoom\+To\+Point (\begin{DoxyParamCaption}\item[{Q\+Point}]{window\+Click,  }\item[{int}]{zoom\+Amount }\end{DoxyParamCaption})}
+
+google maps style, zoom in/out to a mouse point
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_paint_q_label_a30afcb97e84548909b882e0514111e03}{Paint\+Q\+Label\+::zoom\+To\+Point} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Point} & window\+Click \\
+\hline
+{\em int} & zoom\+Amount \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 599 of file paintqlabel.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_paint_q_label_a30afcb97e84548909b882e0514111e03_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/paintqlabel.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/debug/moc\+\_\+paintqlabel.\+cpp\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/paintqlabel.\+cpp\end{DoxyCompactItemize}

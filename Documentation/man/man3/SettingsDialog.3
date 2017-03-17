@@ -1,0 +1,207 @@
+.TH "SettingsDialog" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SettingsDialog
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <settingsdialog\&.h>\fP
+.PP
+Inherits QDialog\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSettingsDialog\fP (\fBSettingsValues\fP v, QWidget *parent=0)"
+.br
+.ti -1c
+.RI "\fBSettingsDialog\fP (QWidget *parent=0)"
+.br
+.ti -1c
+.RI "void \fBcreate\fP (\fBSettingsValues\fP v)"
+.br
+.ti -1c
+.RI "void \fBsetHistogramImage\fP (QImage im)"
+.br
+.ti -1c
+.RI "\fB~SettingsDialog\fP ()"
+.br
+.ti -1c
+.RI "\fBSettingsValues\fP \fBgetSettings\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+dialog class to manage application settings 
+.PP
+Definition at line 16 of file settingsdialog\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SettingsDialog::SettingsDialog (\fBSettingsValues\fP v, QWidget * parent = \fC0\fP)\fC [explicit]\fP"
+class constructor using passed in settings values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::SettingsDialog\fP Qualifier : QDialog(parent), ui(new Ui::SettingsDialog) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBSettingsValues\fP\fP v 
+.br
+\fIQWidget\fP * parent 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 22 of file settingsdialog\&.cpp\&.
+.SS "SettingsDialog::SettingsDialog (QWidget * parent = \fC0\fP)\fC [explicit]\fP"
+class constructor
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::SettingsDialog\fP Qualifier : QDialog(parent), ui(new Ui::SettingsDialog) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQWidget\fP * parent 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 45 of file settingsdialog\&.cpp\&.
+.SS "SettingsDialog::~SettingsDialog ()"
+class destructor
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::~SettingsDialog\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 168 of file settingsdialog\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void SettingsDialog::create (\fBSettingsValues\fP v)"
+sets initial values of class
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::create\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBSettingsValues\fP\fP v 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 77 of file settingsdialog\&.cpp\&.
+.SS "\fBSettingsValues\fP SettingsDialog::getSettings ()"
+gets settings
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::getSettings\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+\fBSettingsValues\fP Access public 
+.RE
+.PP
+
+.PP
+Definition at line 185 of file settingsdialog\&.cpp\&.
+.SS "void SettingsDialog::setHistogramImage (QImage im)"
+Displays histogram image in Qlabel
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsDialog::setHistogramImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQImage\fP im 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 97 of file settingsdialog\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

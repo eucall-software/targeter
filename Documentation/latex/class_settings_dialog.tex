@@ -1,0 +1,240 @@
+\hypertarget{class_settings_dialog}{}\section{Settings\+Dialog Class Reference}
+\label{class_settings_dialog}\index{Settings\+Dialog@{Settings\+Dialog}}
+
+
+{\ttfamily \#include $<$settingsdialog.\+h$>$}
+
+
+
+Inheritance diagram for Settings\+Dialog\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{class_settings_dialog__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Settings\+Dialog\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{class_settings_dialog__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1}{Settings\+Dialog} (\hyperlink{struct_settings_values}{Settings\+Values} v, Q\+Widget $\ast$parent=0)
+\item 
+\hyperlink{class_settings_dialog_a9933956b777b2c0451e9119581cc22fb}{Settings\+Dialog} (Q\+Widget $\ast$parent=0)
+\item 
+void \hyperlink{class_settings_dialog_ae84085e9bcbf5411d75f7463b874e005}{create} (\hyperlink{struct_settings_values}{Settings\+Values} v)
+\item 
+void \hyperlink{class_settings_dialog_a3a730a1d975d4c349fe2a4ed01267735}{set\+Histogram\+Image} (Q\+Image im)
+\item 
+\hyperlink{class_settings_dialog_ac48f54d4472902be0a3845a69167f068}{$\sim$\+Settings\+Dialog} ()
+\item 
+\hyperlink{struct_settings_values}{Settings\+Values} \hyperlink{class_settings_dialog_aa60a210ac0141f29ba2f0ef0ebe5f191}{get\+Settings} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+dialog class to manage application settings 
+
+Definition at line 16 of file settingsdialog.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1}\label{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!Settings\+Dialog@{Settings\+Dialog}}
+\index{Settings\+Dialog@{Settings\+Dialog}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{Settings\+Dialog()}{SettingsDialog()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Settings\+Dialog\+::\+Settings\+Dialog (\begin{DoxyParamCaption}\item[{\hyperlink{struct_settings_values}{Settings\+Values}}]{v,  }\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+class constructor using passed in settings values
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1}{Settings\+Dialog\+::\+Settings\+Dialog} Qualifier \+: Q\+Dialog(parent), ui(new Ui\+::\+Settings\+Dialog) 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{struct_settings_values}{Settings\+Values}} & v \\
+\hline
+{\em Q\+Widget} & $\ast$ parent \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 22 of file settingsdialog.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_settings_dialog_a9933956b777b2c0451e9119581cc22fb}\label{class_settings_dialog_a9933956b777b2c0451e9119581cc22fb}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!Settings\+Dialog@{Settings\+Dialog}}
+\index{Settings\+Dialog@{Settings\+Dialog}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{Settings\+Dialog()}{SettingsDialog()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Settings\+Dialog\+::\+Settings\+Dialog (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+class constructor
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_a76b0a61383133b8f723431c0b663bdc1}{Settings\+Dialog\+::\+Settings\+Dialog} Qualifier \+: Q\+Dialog(parent), ui(new Ui\+::\+Settings\+Dialog) 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Widget} & $\ast$ parent \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 45 of file settingsdialog.\+cpp.
+
+\mbox{\Hypertarget{class_settings_dialog_ac48f54d4472902be0a3845a69167f068}\label{class_settings_dialog_ac48f54d4472902be0a3845a69167f068}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!````~Settings\+Dialog@{$\sim$\+Settings\+Dialog}}
+\index{````~Settings\+Dialog@{$\sim$\+Settings\+Dialog}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{$\sim$\+Settings\+Dialog()}{~SettingsDialog()}}
+{\footnotesize\ttfamily Settings\+Dialog\+::$\sim$\+Settings\+Dialog (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+class destructor
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_ac48f54d4472902be0a3845a69167f068}{Settings\+Dialog\+::$\sim$\+Settings\+Dialog} Qualifier \begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 168 of file settingsdialog.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_settings_dialog_ae84085e9bcbf5411d75f7463b874e005}\label{class_settings_dialog_ae84085e9bcbf5411d75f7463b874e005}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!create@{create}}
+\index{create@{create}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily void Settings\+Dialog\+::create (\begin{DoxyParamCaption}\item[{\hyperlink{struct_settings_values}{Settings\+Values}}]{v }\end{DoxyParamCaption})}
+
+sets initial values of class
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_ae84085e9bcbf5411d75f7463b874e005}{Settings\+Dialog\+::create} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{struct_settings_values}{Settings\+Values}} & v \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 77 of file settingsdialog.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_settings_dialog_ae84085e9bcbf5411d75f7463b874e005_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_settings_dialog_aa60a210ac0141f29ba2f0ef0ebe5f191}\label{class_settings_dialog_aa60a210ac0141f29ba2f0ef0ebe5f191}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!get\+Settings@{get\+Settings}}
+\index{get\+Settings@{get\+Settings}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{get\+Settings()}{getSettings()}}
+{\footnotesize\ttfamily \hyperlink{struct_settings_values}{Settings\+Values} Settings\+Dialog\+::get\+Settings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+gets settings
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_aa60a210ac0141f29ba2f0ef0ebe5f191}{Settings\+Dialog\+::get\+Settings} Qualifier \begin{DoxyReturn}{Returns}
+\hyperlink{struct_settings_values}{Settings\+Values} Access public 
+\end{DoxyReturn}
+
+
+Definition at line 185 of file settingsdialog.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_settings_dialog_aa60a210ac0141f29ba2f0ef0ebe5f191_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_settings_dialog_a3a730a1d975d4c349fe2a4ed01267735}\label{class_settings_dialog_a3a730a1d975d4c349fe2a4ed01267735}} 
+\index{Settings\+Dialog@{Settings\+Dialog}!set\+Histogram\+Image@{set\+Histogram\+Image}}
+\index{set\+Histogram\+Image@{set\+Histogram\+Image}!Settings\+Dialog@{Settings\+Dialog}}
+\subsubsection{\texorpdfstring{set\+Histogram\+Image()}{setHistogramImage()}}
+{\footnotesize\ttfamily void Settings\+Dialog\+::set\+Histogram\+Image (\begin{DoxyParamCaption}\item[{Q\+Image}]{im }\end{DoxyParamCaption})}
+
+Displays histogram image in Qlabel
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_settings_dialog_a3a730a1d975d4c349fe2a4ed01267735}{Settings\+Dialog\+::set\+Histogram\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Image} & im \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 97 of file settingsdialog.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_settings_dialog_a3a730a1d975d4c349fe2a4ed01267735_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/settingsdialog.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/settingsdialog.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,6 @@
+<map id="MainWindow::drawCentroids" name="MainWindow::drawCentroids">
+<area shape="rect" id="node2" href="$class_main_window.html#a8d87cd33d22ce614c9d7945264588e5f" title="MainWindow::createScoreImage" alt="" coords="475,13,684,39"/>
+<area shape="rect" id="node5" href="$class_main_window.html#aa137f4371bae807873da7862f4102521" title="MainWindow::writeCentroids" alt="" coords="240,38,427,65"/>
+<area shape="rect" id="node3" href="$class_main_window.html#a49cfabc6ef4845c5a9b5c9a92c9d4e2e" title="MainWindow::getConnected\lComponents" alt="" coords="732,5,916,47"/>
+<area shape="rect" id="node4" href="$class_main_window.html#ad0219fc878a0bc02403d00a16b7fc7ec" title="MainWindow::deleteImage" alt="" coords="964,13,1139,39"/>
+</map>

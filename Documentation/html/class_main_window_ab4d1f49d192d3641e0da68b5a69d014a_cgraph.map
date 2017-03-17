@@ -1,0 +1,32 @@
+<map id="MainWindow::addImage" name="MainWindow::addImage">
+<area shape="rect" id="node2" href="$class_main_window.html#a0c29749703b7fc8a64a17d123816bfac" title="MainWindow::addCVImage" alt="" coords="213,399,392,426"/>
+<area shape="rect" id="node3" href="$class_main_window.html#a8b60c57f82b0ac86df7c64692294a35e" title="MainWindow::addQImageThumbnail" alt="" coords="440,159,669,186"/>
+<area shape="rect" id="node5" href="$classtargeter_image.html#a9c5c783a82afecd73a0b877d3bfdfc01" title="targeterImage::getQTImage" alt="" coords="1251,657,1429,683"/>
+<area shape="rect" id="node6" href="$class_main_window.html#a8e20e1254b179ca9ec054ec908d9cc43" title="MainWindow::DisplayImage" alt="" coords="463,559,646,586"/>
+<area shape="rect" id="node4" href="$class_main_window.html#a5e034c81127e2a14248eb81414e1e96e" title="MainWindow::copyImageToSquare\lRegion" alt="" coords="717,148,940,189"/>
+<area shape="rect" id="node7" href="$class_main_window.html#acc35ff9a0c04d62297e7fd219fa869e5" title="MainWindow::getValidImage\lIndex" alt="" coords="997,620,1184,661"/>
+<area shape="rect" id="node8" href="$class_paint_q_label.html#a18ac8d49bd128e0ce565b588a6e8b66a" title="PaintQLabel::setImage" alt="" coords="751,366,906,393"/>
+<area shape="rect" id="node9" href="$class_paint_q_label.html#a58a4d1f0765a00967529fcbb9cecbc91" title="PaintQLabel::getDisplayRect" alt="" coords="996,318,1185,345"/>
+<area shape="rect" id="node11" href="$class_main_window.html#a89dfa31ef44692bb1d7307f0c35838c0" title="MainWindow::updateThumbs" alt="" coords="734,483,923,510"/>
+<area shape="rect" id="node12" href="$class_main_window.html#acea9cebdcf70bf45107baa0789e732bf" title="MainWindow::OpenImage" alt="" coords="743,889,914,915"/>
+<area shape="rect" id="node13" href="$class_main_window.html#a280d25148ac076ca817d411372584ae5" title="MainWindow::showMessage" alt="" coords="735,534,922,561"/>
+<area shape="rect" id="node14" href="$class_main_window.html#a1e798fdae21c3294495ea7994df1887a" title="MainWindow::getCheckedImages" alt="" coords="721,585,936,611"/>
+<area shape="rect" id="node15" href="$class_focus_stack.html#aca40f92aa05f5aa0a2e58c846bb69a75" title="FocusStack::processImage\lStack" alt="" coords="738,417,919,459"/>
+<area shape="rect" id="node20" href="$class_main_window.html#aa816921e6ce14f558ada5c73c8a5ef20" title="MainWindow::SaveImage" alt="" coords="745,686,912,713"/>
+<area shape="rect" id="node22" href="$class_main_window.html#a92a40847027eaf2cf258c3a9f8da4c48" title="MainWindow::createMaskImage" alt="" coords="725,214,932,241"/>
+<area shape="rect" id="node31" href="$classtargeter_image.html#a2a66aadfba8fe64dfde9725bde71808c" title="targeterImage::getImage" alt="" coords="747,787,910,814"/>
+<area shape="rect" id="node10" href="$class_paint_q_label.html#abe77c4ddb9e176c54374718d1e782af0" title="PaintQLabel::displayRect" alt="" coords="1255,318,1425,345"/>
+<area shape="rect" id="node16" href="$class_haar.html#ad85443bf4bbe9d65be10acbd0d89093b" title="Haar::LaplacianPyramid" alt="" coords="1011,525,1171,551"/>
+<area shape="rect" id="node17" href="$class_haar.html#afa323789e73c94995eba32e09d9aa026" title="Haar::HaarEnergy" alt="" coords="1028,373,1153,399"/>
+<area shape="rect" id="node18" href="$class_image_processing.html#ae1460831474adb16ed769cd6956ddbff" title="ImageProcessing::modalFilter" alt="" coords="993,423,1188,450"/>
+<area shape="rect" id="node19" href="$class_focus_stack.html#ac55d6cde57441ffd9b023fc936529802" title="FocusStack::mergeImageStack" alt="" coords="988,474,1193,501"/>
+<area shape="rect" id="node21" href="$class_main_window.html#aa08469ed5c8396e60fa44bae6530bcf1" title="MainWindow::loadFile" alt="" coords="1016,838,1165,865"/>
+<area shape="rect" id="node23" href="$classtargeter_image.html#a20a228c177141e4f0ca2a7776c7f242d" title="targeterImage::addImage" alt="" coords="1008,215,1173,242"/>
+<area shape="rect" id="node26" href="$class_paint_q_label.html#a30afcb97e84548909b882e0514111e03" title="PaintQLabel::zoomToPoint" alt="" coords="1002,63,1179,90"/>
+<area shape="rect" id="node27" href="$class_paint_q_label.html#a15478ad03c1c6254c3474ab8deb0428f" title="PaintQLabel::setDrawingMode" alt="" coords="992,114,1189,141"/>
+<area shape="rect" id="node28" href="$class_paint_q_label.html#a9f76a4b2851a0906aee6738c91c76969" title="PaintQLabel::setPanMode" alt="" coords="1003,165,1178,191"/>
+<area shape="rect" id="node29" href="$class_paint_q_label.html#a409e0869a3115968f025878ad49d9883" title="PaintQLabel::getTargetImage" alt="" coords="995,13,1186,39"/>
+<area shape="rect" id="node24" href="$classtargeter_image.html#affcf9e83dc25eb200a8919518cf40155" title="targeterImage::createQTImage" alt="" coords="1241,215,1439,242"/>
+<area shape="rect" id="node25" href="$class_helper_functions.html#a64c4fa7fceb347bc87600d926ab9a6dc" title="HelperFunctions::getFormat" alt="" coords="1487,215,1669,242"/>
+<area shape="rect" id="node30" href="$class_paint_q_label.html#aeac060e87e6671f65fb3a5ff4e3f15f4" title="PaintQLabel::resetDrawing\lObjects" alt="" coords="1252,5,1428,47"/>
+</map>

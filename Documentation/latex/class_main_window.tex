@@ -1,0 +1,1106 @@
+\hypertarget{class_main_window}{}\section{Main\+Window Class Reference}
+\label{class_main_window}\index{Main\+Window@{Main\+Window}}
+
+
+{\ttfamily \#include $<$mainwindow.\+h$>$}
+
+
+
+Inheritance diagram for Main\+Window\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_main_window__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Main\+Window\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_main_window__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Slots}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43}{Display\+Image} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_main_window_acea9cebdcf70bf45107baa0789e732bf}{Open\+Image} ()
+\item 
+void \hyperlink{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20}{Save\+Image} ()
+\item 
+void \hyperlink{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a}{add\+Image} (const Q\+String \&file\+Name, image\+Type\+::image\+Type type=image\+Type\+::display)
+\item 
+void \hyperlink{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1}{load\+File} (const Q\+String \&file\+Name)
+\item 
+\mbox{\Hypertarget{class_main_window_a15007754f8c9ca7ab8e2886fd321d33d}\label{class_main_window_a15007754f8c9ca7ab8e2886fd321d33d}} 
+Q\+Image\+::\+Format {\bfseries get\+Format} (int type)
+\item 
+int \hyperlink{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5}{get\+Valid\+Image\+Index} ()
+\item 
+void \hyperlink{class_main_window_a0c29749703b7fc8a64a17d123816bfac}{add\+C\+V\+Image} (\hyperlink{classtargeter_image}{targeter\+Image} \&tim, Q\+String image\+Name, bool b\+R\+G\+B\+Swap)
+\item 
+void \hyperlink{class_main_window_ab87edc0e4b2fb3e4fb4df14a8872cbb4}{add\+C\+V\+Image} (cv\+::\+Mat im, Q\+String image\+Name=\char`\"{}\char`\"{}, bool b\+R\+G\+B\+Swap=true, image\+Type\+::image\+Type type=image\+Type\+::display, bool b\+Display=true)
+\item 
+void \hyperlink{class_main_window_a171b0591a4f66b4b16a33d4af5c35465}{update\+Image\+Type} (int ind, image\+Type\+::image\+Type type)
+\item 
+void \hyperlink{class_main_window_a8b60c57f82b0ac86df7c64692294a35e}{add\+Q\+Image\+Thumbnail} (Q\+Image \&qim, Q\+String image\+Name=\char`\"{}\char`\"{}, image\+Type\+::image\+Type type=image\+Type\+::display)
+\item 
+Q\+Image \hyperlink{class_main_window_a5e034c81127e2a14248eb81414e1e96e}{copy\+Image\+To\+Square\+Region} (Q\+Image im, Q\+Color col)
+\item 
+void \hyperlink{class_main_window_ae12f8f63791595567b6250f8bb002bda}{resize\+Event} (Q\+Resize\+Event $\ast$event)
+\item 
+std\+::vector$<$ int $>$ \hyperlink{class_main_window_a1e798fdae21c3294495ea7994df1887a}{get\+Checked\+Images} ()
+\item 
+\mbox{\Hypertarget{class_main_window_a2b4203abdf454313ed5bf11d38ae70f5}\label{class_main_window_a2b4203abdf454313ed5bf11d38ae70f5}} 
+void {\bfseries resize\+Image\+Preserve} (cv\+::\+Mat \&in, cv\+::\+Mat \&out, int new\+Width, int new\+Height)
+\item 
+\hyperlink{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}{Main\+Window} (Q\+Widget $\ast$parent=0)
+\item 
+\hyperlink{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}{$\sim$\+Main\+Window} ()
+\item 
+\mbox{\Hypertarget{class_main_window_a838a9764a5001c205b964fd5e89742d2}\label{class_main_window_a838a9764a5001c205b964fd5e89742d2}} 
+void {\bfseries Debug\+Print\+Mat} (cv\+::\+Mat mat)
+\item 
+void \hyperlink{class_main_window_a280d25148ac076ca817d411372584ae5}{show\+Message} (image\+Type\+::image\+Type, Q\+Message\+Box\+::\+Icon icn=Q\+Message\+Box\+::\+Warning)
+\item 
+void \hyperlink{class_main_window_aebde68c58d77b71d20fa6816b751356e}{show\+Message} (Q\+String message, Q\+Message\+Box\+::\+Icon icn=Q\+Message\+Box\+::\+Warning)
+\item 
+void \hyperlink{class_main_window_a89dfa31ef44692bb1d7307f0c35838c0}{update\+Thumbs} (int index=-\/1)
+\item 
+void \hyperlink{class_main_window_a5e130e8122dbab96f931a7ecc41086d3}{set\+Histogram\+Image} ()
+\item 
+void \hyperlink{class_main_window_aa137f4371bae807873da7862f4102521}{write\+Centroids} (\hyperlink{classtargeter_image}{targeter\+Image} \&tim, Q\+File \&xml\+File)
+\item 
+cv\+::\+Mat \hyperlink{class_main_window_a2734ce9308b5847a561f00b2fc9066aa}{get\+Histogram} ()
+\item 
+\hyperlink{classtargeter_image}{targeter\+Image} \hyperlink{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e}{get\+Connected\+Components} (cv\+::\+Mat \&im)
+\item 
+void \hyperlink{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2}{draw\+Centroids} (\hyperlink{classtargeter_image}{targeter\+Image} \&tim, cv\+::\+Mat \&drawimage)
+\item 
+cv\+::\+Mat \hyperlink{class_main_window_a8d87cd33d22ce614c9d7945264588e5f}{create\+Score\+Image} ()
+\item 
+\mbox{\Hypertarget{class_main_window_abf05d580e91f725777cdb6a5eb0bf08c}\label{class_main_window_abf05d580e91f725777cdb6a5eb0bf08c}} 
+virtual void {\bfseries paint\+Event} (Q\+Paint\+Event $\ast$event)
+\item 
+void \hyperlink{class_main_window_a92a40847027eaf2cf258c3a9f8da4c48}{create\+Mask\+Image} (cv\+::\+Mat im, \hyperlink{structdrawing_shape}{drawing\+Shape} shape)
+\item 
+void \hyperlink{class_main_window_ad0219fc878a0bc02403d00a16b7fc7ec}{delete\+Image} (int index, bool b\+Display=true)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Main Q\+T\+Main\+Window derived class for managing window display 
+
+Definition at line 25 of file mainwindow.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}\label{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}} 
+\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\index{Main\+Window@{Main\+Window}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{Main\+Window()}{MainWindow()}}
+{\footnotesize\ttfamily Main\+Window\+::\+Main\+Window (\begin{DoxyParamCaption}\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+class constructor\+: sets up slots, initializes variables, gets serialised settings values
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db}{Main\+Window\+::\+Main\+Window} Qualifier \+: Q\+Main\+Window(parent), ui(new Ui\+::\+Main\+Window) 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Widget} & $\ast$ parent \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 73 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8b244be8b7b7db1b08de2a2acb9409db_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}\label{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}} 
+\index{Main\+Window@{Main\+Window}!````~Main\+Window@{$\sim$\+Main\+Window}}
+\index{````~Main\+Window@{$\sim$\+Main\+Window}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{$\sim$\+Main\+Window()}{~MainWindow()}}
+{\footnotesize\ttfamily Main\+Window\+::$\sim$\+Main\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+class destructor, serializes settings values
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7}{Main\+Window\+::$\sim$\+Main\+Window} Qualifier \begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 983 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ae98d00a93bc118200eeef9f9bba1dba7_cgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_main_window_a0c29749703b7fc8a64a17d123816bfac}\label{class_main_window_a0c29749703b7fc8a64a17d123816bfac}} 
+\index{Main\+Window@{Main\+Window}!add\+C\+V\+Image@{add\+C\+V\+Image}}
+\index{add\+C\+V\+Image@{add\+C\+V\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{add\+C\+V\+Image()}{addCVImage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Main\+Window\+::add\+C\+V\+Image (\begin{DoxyParamCaption}\item[{\hyperlink{classtargeter_image}{targeter\+Image} \&}]{tim,  }\item[{Q\+String}]{image\+Name,  }\item[{bool}]{b\+R\+G\+B\+Swap }\end{DoxyParamCaption})}
+
+Creates Q\+Image for display from targeter image and displays image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a0c29749703b7fc8a64a17d123816bfac}{Main\+Window\+::add\+C\+V\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{classtargeter_image}{targeter\+Image}} & \& tim \\
+\hline
+{\em Q\+String} & image\+Name \\
+\hline
+{\em bool} & b\+R\+G\+B\+Swap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 597 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a0c29749703b7fc8a64a17d123816bfac_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a0c29749703b7fc8a64a17d123816bfac_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ab87edc0e4b2fb3e4fb4df14a8872cbb4}\label{class_main_window_ab87edc0e4b2fb3e4fb4df14a8872cbb4}} 
+\index{Main\+Window@{Main\+Window}!add\+C\+V\+Image@{add\+C\+V\+Image}}
+\index{add\+C\+V\+Image@{add\+C\+V\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{add\+C\+V\+Image()}{addCVImage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Main\+Window\+::add\+C\+V\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{Q\+String}]{image\+Name = {\ttfamily \char`\"{}\char`\"{}},  }\item[{bool}]{b\+R\+G\+B\+Swap = {\ttfamily true},  }\item[{image\+Type\+::image\+Type}]{type = {\ttfamily imageType\+:\+:display},  }\item[{bool}]{b\+Display = {\ttfamily true} }\end{DoxyParamCaption})}
+
+Creates targeter image and Q\+Image for display from Open\+CV image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a0c29749703b7fc8a64a17d123816bfac}{Main\+Window\+::add\+C\+V\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+{\em Q\+String} & image\+Name \\
+\hline
+{\em bool} & b\+R\+G\+B\+Swap \\
+\hline
+{\em \hyperlink{namespaceimage_type}{image\+Type}} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 568 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ab87edc0e4b2fb3e4fb4df14a8872cbb4_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a}\label{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a}} 
+\index{Main\+Window@{Main\+Window}!add\+Image@{add\+Image}}
+\index{add\+Image@{add\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{add\+Image()}{addImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::add\+Image (\begin{DoxyParamCaption}\item[{const Q\+String \&}]{file\+Name,  }\item[{image\+Type\+::image\+Type}]{type = {\ttfamily imageType\+:\+:display} }\end{DoxyParamCaption})}
+
+Given a file name loads and reads image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a}{Main\+Window\+::add\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & Q\+String \& file\+Name \\
+\hline
+{\em \hyperlink{namespaceimage_type}{image\+Type}} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 625 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ab4d1f49d192d3641e0da68b5a69d014a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a8b60c57f82b0ac86df7c64692294a35e}\label{class_main_window_a8b60c57f82b0ac86df7c64692294a35e}} 
+\index{Main\+Window@{Main\+Window}!add\+Q\+Image\+Thumbnail@{add\+Q\+Image\+Thumbnail}}
+\index{add\+Q\+Image\+Thumbnail@{add\+Q\+Image\+Thumbnail}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{add\+Q\+Image\+Thumbnail()}{addQImageThumbnail()}}
+{\footnotesize\ttfamily void Main\+Window\+::add\+Q\+Image\+Thumbnail (\begin{DoxyParamCaption}\item[{Q\+Image \&}]{qim,  }\item[{Q\+String}]{image\+Name = {\ttfamily \char`\"{}\char`\"{}},  }\item[{image\+Type\+::image\+Type}]{type = {\ttfamily imageType\+:\+:display} }\end{DoxyParamCaption})}
+
+adds Q\+Image to thumbnail list
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name Main\+Window\+::add\+Q\+Image Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Image} & \& qim \\
+\hline
+{\em Q\+String} & image\+Name \\
+\hline
+{\em \hyperlink{namespaceimage_type}{image\+Type}} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 739 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8b60c57f82b0ac86df7c64692294a35e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8b60c57f82b0ac86df7c64692294a35e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a5e034c81127e2a14248eb81414e1e96e}\label{class_main_window_a5e034c81127e2a14248eb81414e1e96e}} 
+\index{Main\+Window@{Main\+Window}!copy\+Image\+To\+Square\+Region@{copy\+Image\+To\+Square\+Region}}
+\index{copy\+Image\+To\+Square\+Region@{copy\+Image\+To\+Square\+Region}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{copy\+Image\+To\+Square\+Region()}{copyImageToSquareRegion()}}
+{\footnotesize\ttfamily Q\+Image Main\+Window\+::copy\+Image\+To\+Square\+Region (\begin{DoxyParamCaption}\item[{Q\+Image}]{qim,  }\item[{Q\+Color}]{col }\end{DoxyParamCaption})}
+
+Makes sub image from rectangular region of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a5e034c81127e2a14248eb81414e1e96e}{Main\+Window\+::copy\+Image\+To\+Square\+Region} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Image} & qim \\
+\hline
+{\em Q\+Color} & col \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Q\+T\+\_\+\+N\+A\+M\+E\+S\+P\+A\+C\+E\+::\+Q\+Image Access public 
+\end{DoxyReturn}
+
+
+Definition at line 656 of file mainwindow.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a5e034c81127e2a14248eb81414e1e96e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a92a40847027eaf2cf258c3a9f8da4c48}\label{class_main_window_a92a40847027eaf2cf258c3a9f8da4c48}} 
+\index{Main\+Window@{Main\+Window}!create\+Mask\+Image@{create\+Mask\+Image}}
+\index{create\+Mask\+Image@{create\+Mask\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{create\+Mask\+Image()}{createMaskImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::create\+Mask\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{\hyperlink{structdrawing_shape}{drawing\+Shape}}]{shape }\end{DoxyParamCaption})}
+
+Gets binary mask image and sub image from region from drawing object shape
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name Main\+Window\+::mask\+Image Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Mat} & im \\
+\hline
+{\em \hyperlink{structdrawing_shape}{drawing\+Shape}} & shape \\
+\hline
+{\em \hyperlink{classtargeter_image}{targeter\+Image}} & \& tim \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1253 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a92a40847027eaf2cf258c3a9f8da4c48_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a92a40847027eaf2cf258c3a9f8da4c48_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a8d87cd33d22ce614c9d7945264588e5f}\label{class_main_window_a8d87cd33d22ce614c9d7945264588e5f}} 
+\index{Main\+Window@{Main\+Window}!create\+Score\+Image@{create\+Score\+Image}}
+\index{create\+Score\+Image@{create\+Score\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{create\+Score\+Image()}{createScoreImage()}}
+{\footnotesize\ttfamily cv\+::\+Mat Main\+Window\+::create\+Score\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Slot to score image of possible targets found in the detection image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a8d87cd33d22ce614c9d7945264588e5f}{Main\+Window\+::create\+Score\+Image} Qualifier \begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public 
+\end{DoxyReturn}
+
+
+Definition at line 2043 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8d87cd33d22ce614c9d7945264588e5f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8d87cd33d22ce614c9d7945264588e5f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ad0219fc878a0bc02403d00a16b7fc7ec}\label{class_main_window_ad0219fc878a0bc02403d00a16b7fc7ec}} 
+\index{Main\+Window@{Main\+Window}!delete\+Image@{delete\+Image}}
+\index{delete\+Image@{delete\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{delete\+Image()}{deleteImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::delete\+Image (\begin{DoxyParamCaption}\item[{int}]{index,  }\item[{bool}]{b\+Display = {\ttfamily true} }\end{DoxyParamCaption})}
+
+removes image at array index
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_ad0219fc878a0bc02403d00a16b7fc7ec}{Main\+Window\+::delete\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1610 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ad0219fc878a0bc02403d00a16b7fc7ec_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43}\label{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43}} 
+\index{Main\+Window@{Main\+Window}!Display\+Image@{Display\+Image}}
+\index{Display\+Image@{Display\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{Display\+Image}{DisplayImage}}
+{\footnotesize\ttfamily void Main\+Window\+::\+Display\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [slot]}}
+
+Displays image in widget
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43}{Main\+Window\+::\+Display\+Image} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1085 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a8e20e1254b179ca9ec054ec908d9cc43_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2}\label{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2}} 
+\index{Main\+Window@{Main\+Window}!draw\+Centroids@{draw\+Centroids}}
+\index{draw\+Centroids@{draw\+Centroids}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{draw\+Centroids()}{drawCentroids()}}
+{\footnotesize\ttfamily void Main\+Window\+::draw\+Centroids (\begin{DoxyParamCaption}\item[{\hyperlink{classtargeter_image}{targeter\+Image} \&}]{tim,  }\item[{cv\+::\+Mat \&}]{drawimage }\end{DoxyParamCaption})}
+
+Draws crosses at centroid positions of connected component regions on supplied cv\+::\+Mat image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2}{Main\+Window\+::draw\+Centroids} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{classtargeter_image}{targeter\+Image}} & \& tim \\
+\hline
+{\em cv\+::\+Mat} & \& drawimage \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 2185 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ad68b6789cc86ef20cd7cedd6de8d4ed2_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a1e798fdae21c3294495ea7994df1887a}\label{class_main_window_a1e798fdae21c3294495ea7994df1887a}} 
+\index{Main\+Window@{Main\+Window}!get\+Checked\+Images@{get\+Checked\+Images}}
+\index{get\+Checked\+Images@{get\+Checked\+Images}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{get\+Checked\+Images()}{getCheckedImages()}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ Main\+Window\+::get\+Checked\+Images (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Get vector of checked images in list
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a1e798fdae21c3294495ea7994df1887a}{Main\+Window\+::get\+Checked\+Images} Qualifier \begin{DoxyReturn}{Returns}
+Q\+Vector$<$int$>$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 952 of file mainwindow.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a1e798fdae21c3294495ea7994df1887a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e}\label{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e}} 
+\index{Main\+Window@{Main\+Window}!get\+Connected\+Components@{get\+Connected\+Components}}
+\index{get\+Connected\+Components@{get\+Connected\+Components}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{get\+Connected\+Components()}{getConnectedComponents()}}
+{\footnotesize\ttfamily \hyperlink{classtargeter_image}{targeter\+Image} Main\+Window\+::get\+Connected\+Components (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{im }\end{DoxyParamCaption})}
+
+Sets connected component image structure from binary image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e}{Main\+Window\+::get\+Connected\+Components} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & \& im \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classtargeter_image}{targeter\+Image}\& Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1929 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a49cfabc6ef4845c5a9b5c9a92c9d4e2e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a2734ce9308b5847a561f00b2fc9066aa}\label{class_main_window_a2734ce9308b5847a561f00b2fc9066aa}} 
+\index{Main\+Window@{Main\+Window}!get\+Histogram@{get\+Histogram}}
+\index{get\+Histogram@{get\+Histogram}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{get\+Histogram()}{getHistogram()}}
+{\footnotesize\ttfamily cv\+::\+Mat Main\+Window\+::get\+Histogram (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets image histogram
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a2734ce9308b5847a561f00b2fc9066aa}{Main\+Window\+::get\+Histogram} Qualifier \begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access public 
+\end{DoxyReturn}
+
+
+Definition at line 522 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a2734ce9308b5847a561f00b2fc9066aa_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a2734ce9308b5847a561f00b2fc9066aa_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5}\label{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5}} 
+\index{Main\+Window@{Main\+Window}!get\+Valid\+Image\+Index@{get\+Valid\+Image\+Index}}
+\index{get\+Valid\+Image\+Index@{get\+Valid\+Image\+Index}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{get\+Valid\+Image\+Index()}{getValidImageIndex()}}
+{\footnotesize\ttfamily int Main\+Window\+::get\+Valid\+Image\+Index (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets valid image array index, if current image index is invalid then function returns last valid index
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5}{Main\+Window\+::get\+Valid\+Image\+Index} Qualifier \begin{DoxyReturn}{Returns}
+int Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1047 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_acc35ff9a0c04d62297e7fd219fa869e5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1}\label{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1}} 
+\index{Main\+Window@{Main\+Window}!load\+File@{load\+File}}
+\index{load\+File@{load\+File}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{load\+File()}{loadFile()}}
+{\footnotesize\ttfamily void Main\+Window\+::load\+File (\begin{DoxyParamCaption}\item[{const Q\+String \&}]{file\+Name }\end{DoxyParamCaption})}
+
+loads image file
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1}{Main\+Window\+::load\+File} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & Q\+String \& file\+Name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 396 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa08469ed5c8396e60fa44bae6530bcf1_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_acea9cebdcf70bf45107baa0789e732bf}\label{class_main_window_acea9cebdcf70bf45107baa0789e732bf}} 
+\index{Main\+Window@{Main\+Window}!Open\+Image@{Open\+Image}}
+\index{Open\+Image@{Open\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{Open\+Image()}{OpenImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::\+Open\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Handles Opening of image from file open dialog
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_acea9cebdcf70bf45107baa0789e732bf}{Main\+Window\+::\+Open\+Image} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 805 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_acea9cebdcf70bf45107baa0789e732bf_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_acea9cebdcf70bf45107baa0789e732bf_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_ae12f8f63791595567b6250f8bb002bda}\label{class_main_window_ae12f8f63791595567b6250f8bb002bda}} 
+\index{Main\+Window@{Main\+Window}!resize\+Event@{resize\+Event}}
+\index{resize\+Event@{resize\+Event}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{resize\+Event()}{resizeEvent()}}
+{\footnotesize\ttfamily void Main\+Window\+::resize\+Event (\begin{DoxyParamCaption}\item[{Q\+Resize\+Event $\ast$}]{event }\end{DoxyParamCaption})}
+
+manage image redrawing when window resized
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_ae12f8f63791595567b6250f8bb002bda}{Main\+Window\+::resize\+Event} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Resize\+Event} & $\ast$ event \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1022 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_ae12f8f63791595567b6250f8bb002bda_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20}\label{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20}} 
+\index{Main\+Window@{Main\+Window}!Save\+Image@{Save\+Image}}
+\index{Save\+Image@{Save\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{Save\+Image()}{SaveImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::\+Save\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Saves current image to file
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20}{Main\+Window\+::\+Save\+Image} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 340 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa816921e6ce14f558ada5c73c8a5ef20_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a5e130e8122dbab96f931a7ecc41086d3}\label{class_main_window_a5e130e8122dbab96f931a7ecc41086d3}} 
+\index{Main\+Window@{Main\+Window}!set\+Histogram\+Image@{set\+Histogram\+Image}}
+\index{set\+Histogram\+Image@{set\+Histogram\+Image}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{set\+Histogram\+Image()}{setHistogramImage()}}
+{\footnotesize\ttfamily void Main\+Window\+::set\+Histogram\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Sets image histogram in settings dialog
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a5e130e8122dbab96f931a7ecc41086d3}{Main\+Window\+::set\+Histogram\+Image} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 496 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a5e130e8122dbab96f931a7ecc41086d3_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a5e130e8122dbab96f931a7ecc41086d3_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a280d25148ac076ca817d411372584ae5}\label{class_main_window_a280d25148ac076ca817d411372584ae5}} 
+\index{Main\+Window@{Main\+Window}!show\+Message@{show\+Message}}
+\index{show\+Message@{show\+Message}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Message()}{showMessage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Message (\begin{DoxyParamCaption}\item[{image\+Type\+::image\+Type}]{type,  }\item[{Q\+Message\+Box\+::\+Icon}]{icn = {\ttfamily QMessageBox\+:\+:Warning} }\end{DoxyParamCaption})}
+
+Displays message box depending on image type
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a280d25148ac076ca817d411372584ae5}{Main\+Window\+::show\+Message} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+{\em Q\+Message\+Box\+::\+Icon} & icn \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 437 of file mainwindow.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a280d25148ac076ca817d411372584ae5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_aebde68c58d77b71d20fa6816b751356e}\label{class_main_window_aebde68c58d77b71d20fa6816b751356e}} 
+\index{Main\+Window@{Main\+Window}!show\+Message@{show\+Message}}
+\index{show\+Message@{show\+Message}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{show\+Message()}{showMessage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Main\+Window\+::show\+Message (\begin{DoxyParamCaption}\item[{Q\+String}]{message,  }\item[{Q\+Message\+Box\+::\+Icon}]{icn = {\ttfamily QMessageBox\+:\+:Warning} }\end{DoxyParamCaption})}
+
+Displays message box
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a280d25148ac076ca817d411372584ae5}{Main\+Window\+::show\+Message} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+String} & message \\
+\hline
+{\em Q\+Message\+Box\+::\+Icon} & icn \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 473 of file mainwindow.\+cpp.
+
+\mbox{\Hypertarget{class_main_window_a171b0591a4f66b4b16a33d4af5c35465}\label{class_main_window_a171b0591a4f66b4b16a33d4af5c35465}} 
+\index{Main\+Window@{Main\+Window}!update\+Image\+Type@{update\+Image\+Type}}
+\index{update\+Image\+Type@{update\+Image\+Type}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{update\+Image\+Type()}{updateImageType()}}
+{\footnotesize\ttfamily void Main\+Window\+::update\+Image\+Type (\begin{DoxyParamCaption}\item[{int}]{ind,  }\item[{image\+Type\+::image\+Type}]{type }\end{DoxyParamCaption})}
+
+sets type of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/14
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a171b0591a4f66b4b16a33d4af5c35465}{Main\+Window\+::update\+Image\+Type} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & ind \\
+\hline
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 1545 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a171b0591a4f66b4b16a33d4af5c35465_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a171b0591a4f66b4b16a33d4af5c35465_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_a89dfa31ef44692bb1d7307f0c35838c0}\label{class_main_window_a89dfa31ef44692bb1d7307f0c35838c0}} 
+\index{Main\+Window@{Main\+Window}!update\+Thumbs@{update\+Thumbs}}
+\index{update\+Thumbs@{update\+Thumbs}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{update\+Thumbs()}{updateThumbs()}}
+{\footnotesize\ttfamily void Main\+Window\+::update\+Thumbs (\begin{DoxyParamCaption}\item[{int}]{index = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+update labels of thumbnail images
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_a89dfa31ef44692bb1d7307f0c35838c0}{Main\+Window\+::update\+Thumbs} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 703 of file mainwindow.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_a89dfa31ef44692bb1d7307f0c35838c0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_main_window_aa137f4371bae807873da7862f4102521}\label{class_main_window_aa137f4371bae807873da7862f4102521}} 
+\index{Main\+Window@{Main\+Window}!write\+Centroids@{write\+Centroids}}
+\index{write\+Centroids@{write\+Centroids}!Main\+Window@{Main\+Window}}
+\subsubsection{\texorpdfstring{write\+Centroids()}{writeCentroids()}}
+{\footnotesize\ttfamily void Main\+Window\+::write\+Centroids (\begin{DoxyParamCaption}\item[{\hyperlink{classtargeter_image}{targeter\+Image} \&}]{tim,  }\item[{Q\+File \&}]{xml\+File }\end{DoxyParamCaption})}
+
+Writes X\+ML of target locations in image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{class_main_window_aa137f4371bae807873da7862f4102521}{Main\+Window\+::write\+Centroids} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{classtargeter_image}{targeter\+Image}} & \& tim \\
+\hline
+{\em Q\+File} & \& xml\+File \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 2221 of file mainwindow.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa137f4371bae807873da7862f4102521_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_main_window_aa137f4371bae807873da7862f4102521_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/mainwindow.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/mainwindow.\+cpp\end{DoxyCompactItemize}

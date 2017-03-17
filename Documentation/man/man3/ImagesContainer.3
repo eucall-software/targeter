@@ -1,0 +1,47 @@
+.TH "ImagesContainer" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ImagesContainer
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <imagesContainer\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBgetNumImages\fP ()"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP * \fBgetImageAtPtr\fP (int i)"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP & \fBgetImageAt\fP (int i)"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP * \fBgetImageAtOfType\fP (int i, imageType::imageType type)"
+.br
+.ti -1c
+.RI "std::vector< \fBtargeterImage\fP > \fBgetImages\fP ()"
+.br
+.ti -1c
+.RI "void \fBremoveImage\fP (int ind)"
+.br
+.ti -1c
+.RI "void \fBaddImage\fP (\fBtargeterImage\fP &im)"
+.br
+.ti -1c
+.RI "void \fBfreeImages\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class to store all images 
+.PP
+Definition at line 9 of file imagesContainer\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

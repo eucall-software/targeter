@@ -1,0 +1,6 @@
+<map id="FocusStack::processImageStack" name="FocusStack::processImageStack">
+<area shape="rect" id="node2" href="$class_haar.html#ad85443bf4bbe9d65be10acbd0d89093b" title="Haar::LaplacianPyramid" alt="" coords="257,5,417,32"/>
+<area shape="rect" id="node3" href="$class_haar.html#afa323789e73c94995eba32e09d9aa026" title="Haar::HaarEnergy" alt="" coords="275,56,400,83"/>
+<area shape="rect" id="node4" href="$class_image_processing.html#ae1460831474adb16ed769cd6956ddbff" title="ImageProcessing::modalFilter" alt="" coords="240,107,435,133"/>
+<area shape="rect" id="node5" href="$class_focus_stack.html#ac55d6cde57441ffd9b023fc936529802" title="FocusStack::mergeImageStack" alt="" coords="235,157,440,184"/>
+</map>

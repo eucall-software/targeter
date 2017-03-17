@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>822</width>
+    <height>682</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Targeter</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/24/targeter.png</normaloff>:/icons/24/targeter.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>20</number>
+      </property>
+      <item>
+       <widget class="PaintQLabel" name="display_image">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>254</width>
+          <height>254</height>
+         </size>
+        </property>
+        <property name="toolTipDuration">
+         <number>1</number>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>765</width>
+           <height>87</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QListWidget" name="ImageThumbList">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAsNeeded</enum>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="autoScroll">
+             <bool>true</bool>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>false</bool>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="isWrapping" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="resizeMode">
+             <enum>QListView::Adjust</enum>
+            </property>
+            <property name="viewMode">
+             <enum>QListView::IconMode</enum>
+            </property>
+            <property name="modelColumn">
+             <number>0</number>
+            </property>
+            <property name="uniformItemSizes">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>822</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+    <addaction name="separator"/>
+    <addaction name="actionGrab_Image_From_Camera"/>
+    <addaction name="actionProcessFocusStack"/>
+    <addaction name="action_Exit"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuImages">
+    <property name="title">
+     <string>Images</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <widget class="QMenu" name="menuWith_Selected">
+     <property name="title">
+      <string>With Selected ...</string>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>true</bool>
+     </property>
+     <addaction name="actionSet_as_Target"/>
+     <addaction name="actionSet_as_find_targets_image"/>
+    </widget>
+    <widget class="QMenu" name="menuMask_target_region">
+     <property name="title">
+      <string>Mask target region</string>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>true</bool>
+     </property>
+     <addaction name="actionDraw_Circle_Region"/>
+     <addaction name="actionDraw_Rectangular_Region"/>
+     <addaction name="actionDraw_Polygon"/>
+     <addaction name="actionGet_Target_image_region"/>
+    </widget>
+    <widget class="QMenu" name="menuType_Here">
+     <property name="title">
+      <string>Type Here</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuImage_Zoom_Panning">
+     <property name="title">
+      <string>Image Zoom/Panning</string>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>true</bool>
+     </property>
+     <addaction name="actionZoom_In"/>
+     <addaction name="actionZoom_Out"/>
+     <addaction name="action_Move_Image"/>
+    </widget>
+    <addaction name="actionSelect_All"/>
+    <addaction name="actionDeselect_All"/>
+    <addaction name="separator"/>
+    <addaction name="menuImage_Zoom_Panning"/>
+    <addaction name="separator"/>
+    <addaction name="menuWith_Selected"/>
+    <addaction name="menuMask_target_region"/>
+    <addaction name="separator"/>
+    <addaction name="actionDeleteObject"/>
+    <addaction name="menuType_Here"/>
+   </widget>
+   <widget class="QMenu" name="menuDetection">
+    <property name="title">
+     <string>Detection</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionScoreImage"/>
+    <addaction name="actionFind_targets"/>
+    <addaction name="actionSave_Target_Positions"/>
+   </widget>
+   <widget class="QMenu" name="menuCamera">
+    <property name="title">
+     <string>Camera</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionGrab_Image_From_Camera"/>
+   </widget>
+   <widget class="QMenu" name="menuImage_Processing">
+    <property name="title">
+     <string>Image Processing</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionThresholdImage"/>
+    <addaction name="actionMergeImages"/>
+    <addaction name="actionConnected_Components"/>
+    <addaction name="actionFilter_Binary_Objects"/>
+    <addaction name="actionFind_Centers"/>
+    <addaction name="separator"/>
+    <addaction name="actionInvert"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuAlignment">
+    <property name="title">
+     <string>Alignment</string>
+    </property>
+    <addaction name="actionReference_fuducial_marks"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menuImages"/>
+   <addaction name="menuCamera"/>
+   <addaction name="menuAlignment"/>
+   <addaction name="menuImage_Processing"/>
+   <addaction name="menuDetection"/>
+   <addaction name="menuSettings"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_Open"/>
+   <addaction name="action_Save"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="toolTip">
+    <string>drawing tools</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionGrab_Image_From_Camera"/>
+   <addaction name="actionReference_fuducial_marks"/>
+   <addaction name="actionDeleteObject"/>
+   <addaction name="actionSettings"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionDraw_Rectangular_Region"/>
+   <addaction name="actionDraw_Circle_Region"/>
+   <addaction name="actionDraw_Polygon"/>
+   <addaction name="separator"/>
+   <addaction name="actionGet_Target_image_region"/>
+   <addaction name="actionScoreImage"/>
+   <addaction name="actionFind_targets"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_3">
+   <property name="windowTitle">
+    <string>toolBar_3</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionZoom_Out"/>
+   <addaction name="actionZoom_In"/>
+   <addaction name="action_Move_Image"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_4">
+   <property name="windowTitle">
+    <string>toolBar_4</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionProcessFocusStack"/>
+   <addaction name="separator"/>
+   <addaction name="actionThresholdImage"/>
+   <addaction name="actionMergeImages"/>
+   <addaction name="actionInvert"/>
+   <addaction name="actionConnected_Components"/>
+   <addaction name="actionFind_Centers"/>
+   <addaction name="separator"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionFile">
+   <property name="text">
+    <string>File</string>
+   </property>
+  </action>
+  <action name="action_File">
+   <property name="text">
+    <string>&amp;File</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+  </action>
+  <action name="action_Open">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionProcessFocusStack">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/focus.png</normaloff>:/icons/24/focus.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;FocusStack</string>
+   </property>
+   <property name="iconText">
+    <string>FocusStack</string>
+   </property>
+   <property name="toolTip">
+    <string>Combine Focus Stack Images</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionSelect_All">
+   <property name="text">
+    <string>Select All</string>
+   </property>
+  </action>
+  <action name="actionDeselect_All">
+   <property name="text">
+    <string>Deselect All</string>
+   </property>
+   <property name="iconText">
+    <string>Deselect All</string>
+   </property>
+  </action>
+  <action name="actionGrab_Image_From_Camera">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/camera.png</normaloff>:/icons/24/camera.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Grab Image From Camera</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/minus.png</normaloff>:/icons/24/minus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom &amp;Out</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom out of Image</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/plus.png</normaloff>:/icons/24/plus.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom &amp;In</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom in closer to image </string>
+   </property>
+  </action>
+  <action name="actionDraw_Polygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/polygon.png</normaloff>:/icons/24/polygon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw &amp;Polygon Region</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw polygon to select region</string>
+   </property>
+  </action>
+  <action name="actionDraw_Circle_Region">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/circ.png</normaloff>:/icons/24/circ.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw &amp;Circle Region</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw circle to select Region</string>
+   </property>
+  </action>
+  <action name="actionDraw_Rectangular_Region">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/rect.png</normaloff>:/icons/24/rect.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw &amp;Rectangular Region</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw rectangle to select region</string>
+   </property>
+  </action>
+  <action name="action_Move_Image">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/grabhand.ico</normaloff>:/icons/24/grabhand.ico</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Move Image</string>
+   </property>
+   <property name="toolTip">
+    <string>Move image or selected drawing object </string>
+   </property>
+  </action>
+  <action name="actionGet_Target_image_region">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/polygonmask.png</normaloff>:/icons/24/polygonmask.png</iconset>
+   </property>
+   <property name="text">
+    <string>Get &amp;Target image region</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create&lt;span style=&quot; font-weight:600;&quot;&gt; target image&lt;/span&gt; from drawn boundary region and polygon/circular shape&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionSet_as_Target">
+   <property name="text">
+    <string>Set/Unset as 'good target' image</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This will set/unset the selected image as a suitable &lt;span style=&quot; font-weight:600;&quot;&gt;target image&lt;/span&gt; to use for image analysis &lt;span style=&quot; font-weight:600;&quot;&gt;training&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionSet_as_find_targets_image">
+   <property name="text">
+    <string>Set/unset as 'find targets' image</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This will set/unset the checked image as the &lt;span style=&quot; font-weight:600;&quot;&gt;test image&lt;/span&gt; in which image analysis will try to &lt;span style=&quot; font-weight:600;&quot;&gt;find&lt;/span&gt; targets&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionFind_targets">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/targeter.png</normaloff>:/icons/24/targeter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Detect Targets</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By clicking this button image analysis algorithms trained on the example target images and&lt;span style=&quot; font-weight:600;&quot;&gt; best target regions within the 'test' image will be detected&lt;/span&gt;. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionDeleteObject">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/trashcan.png</normaloff>:/icons/24/trashcan.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Delete object</string>
+   </property>
+   <property name="toolTip">
+    <string>Deletes current drawing object or selected image</string>
+   </property>
+  </action>
+  <action name="actionTarget_detection_settings">
+   <property name="text">
+    <string>target detection settings</string>
+   </property>
+   <property name="toolTip">
+    <string>manage how targets are detected</string>
+   </property>
+  </action>
+  <action name="actionDeleteImage">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/trashcan.png</normaloff>:/icons/24/trashcan.png</iconset>
+   </property>
+   <property name="text">
+    <string>DeleteImage</string>
+   </property>
+   <property name="toolTip">
+    <string>Deletes Image</string>
+   </property>
+  </action>
+  <action name="actionThresholdImage">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/threshold.png</normaloff>:/icons/24/threshold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Threshold Image</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By clicking this button the current image will be &amp;lt;b&amp;gt;thresholded&amp;lt;/b&amp;gt; to a black/white image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionMergeImages">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/mergeimage.png</normaloff>:/icons/24/mergeimage.png</iconset>
+   </property>
+   <property name="text">
+    <string>Merge Images</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Combines a binary mask image with another image by multiplication. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/settings.png</normaloff>:/icons/24/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Targeter Settings</string>
+   </property>
+  </action>
+  <action name="actionReference_fuducial_marks">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/marks.png</normaloff>:/icons/24/marks.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reference fuducial marks</string>
+   </property>
+  </action>
+  <action name="actionFind_Centers">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/findcenters.png</normaloff>:/icons/24/findcenters.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find Centers</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Find center of regions in a connected component image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionInvert">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/invert.png</normaloff>:/icons/24/invert.png</iconset>
+   </property>
+   <property name="text">
+    <string>Invert Colours</string>
+   </property>
+  </action>
+  <action name="actionConnected_Components">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/connectedcomponents.png</normaloff>:/icons/24/connectedcomponents.png</iconset>
+   </property>
+   <property name="text">
+    <string>Connected Components</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Finds connected components regions in a binary image. Non touching white regions are labelled with a region number. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionFilter_Binary_Objects">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/filter.png</normaloff>:/icons/24/filter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Filter Binary Objects</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Processes conneceted component image to find only those regions that meet size or shape criteria&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionSave_Target_Positions">
+   <property name="text">
+    <string>Save Target Positions</string>
+   </property>
+  </action>
+  <action name="actionScoreImage">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/scoreimage.png</normaloff>:/icons/24/scoreimage.png</iconset>
+   </property>
+   <property name="text">
+    <string>ScoreImage</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By clicking this button a 'good targets' score image is created, brighter pixels show best 'good target' positions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PaintQLabel</class>
+   <extends>QLabel</extends>
+   <header>paintqlabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

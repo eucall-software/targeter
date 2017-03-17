@@ -1,0 +1,7 @@
+<map id="MainWindow::setHistogramImage" name="MainWindow::setHistogramImage">
+<area shape="rect" id="node2" href="$class_main_window.html#a2734ce9308b5847a561f00b2fc9066aa" title="MainWindow::getHistogram" alt="" coords="245,35,426,61"/>
+<area shape="rect" id="node5" href="$class_helper_functions.html#a905e9fa464584f31d1537a84d8d348ae" title="HelperFunctions::makeQImage" alt="" coords="235,85,436,112"/>
+<area shape="rect" id="node6" href="$class_settings_dialog.html#a3a730a1d975d4c349fe2a4ed01267735" title="SettingsDialog::setHistogram\lImage" alt="" coords="240,137,431,178"/>
+<area shape="rect" id="node3" href="$classtargeter_image.html#a2a66aadfba8fe64dfde9725bde71808c" title="targeterImage::getImage" alt="" coords="485,5,648,32"/>
+<area shape="rect" id="node4" href="$class_helper_functions.html#a5c5283b1bdbfff78c4381a93161effe5" title="HelperFunctions::display\lHistogram" alt="" coords="484,57,649,98"/>
+</map>

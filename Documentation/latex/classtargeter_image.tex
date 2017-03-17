@@ -1,0 +1,605 @@
+\hypertarget{classtargeter_image}{}\section{targeter\+Image Class Reference}
+\label{classtargeter_image}\index{targeter\+Image@{targeter\+Image}}
+
+
+{\ttfamily \#include $<$targeterimage.\+h$>$}
+
+
+
+Collaboration diagram for targeter\+Image\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=208pt]{classtargeter_image__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}{targeter\+Image} (\hyperlink{class_images_container}{Images\+Container} $\ast$p\+Win)
+\item 
+\hyperlink{classtargeter_image_a5fadb46e9235423e05b42e301b33c83f}{targeter\+Image} ()
+\item 
+\hyperlink{classtargeter_image_a885fd05e144dff445373442278e96c1b}{$\sim$targeter\+Image} ()
+\item 
+void \hyperlink{classtargeter_image_a3ebd45ebb6d80dbb175906efbfd5e479}{add\+Image\+From\+File} (std\+::string filename, image\+Type\+::image\+Type type=image\+Type\+::display)
+\item 
+void \hyperlink{classtargeter_image_a71d81d6bc145df61da64989c14444d76}{add\+Image\+Ex} (cv\+::\+Mat im, image\+Type\+::image\+Type type, std\+::string descriptive\+Name=\char`\"{}\char`\"{}, std\+::string tooltip=\char`\"{}\char`\"{}, std\+::string filename=\char`\"{}\char`\"{})
+\item 
+void \hyperlink{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d}{add\+Image} (cv\+::\+Mat im)
+\item 
+cv\+::\+Mat \& \hyperlink{classtargeter_image_a2a66aadfba8fe64dfde9725bde71808c}{get\+Image} ()
+\item 
+void \hyperlink{classtargeter_image_affcf9e83dc25eb200a8919518cf40155}{create\+Q\+T\+Image} (bool b\+R\+G\+B\+Swap=true)
+\item 
+Q\+Image \hyperlink{classtargeter_image_a9c5c783a82afecd73a0b877d3bfdfc01}{get\+Q\+T\+Image} ()
+\item 
+std\+::string \hyperlink{classtargeter_image_a47b6c3edc2c1854523e6f14504a64883}{set\+Default\+Name} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a170820c93d910509215d3a47a91aa92e}\label{classtargeter_image_a170820c93d910509215d3a47a91aa92e}} 
+void {\bfseries set\+Image\+Type} (image\+Type\+::image\+Type type)
+\item 
+\mbox{\Hypertarget{classtargeter_image_a53176820ff167a5d0cdcb660a767d15b}\label{classtargeter_image_a53176820ff167a5d0cdcb660a767d15b}} 
+image\+Type\+::image\+Type {\bfseries get\+Image\+Function} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a2a6e7ae1dad077db2a3e25e936976ca1}\label{classtargeter_image_a2a6e7ae1dad077db2a3e25e936976ca1}} 
+std\+::vector$<$ int $>$ \& {\bfseries get\+Derived\+Image\+Array} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a9a1a800e49ba929db6b9611f28631d76}\label{classtargeter_image_a9a1a800e49ba929db6b9611f28631d76}} 
+void {\bfseries add\+Derived\+Index} (int ind)
+\item 
+\mbox{\Hypertarget{classtargeter_image_a4e30051ac89f5982d8f363df9dbf76da}\label{classtargeter_image_a4e30051ac89f5982d8f363df9dbf76da}} 
+void {\bfseries add\+Derived\+Indexes} (const std\+::vector$<$ int $>$ \&to\+\_\+add)
+\item 
+\hyperlink{classtargeter_image}{targeter\+Image} \& \hyperlink{classtargeter_image_a92b7c1e3195bc50b112fc67f161b9723}{get\+Image\+Of\+Type} (image\+Type\+::image\+Type image\+Function)
+\item 
+void \hyperlink{classtargeter_image_ac18fa800316f0d23610318ccf1b35bfc}{remove\+Derived\+Index} (int ind)
+\item 
+void \hyperlink{classtargeter_image_a578e6fabf498c693b7183437ea4dd9e2}{remove\+Derived\+Indexes} (const std\+::vector$<$ int $>$ \&to\+\_\+remove)
+\item 
+\mbox{\Hypertarget{classtargeter_image_ad718efc259fbb42c457a41d5148e2d0b}\label{classtargeter_image_ad718efc259fbb42c457a41d5148e2d0b}} 
+std\+::string {\bfseries get\+Name} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a88d07fb21e05b2883f9e3672fce0528f}\label{classtargeter_image_a88d07fb21e05b2883f9e3672fce0528f}} 
+void {\bfseries set\+Name} (std\+::string s)
+\item 
+int $\ast$ \hyperlink{classtargeter_image_a7e046315df5fec0ac687a4a6beee1a63}{get1\+D\+Image} (image\+Type\+::image\+Type type)
+\item 
+void \hyperlink{classtargeter_image_abcdf64a3dcbb3fc4c9d4a79e9fd658fc}{set1\+D\+Image} (int $\ast$im, image\+Type\+::image\+Type type=image\+Type\+::display)
+\item 
+void \hyperlink{classtargeter_image_a45f6264d5e1ce760c376b1348137d970}{free1\+D\+Images} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_ae035ad0f4ad898343955b501d05c75d2}\label{classtargeter_image_ae035ad0f4ad898343955b501d05c75d2}} 
+int {\bfseries get\+Image\+Rows} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_aa206240f0c2882288a6370b631bc2ce7}\label{classtargeter_image_aa206240f0c2882288a6370b631bc2ce7}} 
+int {\bfseries get\+Image\+Cols} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a643b66c947c2edb6f38f76291eb89469}\label{classtargeter_image_a643b66c947c2edb6f38f76291eb89469}} 
+cv\+::\+Size {\bfseries get\+Image\+Size} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_aba57839705644e736af8e7eb5bbc0a18}\label{classtargeter_image_aba57839705644e736af8e7eb5bbc0a18}} 
+int {\bfseries get\+Image\+Type} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_ac84ad19a329b9c13ffaedfef952872c2}\label{classtargeter_image_ac84ad19a329b9c13ffaedfef952872c2}} 
+cv\+::\+Mat \& {\bfseries get\+Labels\+Image} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_a9d928692de5b2650ac7494100dddf901}\label{classtargeter_image_a9d928692de5b2650ac7494100dddf901}} 
+cv\+::\+Mat \& {\bfseries get\+Stats\+Image} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_aaa3de0344745c9b3739cf5ddb30d1b89}\label{classtargeter_image_aaa3de0344745c9b3739cf5ddb30d1b89}} 
+cv\+::\+Mat \& {\bfseries get\+Centroids\+Image} ()
+\item 
+\mbox{\Hypertarget{classtargeter_image_ada04756b972b05877424afbb952af17c}\label{classtargeter_image_ada04756b972b05877424afbb952af17c}} 
+void {\bfseries set\+Labels\+Image} (cv\+::\+Mat im)
+\item 
+\mbox{\Hypertarget{classtargeter_image_ab99a3acbea5ccb634f25ae7eb8102dfa}\label{classtargeter_image_ab99a3acbea5ccb634f25ae7eb8102dfa}} 
+void {\bfseries set\+Stats\+Image} (cv\+::\+Mat im)
+\item 
+\mbox{\Hypertarget{classtargeter_image_af4f171771b7457629388be5748f76136}\label{classtargeter_image_af4f171771b7457629388be5748f76136}} 
+void {\bfseries set\+Centroids\+Image} (cv\+::\+Mat im)
+\item 
+\mbox{\Hypertarget{classtargeter_image_aac06df6cfcb1f654ad7d0a2241954c81}\label{classtargeter_image_aac06df6cfcb1f654ad7d0a2241954c81}} 
+void {\bfseries set\+Mask\+Type} (drawing\+Mode\+::drawing\+Mode mode)
+\item 
+\mbox{\Hypertarget{classtargeter_image_ae19d5c454796299cc60e09fcf5c974cf}\label{classtargeter_image_ae19d5c454796299cc60e09fcf5c974cf}} 
+drawing\+Mode\+::drawing\+Mode {\bfseries get\+Mask\+Type} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class to represent targeter image used to store associated image information and group images together 
+
+Definition at line 16 of file targeterimage.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}\label{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}} 
+\index{targeter\+Image@{targeter\+Image}!targeter\+Image@{targeter\+Image}}
+\index{targeter\+Image@{targeter\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{targeter\+Image()}{targeterImage()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily targeter\+Image\+::targeter\+Image (\begin{DoxyParamCaption}\item[{\hyperlink{class_images_container}{Images\+Container} $\ast$}]{p\+Images }\end{DoxyParamCaption})}
+
+Constructor for \hyperlink{classtargeter_image}{targeter\+Image} class, has pointer to image array
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}{targeter\+Image\+::targeter\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{class_images_container}{Images\+Container}} & $\ast$ p\+Images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 26 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a5fadb46e9235423e05b42e301b33c83f}\label{classtargeter_image_a5fadb46e9235423e05b42e301b33c83f}} 
+\index{targeter\+Image@{targeter\+Image}!targeter\+Image@{targeter\+Image}}
+\index{targeter\+Image@{targeter\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{targeter\+Image()}{targeterImage()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily targeter\+Image\+::targeter\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Constructor for \hyperlink{classtargeter_image}{targeter\+Image} class
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}{targeter\+Image\+::targeter\+Image} Qualifier \begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 50 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a885fd05e144dff445373442278e96c1b}\label{classtargeter_image_a885fd05e144dff445373442278e96c1b}} 
+\index{targeter\+Image@{targeter\+Image}!````~targeter\+Image@{$\sim$targeter\+Image}}
+\index{````~targeter\+Image@{$\sim$targeter\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{$\sim$targeter\+Image()}{~targeterImage()}}
+{\footnotesize\ttfamily targeter\+Image\+::$\sim$targeter\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\hyperlink{classtargeter_image}{targeter\+Image} destructor
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a885fd05e144dff445373442278e96c1b}{targeter\+Image\+::$\sim$targeter\+Image} Qualifier \begin{DoxyReturn}{Returns}
+Access public 
+\end{DoxyReturn}
+
+
+Definition at line 73 of file targeterimage.\+cpp.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d}\label{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d}} 
+\index{targeter\+Image@{targeter\+Image}!add\+Image@{add\+Image}}
+\index{add\+Image@{add\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{add\+Image()}{addImage()}}
+{\footnotesize\ttfamily void targeter\+Image\+::add\+Image (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im }\end{DoxyParamCaption})}
+
+adds image and creates QT Image copy for display
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d}{targeter\+Image\+::add\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 345 of file targeterimage.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a20a228c177141e4f0ca2a7776c7f242d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_a71d81d6bc145df61da64989c14444d76}\label{classtargeter_image_a71d81d6bc145df61da64989c14444d76}} 
+\index{targeter\+Image@{targeter\+Image}!add\+Image\+Ex@{add\+Image\+Ex}}
+\index{add\+Image\+Ex@{add\+Image\+Ex}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{add\+Image\+Ex()}{addImageEx()}}
+{\footnotesize\ttfamily void targeter\+Image\+::add\+Image\+Ex (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{image\+Type\+::image\+Type}]{type,  }\item[{std\+::string}]{descriptive\+Name = {\ttfamily \char`\"{}\char`\"{}},  }\item[{std\+::string}]{tooltip = {\ttfamily \char`\"{}\char`\"{}},  }\item[{std\+::string}]{filename = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+Extended method to create image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a71d81d6bc145df61da64989c14444d76}{targeter\+Image\+::add\+Image\+Ex} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+{\em std\+::string} & descriptive\+Name \\
+\hline
+{\em std\+::string} & tooltip \\
+\hline
+{\em std\+::string} & filename \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 282 of file targeterimage.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a71d81d6bc145df61da64989c14444d76_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a71d81d6bc145df61da64989c14444d76_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_a3ebd45ebb6d80dbb175906efbfd5e479}\label{classtargeter_image_a3ebd45ebb6d80dbb175906efbfd5e479}} 
+\index{targeter\+Image@{targeter\+Image}!add\+Image\+From\+File@{add\+Image\+From\+File}}
+\index{add\+Image\+From\+File@{add\+Image\+From\+File}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{add\+Image\+From\+File()}{addImageFromFile()}}
+{\footnotesize\ttfamily void targeter\+Image\+::add\+Image\+From\+File (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{image\+Type\+::image\+Type}]{type = {\ttfamily imageType\+:\+:display} }\end{DoxyParamCaption})}
+
+loads image from file
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a3ebd45ebb6d80dbb175906efbfd5e479}{targeter\+Image\+::add\+Image\+From\+File} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em std\+::string} & filename \\
+\hline
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 256 of file targeterimage.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a3ebd45ebb6d80dbb175906efbfd5e479_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_affcf9e83dc25eb200a8919518cf40155}\label{classtargeter_image_affcf9e83dc25eb200a8919518cf40155}} 
+\index{targeter\+Image@{targeter\+Image}!create\+Q\+T\+Image@{create\+Q\+T\+Image}}
+\index{create\+Q\+T\+Image@{create\+Q\+T\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{create\+Q\+T\+Image()}{createQTImage()}}
+{\footnotesize\ttfamily void targeter\+Image\+::create\+Q\+T\+Image (\begin{DoxyParamCaption}\item[{bool}]{b\+R\+G\+B\+Swap = {\ttfamily true} }\end{DoxyParamCaption})}
+
+Creates a Q\+Image for display purposes from an Open\+CV image (shares memory)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/13
+\end{DoxySince}
+Full\+Name targeter\+Image\+::get\+Q\+Image Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em bool} & b\+R\+G\+B\+Swap \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 196 of file targeterimage.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_affcf9e83dc25eb200a8919518cf40155_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_affcf9e83dc25eb200a8919518cf40155_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_a45f6264d5e1ce760c376b1348137d970}\label{classtargeter_image_a45f6264d5e1ce760c376b1348137d970}} 
+\index{targeter\+Image@{targeter\+Image}!free1\+D\+Images@{free1\+D\+Images}}
+\index{free1\+D\+Images@{free1\+D\+Images}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{free1\+D\+Images()}{free1DImages()}}
+{\footnotesize\ttfamily void targeter\+Image\+::free1\+D\+Images (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+free\textquotesingle{}s memory used by image pointers
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a45f6264d5e1ce760c376b1348137d970}{targeter\+Image\+::free1\+D\+Images} Qualifier \begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 130 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a7e046315df5fec0ac687a4a6beee1a63}\label{classtargeter_image_a7e046315df5fec0ac687a4a6beee1a63}} 
+\index{targeter\+Image@{targeter\+Image}!get1\+D\+Image@{get1\+D\+Image}}
+\index{get1\+D\+Image@{get1\+D\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{get1\+D\+Image()}{get1DImage()}}
+{\footnotesize\ttfamily int $\ast$ targeter\+Image\+::get1\+D\+Image (\begin{DoxyParamCaption}\item[{image\+Type\+::image\+Type}]{type }\end{DoxyParamCaption})}
+
+Returns int$\ast$ image pointer depending on type of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a7e046315df5fec0ac687a4a6beee1a63}{targeter\+Image\+::get1\+D\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 90 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a2a66aadfba8fe64dfde9725bde71808c}\label{classtargeter_image_a2a66aadfba8fe64dfde9725bde71808c}} 
+\index{targeter\+Image@{targeter\+Image}!get\+Image@{get\+Image}}
+\index{get\+Image@{get\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{get\+Image()}{getImage()}}
+{\footnotesize\ttfamily cv\+::\+Mat \& targeter\+Image\+::get\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+returns the current display image if existing or a valid image if not
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/15
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a2a66aadfba8fe64dfde9725bde71808c}{targeter\+Image\+::get\+Image} Qualifier \begin{DoxyReturn}{Returns}
+cv\+::\+Mat\& Access public 
+\end{DoxyReturn}
+
+
+Definition at line 216 of file targeterimage.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a2a66aadfba8fe64dfde9725bde71808c_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_a92b7c1e3195bc50b112fc67f161b9723}\label{classtargeter_image_a92b7c1e3195bc50b112fc67f161b9723}} 
+\index{targeter\+Image@{targeter\+Image}!get\+Image\+Of\+Type@{get\+Image\+Of\+Type}}
+\index{get\+Image\+Of\+Type@{get\+Image\+Of\+Type}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{get\+Image\+Of\+Type()}{getImageOfType()}}
+{\footnotesize\ttfamily \hyperlink{classtargeter_image}{targeter\+Image} \& targeter\+Image\+::get\+Image\+Of\+Type (\begin{DoxyParamCaption}\item[{image\+Type\+::image\+Type}]{image\+Function }\end{DoxyParamCaption})}
+
+gets associated image of a certain type
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a92b7c1e3195bc50b112fc67f161b9723}{targeter\+Image\+::get\+Image\+Of\+Type} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em image\+Type\+::image\+Type} & image\+Function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classtargeter_image_a2a82f686b73602837e2fb304ce37861d}{targeter\+Image\+::targeter\+Image}\& Access public 
+\end{DoxyReturn}
+
+
+Definition at line 156 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a9c5c783a82afecd73a0b877d3bfdfc01}\label{classtargeter_image_a9c5c783a82afecd73a0b877d3bfdfc01}} 
+\index{targeter\+Image@{targeter\+Image}!get\+Q\+T\+Image@{get\+Q\+T\+Image}}
+\index{get\+Q\+T\+Image@{get\+Q\+T\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{get\+Q\+T\+Image()}{getQTImage()}}
+{\footnotesize\ttfamily Q\+Image targeter\+Image\+::get\+Q\+T\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+gets Q\+Image and if not exising creates one from valid cv\+::\+Mat image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/15
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a9c5c783a82afecd73a0b877d3bfdfc01}{targeter\+Image\+::get\+Q\+T\+Image} Qualifier \begin{DoxyReturn}{Returns}
+Q\+T\+\_\+\+N\+A\+M\+E\+S\+P\+A\+C\+E\+::\+Q\+Image Access public 
+\end{DoxyReturn}
+
+
+Definition at line 178 of file targeterimage.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a9c5c783a82afecd73a0b877d3bfdfc01_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classtargeter_image_ac18fa800316f0d23610318ccf1b35bfc}\label{classtargeter_image_ac18fa800316f0d23610318ccf1b35bfc}} 
+\index{targeter\+Image@{targeter\+Image}!remove\+Derived\+Index@{remove\+Derived\+Index}}
+\index{remove\+Derived\+Index@{remove\+Derived\+Index}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{remove\+Derived\+Index()}{removeDerivedIndex()}}
+{\footnotesize\ttfamily void targeter\+Image\+::remove\+Derived\+Index (\begin{DoxyParamCaption}\item[{int}]{ind }\end{DoxyParamCaption})}
+
+remove associated image given its ID
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_ac18fa800316f0d23610318ccf1b35bfc}{targeter\+Image\+::remove\+Derived\+Index} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & ind \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 365 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a578e6fabf498c693b7183437ea4dd9e2}\label{classtargeter_image_a578e6fabf498c693b7183437ea4dd9e2}} 
+\index{targeter\+Image@{targeter\+Image}!remove\+Derived\+Indexes@{remove\+Derived\+Indexes}}
+\index{remove\+Derived\+Indexes@{remove\+Derived\+Indexes}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{remove\+Derived\+Indexes()}{removeDerivedIndexes()}}
+{\footnotesize\ttfamily void targeter\+Image\+::remove\+Derived\+Indexes (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ int $>$ \&}]{to\+\_\+remove }\end{DoxyParamCaption})}
+
+remove associated images given their ID\textquotesingle{}s
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a578e6fabf498c693b7183437ea4dd9e2}{targeter\+Image\+::remove\+Derived\+Indexes} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & std\+::vector$<$int$>$ \& to\+\_\+remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 384 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_abcdf64a3dcbb3fc4c9d4a79e9fd658fc}\label{classtargeter_image_abcdf64a3dcbb3fc4c9d4a79e9fd658fc}} 
+\index{targeter\+Image@{targeter\+Image}!set1\+D\+Image@{set1\+D\+Image}}
+\index{set1\+D\+Image@{set1\+D\+Image}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{set1\+D\+Image()}{set1DImage()}}
+{\footnotesize\ttfamily void targeter\+Image\+::set1\+D\+Image (\begin{DoxyParamCaption}\item[{int $\ast$}]{im,  }\item[{image\+Type\+::image\+Type}]{type = {\ttfamily imageType\+:\+:display} }\end{DoxyParamCaption})}
+
+sets int$\ast$ image pointer, depending on type of image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_abcdf64a3dcbb3fc4c9d4a79e9fd658fc}{targeter\+Image\+::set1\+D\+Image} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & $\ast$ im \\
+\hline
+{\em image\+Type\+::image\+Type} & type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 111 of file targeterimage.\+cpp.
+
+\mbox{\Hypertarget{classtargeter_image_a47b6c3edc2c1854523e6f14504a64883}\label{classtargeter_image_a47b6c3edc2c1854523e6f14504a64883}} 
+\index{targeter\+Image@{targeter\+Image}!set\+Default\+Name@{set\+Default\+Name}}
+\index{set\+Default\+Name@{set\+Default\+Name}!targeter\+Image@{targeter\+Image}}
+\subsubsection{\texorpdfstring{set\+Default\+Name()}{setDefaultName()}}
+{\footnotesize\ttfamily std\+::string targeter\+Image\+::set\+Default\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+sets a default name for image based on type
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/17
+\end{DoxySince}
+Full\+Name \hyperlink{classtargeter_image_a47b6c3edc2c1854523e6f14504a64883}{targeter\+Image\+::set\+Default\+Name} Qualifier \begin{DoxyReturn}{Returns}
+std\+::string Access public 
+\end{DoxyReturn}
+
+
+Definition at line 310 of file targeterimage.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtargeter_image_a47b6c3edc2c1854523e6f14504a64883_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/targeterimage.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/targeterimage.\+cpp\end{DoxyCompactItemize}

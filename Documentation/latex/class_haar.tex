@@ -1,0 +1,489 @@
+\hypertarget{class_haar}{}\section{Haar Class Reference}
+\label{class_haar}\index{Haar@{Haar}}
+
+
+Collaboration diagram for Haar\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=205pt]{class_haar__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{class_haar_afa323789e73c94995eba32e09d9aa026}{Haar\+Energy} (cv\+::\+Mat data, cv\+::\+Mat \&energy\+Image, int width, int height, int iterations, bool laplace=false, bool b\+Square=true)
+\item 
+static cv\+::\+Mat \hyperlink{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36}{Pyramid\+Levels} (cv\+::\+Mat data, int width, int height, int iterations, const int No\+Focus\+Images)
+\item 
+static cv\+::\+Mat \hyperlink{class_haar_ad85443bf4bbe9d65be10acbd0d89093b}{Laplacian\+Pyramid} (cv\+::\+Mat im, int levels, bool include\+Scale=true)
+\item 
+static void \hyperlink{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d}{Haar2} (cv\+::\+Mat \&data, int iterations)
+\item 
+{\footnotesize template$<$class T $>$ }\\static T $\ast$ \hyperlink{class_haar_a6724557f8d0a1660df2a9de85d7ce523}{Pyramid\+Levels} (T $\ast$data, int width, int height, int iterations, int No\+Focus\+Images)
+\item 
+{\footnotesize template$<$class T $>$ }\\static T $\ast$ \hyperlink{class_haar_a4f48761ec2f91c74df7ef6b501238d2a}{Pyramid\+Region\+Levels} (T $\ast$data, int width, int height, int iterations, int No\+Focus\+Images)
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{class_haar_a44ab3d3043f2a9c2145629a242e6ed0f}{Haar1} (T $\ast$data, int n)
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{class_haar_a4b2951fd5ec6f760fc94bd4273e2c544}{Haar2} (T $\ast$data, int width, int height, int iterations, bool Abs\+Image=false)
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{class_haar_ab2c372ee9f5eec084066ba52de18fbbe}{i\+Haar2} (T $\ast$data, int width, int height, int iterations)
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{class_haar_aedd7102138b5f942b7fbd539b1ff8143}{i\+Haar1} (T $\ast$data, int n)
+\item 
+{\footnotesize template$<$class T $>$ }\\static void \hyperlink{class_haar_a4516357f347f25499ac6aebb717e4f48}{i\+Haar2} (cv\+::\+Mat \&data, int iterations)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 18 of file haar.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_haar_a44ab3d3043f2a9c2145629a242e6ed0f}\label{class_haar_a44ab3d3043f2a9c2145629a242e6ed0f}} 
+\index{Haar@{Haar}!Haar1@{Haar1}}
+\index{Haar1@{Haar1}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Haar1()}{Haar1()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static void Haar\+::\+Haar1 (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Perform 1D \hyperlink{class_haar}{Haar} wavelet transform
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_a44ab3d3043f2a9c2145629a242e6ed0f}{Haar\+::\+Haar1} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & n \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 259 of file haar.\+h.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_haar_a44ab3d3043f2a9c2145629a242e6ed0f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d}\label{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d}} 
+\index{Haar@{Haar}!Haar2@{Haar2}}
+\index{Haar2@{Haar2}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Haar2()}{Haar2()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Haar\+::\+Haar2 (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{data,  }\item[{int}]{iterations }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Perform 2D \hyperlink{class_haar}{Haar} wavelet pyramid transform with Open\+CV image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d}{Haar\+::\+Haar2} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & \& data \\
+\hline
+{\em int} & iterations (no of levels) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 214 of file haar.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=320pt]{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_a4b2951fd5ec6f760fc94bd4273e2c544}\label{class_haar_a4b2951fd5ec6f760fc94bd4273e2c544}} 
+\index{Haar@{Haar}!Haar2@{Haar2}}
+\index{Haar2@{Haar2}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Haar2()}{Haar2()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static void Haar\+::\+Haar2 (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations,  }\item[{bool}]{Abs\+Image = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Perform 1D \hyperlink{class_haar}{Haar} wavelet transform on 1D image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_afde8fa7a1d65b505185a29fc7eaf4b2d}{Haar\+::\+Haar2} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+{\em bool} & Abs\+Image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 297 of file haar.\+h.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{class_haar_a4b2951fd5ec6f760fc94bd4273e2c544_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_afa323789e73c94995eba32e09d9aa026}\label{class_haar_afa323789e73c94995eba32e09d9aa026}} 
+\index{Haar@{Haar}!Haar\+Energy@{Haar\+Energy}}
+\index{Haar\+Energy@{Haar\+Energy}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Haar\+Energy()}{HaarEnergy()}}
+{\footnotesize\ttfamily void Haar\+::\+Haar\+Energy (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{data,  }\item[{cv\+::\+Mat \&}]{energy\+Image,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations,  }\item[{bool}]{laplace = {\ttfamily false},  }\item[{bool}]{b\+Square = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Get energy image (summed coefficient magnitude) from haar wavelet pyramid
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_afa323789e73c94995eba32e09d9aa026}{Haar\+::\+Haar\+Energy} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & data \\
+\hline
+{\em cv\+::\+Mat} & \& energy\+Image \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+{\em bool} & laplace \\
+\hline
+{\em bool} & b\+Square \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 29 of file haar.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_haar_afa323789e73c94995eba32e09d9aa026_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_aedd7102138b5f942b7fbd539b1ff8143}\label{class_haar_aedd7102138b5f942b7fbd539b1ff8143}} 
+\index{Haar@{Haar}!i\+Haar1@{i\+Haar1}}
+\index{i\+Haar1@{i\+Haar1}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{i\+Haar1()}{iHaar1()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static void Haar\+::i\+Haar1 (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Perform inverse \hyperlink{class_haar}{Haar} wavelet transform on 1D image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_aedd7102138b5f942b7fbd539b1ff8143}{Haar\+::i\+Haar1} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & n \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 422 of file haar.\+h.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{class_haar_aedd7102138b5f942b7fbd539b1ff8143_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_ab2c372ee9f5eec084066ba52de18fbbe}\label{class_haar_ab2c372ee9f5eec084066ba52de18fbbe}} 
+\index{Haar@{Haar}!i\+Haar2@{i\+Haar2}}
+\index{i\+Haar2@{i\+Haar2}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{i\+Haar2()}{iHaar2()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static void Haar\+::i\+Haar2 (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Perform inverse \hyperlink{class_haar}{Haar} wavelet transform on 2D image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_ab2c372ee9f5eec084066ba52de18fbbe}{Haar\+::i\+Haar2} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 363 of file haar.\+h.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{class_haar_ab2c372ee9f5eec084066ba52de18fbbe_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_a4516357f347f25499ac6aebb717e4f48}\label{class_haar_a4516357f347f25499ac6aebb717e4f48}} 
+\index{Haar@{Haar}!i\+Haar2@{i\+Haar2}}
+\index{i\+Haar2@{i\+Haar2}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{i\+Haar2()}{iHaar2()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static void Haar\+::i\+Haar2 (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{data,  }\item[{int}]{iterations }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Perform inverse \hyperlink{class_haar}{Haar} wavelet transform on 2D Open\+CV image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_ab2c372ee9f5eec084066ba52de18fbbe}{Haar\+::i\+Haar2} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & \& data \\
+\hline
+{\em int} & iterations \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access private 
+\end{DoxyReturn}
+
+
+Definition at line 455 of file haar.\+h.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{class_haar_a4516357f347f25499ac6aebb717e4f48_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_ad85443bf4bbe9d65be10acbd0d89093b}\label{class_haar_ad85443bf4bbe9d65be10acbd0d89093b}} 
+\index{Haar@{Haar}!Laplacian\+Pyramid@{Laplacian\+Pyramid}}
+\index{Laplacian\+Pyramid@{Laplacian\+Pyramid}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Laplacian\+Pyramid()}{LaplacianPyramid()}}
+{\footnotesize\ttfamily cv\+::\+Mat Haar\+::\+Laplacian\+Pyramid (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{im,  }\item[{int}]{levels,  }\item[{bool}]{include\+Scale = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+perform Laplacian pyramid
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_ad85443bf4bbe9d65be10acbd0d89093b}{Haar\+::\+Laplacian\+Pyramid} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & im \\
+\hline
+{\em int} & levels \\
+\hline
+{\em bool} & include\+Scale \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access private 
+\end{DoxyReturn}
+
+
+Definition at line 81 of file haar.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_haar_ad85443bf4bbe9d65be10acbd0d89093b_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36}\label{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36}} 
+\index{Haar@{Haar}!Pyramid\+Levels@{Pyramid\+Levels}}
+\index{Pyramid\+Levels@{Pyramid\+Levels}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Pyramid\+Levels()}{PyramidLevels()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily cv\+::\+Mat Haar\+::\+Pyramid\+Levels (\begin{DoxyParamCaption}\item[{cv\+::\+Mat}]{data,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations,  }\item[{const int}]{No\+Focus\+Images }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Get Open\+CV image of best (modal) values from Pyramid composition
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36}{Haar\+::\+Pyramid\+Levels} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em cv\+::\+Mat} & data \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+{\em const} & int No\+Focus\+Images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat Access private 
+\end{DoxyReturn}
+
+
+Definition at line 139 of file haar.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_haar_a6724557f8d0a1660df2a9de85d7ce523}\label{class_haar_a6724557f8d0a1660df2a9de85d7ce523}} 
+\index{Haar@{Haar}!Pyramid\+Levels@{Pyramid\+Levels}}
+\index{Pyramid\+Levels@{Pyramid\+Levels}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Pyramid\+Levels()}{PyramidLevels()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static T$\ast$ Haar\+::\+Pyramid\+Levels (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations,  }\item[{int}]{No\+Focus\+Images }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Get image of best (modal) values from Pyramid composition
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_a5a0726cb9e3a28295ba4ac64f654aa36}{Haar\+::\+Pyramid\+Levels} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+{\em int} & No\+Focus\+Images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+T$\ast$ Access private 
+\end{DoxyReturn}
+
+
+Definition at line 44 of file haar.\+h.
+
+\mbox{\Hypertarget{class_haar_a4f48761ec2f91c74df7ef6b501238d2a}\label{class_haar_a4f48761ec2f91c74df7ef6b501238d2a}} 
+\index{Haar@{Haar}!Pyramid\+Region\+Levels@{Pyramid\+Region\+Levels}}
+\index{Pyramid\+Region\+Levels@{Pyramid\+Region\+Levels}!Haar@{Haar}}
+\subsubsection{\texorpdfstring{Pyramid\+Region\+Levels()}{PyramidRegionLevels()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+static T$\ast$ Haar\+::\+Pyramid\+Region\+Levels (\begin{DoxyParamCaption}\item[{T $\ast$}]{data,  }\item[{int}]{width,  }\item[{int}]{height,  }\item[{int}]{iterations,  }\item[{int}]{No\+Focus\+Images }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Get image of best (modal) values from local 8 connected neighbours of Pyramid composition
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/08
+\end{DoxySince}
+Full\+Name \hyperlink{class_haar_a4f48761ec2f91c74df7ef6b501238d2a}{Haar\+::\+Pyramid\+Region\+Levels} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em T} & $\ast$ data \\
+\hline
+{\em int} & width \\
+\hline
+{\em int} & height \\
+\hline
+{\em int} & iterations \\
+\hline
+{\em int} & No\+Focus\+Images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+T$\ast$ Access private 
+\end{DoxyReturn}
+
+
+Definition at line 122 of file haar.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/haar.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/haar.\+hpp\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/haar.\+cpp\end{DoxyCompactItemize}

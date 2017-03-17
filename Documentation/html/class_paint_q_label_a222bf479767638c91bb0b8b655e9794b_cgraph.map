@@ -1,0 +1,6 @@
+<map id="PaintQLabel::mousePressEvent" name="PaintQLabel::mousePressEvent">
+<area shape="rect" id="node2" href="$class_paint_q_label.html#a76f7bb92d5971c324ff0998babd5a70f" title="PaintQLabel::startPanning" alt="" coords="274,5,449,32"/>
+<area shape="rect" id="node3" href="$class_paint_q_label.html#af6562b147730457b828f0c776ff001e6" title="PaintQLabel::inPoly" alt="" coords="293,56,430,83"/>
+<area shape="rect" id="node4" href="$class_paint_q_label.html#aa8b3fe000a0123047ef6b2c884db979a" title="PaintQLabel::checkForPolygon\lClose" alt="" coords="260,107,463,149"/>
+<area shape="rect" id="node5" href="$class_paint_q_label.html#a332bf0f6137c8613fbdeac4bd0c1516e" title="PaintQLabel::getPolygonRect" alt="" coords="511,115,704,141"/>
+</map>

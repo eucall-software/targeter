@@ -1,0 +1,838 @@
+.TH "MainWindow" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MainWindow
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <mainwindow\&.h>\fP
+.PP
+Inherits QMainWindow\&.
+.SS "Public Slots"
+
+.in +1c
+.ti -1c
+.RI "void \fBDisplayImage\fP ()"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBOpenImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBSaveImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBaddImage\fP (const QString &fileName, imageType::imageType type=imageType::display)"
+.br
+.ti -1c
+.RI "void \fBloadFile\fP (const QString &fileName)"
+.br
+.ti -1c
+.RI "QImage::Format \fBgetFormat\fP (int type)"
+.br
+.ti -1c
+.RI "int \fBgetValidImageIndex\fP ()"
+.br
+.ti -1c
+.RI "void \fBaddCVImage\fP (\fBtargeterImage\fP &tim, QString imageName, bool bRGBSwap)"
+.br
+.ti -1c
+.RI "void \fBaddCVImage\fP (cv::Mat im, QString imageName='', bool bRGBSwap=true, imageType::imageType type=imageType::display, bool bDisplay=true)"
+.br
+.ti -1c
+.RI "void \fBupdateImageType\fP (int ind, imageType::imageType type)"
+.br
+.ti -1c
+.RI "void \fBaddQImageThumbnail\fP (QImage &qim, QString imageName='', imageType::imageType type=imageType::display)"
+.br
+.ti -1c
+.RI "QImage \fBcopyImageToSquareRegion\fP (QImage im, QColor col)"
+.br
+.ti -1c
+.RI "void \fBresizeEvent\fP (QResizeEvent *event)"
+.br
+.ti -1c
+.RI "std::vector< int > \fBgetCheckedImages\fP ()"
+.br
+.ti -1c
+.RI "void \fBresizeImagePreserve\fP (cv::Mat &in, cv::Mat &out, int newWidth, int newHeight)"
+.br
+.ti -1c
+.RI "\fBMainWindow\fP (QWidget *parent=0)"
+.br
+.ti -1c
+.RI "\fB~MainWindow\fP ()"
+.br
+.ti -1c
+.RI "void \fBDebugPrintMat\fP (cv::Mat mat)"
+.br
+.ti -1c
+.RI "void \fBshowMessage\fP (imageType::imageType, QMessageBox::Icon icn=QMessageBox::Warning)"
+.br
+.ti -1c
+.RI "void \fBshowMessage\fP (QString message, QMessageBox::Icon icn=QMessageBox::Warning)"
+.br
+.ti -1c
+.RI "void \fBupdateThumbs\fP (int index=\-1)"
+.br
+.ti -1c
+.RI "void \fBsetHistogramImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBwriteCentroids\fP (\fBtargeterImage\fP &tim, QFile &xmlFile)"
+.br
+.ti -1c
+.RI "cv::Mat \fBgetHistogram\fP ()"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP \fBgetConnectedComponents\fP (cv::Mat &im)"
+.br
+.ti -1c
+.RI "void \fBdrawCentroids\fP (\fBtargeterImage\fP &tim, cv::Mat &drawimage)"
+.br
+.ti -1c
+.RI "cv::Mat \fBcreateScoreImage\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBpaintEvent\fP (QPaintEvent *event)"
+.br
+.ti -1c
+.RI "void \fBcreateMaskImage\fP (cv::Mat im, \fBdrawingShape\fP shape)"
+.br
+.ti -1c
+.RI "void \fBdeleteImage\fP (int index, bool bDisplay=true)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Main QTMainWindow derived class for managing window display 
+.PP
+Definition at line 25 of file mainwindow\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "MainWindow::MainWindow (QWidget * parent = \fC0\fP)\fC [explicit]\fP"
+class constructor: sets up slots, initializes variables, gets serialised settings values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::MainWindow\fP Qualifier : QMainWindow(parent), ui(new Ui::MainWindow) 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQWidget\fP * parent 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 73 of file mainwindow\&.cpp\&.
+.SS "MainWindow::~MainWindow ()"
+class destructor, serializes settings values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::~MainWindow\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 983 of file mainwindow\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void MainWindow::addCVImage (\fBtargeterImage\fP & tim, QString imageName, bool bRGBSwap)"
+Creates QImage for display from targeter image and displays image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::addCVImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBtargeterImage\fP\fP & tim 
+.br
+\fIQString\fP imageName 
+.br
+\fIbool\fP bRGBSwap 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 597 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::addCVImage (cv::Mat im, QString imageName = \fC''\fP, bool bRGBSwap = \fCtrue\fP, imageType::imageType type = \fCimageType::display\fP, bool bDisplay = \fCtrue\fP)"
+Creates targeter image and QImage for display from OpenCV image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::addCVImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIQString\fP imageName 
+.br
+\fIbool\fP bRGBSwap 
+.br
+\fI\fBimageType\fP\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 568 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::addImage (const QString & fileName, imageType::imageType type = \fCimageType::display\fP)"
+Given a file name loads and reads image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::addImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP QString & fileName 
+.br
+\fI\fBimageType\fP\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 625 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::addQImageThumbnail (QImage & qim, QString imageName = \fC''\fP, imageType::imageType type = \fCimageType::display\fP)"
+adds QImage to thumbnail list
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName MainWindow::addQImage Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQImage\fP & qim 
+.br
+\fIQString\fP imageName 
+.br
+\fI\fBimageType\fP\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 739 of file mainwindow\&.cpp\&.
+.SS "QImage MainWindow::copyImageToSquareRegion (QImage qim, QColor col)"
+Makes sub image from rectangular region of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::copyImageToSquareRegion\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQImage\fP qim 
+.br
+\fIQColor\fP col 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+QT_NAMESPACE::QImage Access public 
+.RE
+.PP
+
+.PP
+Definition at line 656 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::createMaskImage (cv::Mat im, \fBdrawingShape\fP shape)"
+Gets binary mask image and sub image from region from drawing object shape
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName MainWindow::maskImage Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIMat\fP im 
+.br
+\fI\fBdrawingShape\fP\fP shape 
+.br
+\fI\fBtargeterImage\fP\fP & tim 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1253 of file mainwindow\&.cpp\&.
+.SS "cv::Mat MainWindow::createScoreImage ()"
+Slot to score image of possible targets found in the detection image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::createScoreImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+
+.PP
+Definition at line 2043 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::deleteImage (int index, bool bDisplay = \fCtrue\fP)"
+removes image at array index
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::deleteImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP index 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1610 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::DisplayImage ()\fC [slot]\fP"
+Displays image in widget
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::DisplayImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1085 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::drawCentroids (\fBtargeterImage\fP & tim, cv::Mat & drawimage)"
+Draws crosses at centroid positions of connected component regions on supplied cv::Mat image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::drawCentroids\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBtargeterImage\fP\fP & tim 
+.br
+\fIcv::Mat\fP & drawimage 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 2185 of file mainwindow\&.cpp\&.
+.SS "std::vector< int > MainWindow::getCheckedImages ()"
+Get vector of checked images in list
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::getCheckedImages\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+QVector<int> Access public 
+.RE
+.PP
+
+.PP
+Definition at line 952 of file mainwindow\&.cpp\&.
+.SS "\fBtargeterImage\fP MainWindow::getConnectedComponents (cv::Mat & im)"
+Sets connected component image structure from binary image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::getConnectedComponents\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP & im 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBtargeterImage\fP& Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1929 of file mainwindow\&.cpp\&.
+.SS "cv::Mat MainWindow::getHistogram ()"
+Gets image histogram
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::getHistogram\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+
+.PP
+Definition at line 522 of file mainwindow\&.cpp\&.
+.SS "int MainWindow::getValidImageIndex ()"
+Gets valid image array index, if current image index is invalid then function returns last valid index
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::getValidImageIndex\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+int Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1047 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::loadFile (const QString & fileName)"
+loads image file
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::loadFile\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP QString & fileName 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 396 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::OpenImage ()"
+Handles Opening of image from file open dialog
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::OpenImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 805 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::resizeEvent (QResizeEvent * event)"
+manage image redrawing when window resized
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::resizeEvent\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQResizeEvent\fP * event 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1022 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::SaveImage ()"
+Saves current image to file
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::SaveImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 340 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::setHistogramImage ()"
+Sets image histogram in settings dialog
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::setHistogramImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 496 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::showMessage (imageType::imageType type, QMessageBox::Icon icn = \fCQMessageBox::Warning\fP)"
+Displays message box depending on image type
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::showMessage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimageType::imageType\fP type 
+.br
+\fIQMessageBox::Icon\fP icn 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 437 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::showMessage (QString message, QMessageBox::Icon icn = \fCQMessageBox::Warning\fP)"
+Displays message box
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::showMessage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQString\fP message 
+.br
+\fIQMessageBox::Icon\fP icn 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 473 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::updateImageType (int ind, imageType::imageType type)"
+sets type of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/14
+.RE
+.PP
+FullName \fBMainWindow::updateImageType\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP ind 
+.br
+\fIimageType::imageType\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 1545 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::updateThumbs (int index = \fC\-1\fP)"
+update labels of thumbnail images
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBMainWindow::updateThumbs\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP index 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 703 of file mainwindow\&.cpp\&.
+.SS "void MainWindow::writeCentroids (\fBtargeterImage\fP & tim, QFile & xmlFile)"
+Writes XML of target locations in image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBMainWindow::writeCentroids\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBtargeterImage\fP\fP & tim 
+.br
+\fIQFile\fP & xmlFile 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 2221 of file mainwindow\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

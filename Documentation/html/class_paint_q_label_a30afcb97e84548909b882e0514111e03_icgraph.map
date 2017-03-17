@@ -1,0 +1,18 @@
+<map id="PaintQLabel::zoomToPoint" name="PaintQLabel::zoomToPoint">
+<area shape="rect" id="node2" href="$class_main_window.html#a92a40847027eaf2cf258c3a9f8da4c48" title="MainWindow::createMaskImage" alt="" coords="231,321,437,347"/>
+<area shape="rect" id="node17" href="$class_paint_q_label.html#adcf7154233dfb4462c1cdd4531ab74ba" title="PaintQLabel::wheelEvent" alt="" coords="251,371,417,398"/>
+<area shape="rect" id="node3" href="$class_main_window.html#a8e20e1254b179ca9ec054ec908d9cc43" title="MainWindow::DisplayImage" alt="" coords="485,274,668,301"/>
+<area shape="rect" id="node4" href="$class_main_window.html#aa08469ed5c8396e60fa44bae6530bcf1" title="MainWindow::loadFile" alt="" coords="1207,161,1357,187"/>
+<area shape="rect" id="node6" href="$class_main_window.html#a0c29749703b7fc8a64a17d123816bfac" title="MainWindow::addCVImage" alt="" coords="716,410,895,437"/>
+<area shape="rect" id="node11" href="$class_main_window.html#acea9cebdcf70bf45107baa0789e732bf" title="MainWindow::OpenImage" alt="" coords="1197,274,1367,301"/>
+<area shape="rect" id="node12" href="$class_main_window.html#ad0219fc878a0bc02403d00a16b7fc7ec" title="MainWindow::deleteImage" alt="" coords="1667,519,1841,546"/>
+<area shape="rect" id="node16" href="$class_main_window.html#ae12f8f63791595567b6250f8bb002bda" title="MainWindow::resizeEvent" alt="" coords="720,59,891,86"/>
+<area shape="rect" id="node5" href="$class_main_window.html#aa816921e6ce14f558ada5c73c8a5ef20" title="MainWindow::SaveImage" alt="" coords="1443,135,1610,162"/>
+<area shape="rect" id="node7" href="$class_focus_stack.html#a141b4869671825fed21068a9c9f2c150" title="FocusStack::processImage\lStack3" alt="" coords="945,337,1127,379"/>
+<area shape="rect" id="node8" href="$class_focus_stack.html#a6342aff10617c4346b32f61ea549b378" title="FocusStack::processImage\lStack2" alt="" coords="945,403,1127,444"/>
+<area shape="rect" id="node9" href="$class_main_window.html#ab87edc0e4b2fb3e4fb4df14a8872cbb4" title="MainWindow::addCVImage" alt="" coords="947,469,1125,495"/>
+<area shape="rect" id="node10" href="$class_main_window.html#ab4d1f49d192d3641e0da68b5a69d014a" title="MainWindow::addImage" alt="" coords="956,211,1116,238"/>
+<area shape="rect" id="node13" href="$class_main_window.html#a49cfabc6ef4845c5a9b5c9a92c9d4e2e" title="MainWindow::getConnected\lComponents" alt="" coords="1435,592,1619,633"/>
+<area shape="rect" id="node14" href="$class_main_window.html#a8d87cd33d22ce614c9d7945264588e5f" title="MainWindow::createScoreImage" alt="" coords="1177,621,1387,647"/>
+<area shape="rect" id="node15" href="$class_main_window.html#aa137f4371bae807873da7862f4102521" title="MainWindow::writeCentroids" alt="" coords="943,621,1129,647"/>
+</map>

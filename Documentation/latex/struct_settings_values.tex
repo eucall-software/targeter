@@ -1,0 +1,146 @@
+\hypertarget{struct_settings_values}{}\section{Settings\+Values Struct Reference}
+\label{struct_settings_values}\index{Settings\+Values@{Settings\+Values}}
+
+
+{\ttfamily \#include $<$globals.\+h$>$}
+
+
+
+Collaboration diagram for Settings\+Values\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=199pt]{struct_settings_values__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{struct_settings_values_ad4544b482570ff509c6afef78071a003}{serialize} (Q\+Data\+Stream \&stream)
+\begin{DoxyCompactList}\small\item\em type of algorithm used to find target \end{DoxyCompactList}\item 
+void \hyperlink{struct_settings_values_aa8366afce6108e4404af7d6f98ad1368}{deserialize} (Q\+Data\+Stream \&stream)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_settings_values_acb69ab102f07b5d618ec0288f31c6dfa}\label{struct_settings_values_acb69ab102f07b5d618ec0288f31c6dfa}} 
+int {\bfseries cluster}
+\item 
+\mbox{\Hypertarget{struct_settings_values_ad1a3f2b400302307e0a5d6bb7efcbb15}\label{struct_settings_values_ad1a3f2b400302307e0a5d6bb7efcbb15}} 
+int \hyperlink{struct_settings_values_ad1a3f2b400302307e0a5d6bb7efcbb15}{distance}
+\begin{DoxyCompactList}\small\item\em number of clusters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a93c384ba159a19b1a1906e30c522d386}\label{struct_settings_values_a93c384ba159a19b1a1906e30c522d386}} 
+bool \hyperlink{struct_settings_values_a93c384ba159a19b1a1906e30c522d386}{auto\+Threshold}
+\begin{DoxyCompactList}\small\item\em number of distance pixels \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a52c98a788db736bacf2234fddcb020af}\label{struct_settings_values_a52c98a788db736bacf2234fddcb020af}} 
+int \hyperlink{struct_settings_values_a52c98a788db736bacf2234fddcb020af}{No\+Clusters\+Threshold}
+\begin{DoxyCompactList}\small\item\em whether to auto threshold \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_aecb171c3e966f04c251a0b0334a78d5c}\label{struct_settings_values_aecb171c3e966f04c251a0b0334a78d5c}} 
+int \hyperlink{struct_settings_values_aecb171c3e966f04c251a0b0334a78d5c}{threshold\+\_\+min}
+\begin{DoxyCompactList}\small\item\em number of clusters in threshold \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a2d338baea9c8dba546dc265649a81689}\label{struct_settings_values_a2d338baea9c8dba546dc265649a81689}} 
+int \hyperlink{struct_settings_values_a2d338baea9c8dba546dc265649a81689}{threshold\+\_\+max}
+\begin{DoxyCompactList}\small\item\em minimum threshold value \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a41cb832a5aa92eae047bf29e2f498c1c}\label{struct_settings_values_a41cb832a5aa92eae047bf29e2f498c1c}} 
+int \hyperlink{struct_settings_values_a41cb832a5aa92eae047bf29e2f498c1c}{Score\+Threshold}
+\begin{DoxyCompactList}\small\item\em maximum threshold value \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a1a49689492e105d90562e1008a549f09}\label{struct_settings_values_a1a49689492e105d90562e1008a549f09}} 
+int {\bfseries size\+Tolerance\+Smaller}
+\item 
+\mbox{\Hypertarget{struct_settings_values_a57b7fe23d3c419fdff5fdc8504542d8f}\label{struct_settings_values_a57b7fe23d3c419fdff5fdc8504542d8f}} 
+int \hyperlink{struct_settings_values_a57b7fe23d3c419fdff5fdc8504542d8f}{size\+Tolerance\+Larger}
+\begin{DoxyCompactList}\small\item\em tolerance to size of detected regions, if smaller than tolerance then not selected \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_a9cf36ccdbc5b9a17056b5ead4b847a0a}\label{struct_settings_values_a9cf36ccdbc5b9a17056b5ead4b847a0a}} 
+int \hyperlink{struct_settings_values_a9cf36ccdbc5b9a17056b5ead4b847a0a}{hu\+Moment\+Similarity}
+\begin{DoxyCompactList}\small\item\em tolerance to size of detected regions, if larger than tolerance then not selected \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_settings_values_ad067123d5f5095c6986733fd31e4f270}\label{struct_settings_values_ad067123d5f5095c6986733fd31e4f270}} 
+algo\+Type\+::algo\+Type \hyperlink{struct_settings_values_ad067123d5f5095c6986733fd31e4f270}{algorithm\+Type}
+\begin{DoxyCompactList}\small\item\em how similar in shape obects should be \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+structure defining setting values (settings values serialised to file and used in settings dialog) 
+
+Definition at line 73 of file globals.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_settings_values_aa8366afce6108e4404af7d6f98ad1368}\label{struct_settings_values_aa8366afce6108e4404af7d6f98ad1368}} 
+\index{Settings\+Values@{Settings\+Values}!deserialize@{deserialize}}
+\index{deserialize@{deserialize}!Settings\+Values@{Settings\+Values}}
+\subsubsection{\texorpdfstring{deserialize()}{deserialize()}}
+{\footnotesize\ttfamily void Settings\+Values\+::deserialize (\begin{DoxyParamCaption}\item[{Q\+Data\+Stream \&}]{stream }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+function to read settings values from file
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{struct_settings_values_aa8366afce6108e4404af7d6f98ad1368}{Settings\+Values\+::deserialize} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Data\+Stream} & \& stream \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 134 of file globals.\+h.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_settings_values_aa8366afce6108e4404af7d6f98ad1368_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{struct_settings_values_ad4544b482570ff509c6afef78071a003}\label{struct_settings_values_ad4544b482570ff509c6afef78071a003}} 
+\index{Settings\+Values@{Settings\+Values}!serialize@{serialize}}
+\index{serialize@{serialize}!Settings\+Values@{Settings\+Values}}
+\subsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Settings\+Values\+::serialize (\begin{DoxyParamCaption}\item[{Q\+Data\+Stream \&}]{stream }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+type of algorithm used to find target 
+
+function to serialise settings parameters to file
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{struct_settings_values_ad4544b482570ff509c6afef78071a003}{Settings\+Values\+::serialize} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Data\+Stream} & \& stream \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 104 of file globals.\+h.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{struct_settings_values_ad4544b482570ff509c6afef78071a003_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/globals.\+h\end{DoxyCompactItemize}

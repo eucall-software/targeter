@@ -1,0 +1,136 @@
+.TH "SettingsValues" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SettingsValues
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <globals\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBserialize\fP (QDataStream &stream)"
+.br
+.RI "type of algorithm used to find target "
+.ti -1c
+.RI "void \fBdeserialize\fP (QDataStream &stream)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBcluster\fP"
+.br
+.ti -1c
+.RI "int \fBdistance\fP"
+.br
+.RI "number of clusters "
+.ti -1c
+.RI "bool \fBautoThreshold\fP"
+.br
+.RI "number of distance pixels "
+.ti -1c
+.RI "int \fBNoClustersThreshold\fP"
+.br
+.RI "whether to auto threshold "
+.ti -1c
+.RI "int \fBthreshold_min\fP"
+.br
+.RI "number of clusters in threshold "
+.ti -1c
+.RI "int \fBthreshold_max\fP"
+.br
+.RI "minimum threshold value "
+.ti -1c
+.RI "int \fBScoreThreshold\fP"
+.br
+.RI "maximum threshold value "
+.ti -1c
+.RI "int \fBsizeToleranceSmaller\fP"
+.br
+.ti -1c
+.RI "int \fBsizeToleranceLarger\fP"
+.br
+.RI "tolerance to size of detected regions, if smaller than tolerance then not selected "
+.ti -1c
+.RI "int \fBhuMomentSimilarity\fP"
+.br
+.RI "tolerance to size of detected regions, if larger than tolerance then not selected "
+.ti -1c
+.RI "algoType::algoType \fBalgorithmType\fP"
+.br
+.RI "how similar in shape obects should be "
+.in -1c
+.SH "Detailed Description"
+.PP 
+structure defining setting values (settings values serialised to file and used in settings dialog) 
+.PP
+Definition at line 73 of file globals\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void SettingsValues::deserialize (QDataStream & stream)\fC [inline]\fP"
+function to read settings values from file
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsValues::deserialize\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQDataStream\fP & stream 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 134 of file globals\&.h\&.
+.SS "void SettingsValues::serialize (QDataStream & stream)\fC [inline]\fP"
+
+.PP
+type of algorithm used to find target function to serialise settings parameters to file
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBSettingsValues::serialize\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQDataStream\fP & stream 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 104 of file globals\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

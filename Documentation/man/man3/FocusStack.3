@@ -1,0 +1,335 @@
+.TH "FocusStack" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FocusStack
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <FocusStack\&.h>\fP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static cv::Mat * \fBprocessImageStack\fP (std::vector< \fBtargeterImage\fP > &imageStack, std::vector< int > &imageIndexes, \fBMainWindow\fP *pMainWindow)"
+.br
+.ti -1c
+.RI "static cv::Mat * \fBprocessImageStack2\fP (std::vector< \fBtargeterImage\fP > &imageStack, std::vector< int > &imageIndexes, \fBMainWindow\fP *pMainWindow)"
+.br
+.ti -1c
+.RI "static cv::Mat * \fBprocessImageStack3\fP (std::vector< \fBtargeterImage\fP > &imageStack, std::vector< int > &imageIndexes, \fBMainWindow\fP *pMainWindow)"
+.br
+.ti -1c
+.RI "static cv::Mat * \fBmergeImageStack\fP (std::vector< \fBtargeterImage\fP > &imageStack, cv::Mat indexImage, int w, int h)"
+.br
+.ti -1c
+.RI "static double \fBmodifiedLaplacian\fP (const cv::Mat &src)"
+.br
+.ti -1c
+.RI "static void \fBfillErrorRegions\fP (int *im, int w, int h, int fSize, int NoFocusImages)"
+.br
+.ti -1c
+.RI "static void \fBfillErrorRegions\fP (cv::Mat &im, int w, int h, int fSize, int NoFocusImages)"
+.br
+.ti -1c
+.RI "static double \fBvarianceOfLaplacian\fP (const cv::Mat &src)"
+.br
+.ti -1c
+.RI "static double \fBtenengrad\fP (const cv::Mat &src, int ksize)"
+.br
+.ti -1c
+.RI "static double \fBnormalizedGraylevelVariance\fP (const cv::Mat &src)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class that manages performing focus stack, ie\&. takes image sequence and combines them into single in focus image 
+.PP
+Definition at line 12 of file FocusStack\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void FocusStack::fillErrorRegions (int * im, int w, int h, int fSize, int NoFocusImages)\fC [static]\fP"
+Compares neighbouring pixels to determine best value for focusing
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::fillErrorRegions\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP * im 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.br
+\fIint\fP fSize 
+.br
+\fIint\fP NoFocusImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 456 of file FocusStack\&.cpp\&.
+.SS "Mat * FocusStack::mergeImageStack (std::vector< \fBtargeterImage\fP > & imageStack, cv::Mat indexImage, int w, int h)\fC [static]\fP"
+Merges images based on indexing the vector using the values in indexImage
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::mergeImageStack\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQVector<targeterImage>\fP & imageStack 
+.br
+\fIMat\fP indexImage 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 408 of file FocusStack\&.cpp\&.
+.SS "double FocusStack::modifiedLaplacian (const cv::Mat & src)\fC [static]\fP"
+OpenCV port of 'LAPM' algorithm (Nayar89)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::modifiedLaplacian\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP cv::Mat & src 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+double Access public 
+.RE
+.PP
+
+.PP
+Definition at line 610 of file FocusStack\&.cpp\&.
+.SS "double FocusStack::normalizedGraylevelVariance (const cv::Mat & src)\fC [static]\fP"
+OpenCV port of 'GLVN' algorithm (Santos97)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::normalizedGraylevelVariance\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP cv::Mat & src 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+double Access public 
+.RE
+.PP
+
+.PP
+Definition at line 698 of file FocusStack\&.cpp\&.
+.SS "Mat * FocusStack::processImageStack (std::vector< \fBtargeterImage\fP > & imageStack, std::vector< int > & imageIndexes, \fBMainWindow\fP * pMainWindow)\fC [static]\fP"
+Creates a single 'in focus' image from a vector of images partially in focus (focus stack)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::processImageStack\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQVector<targeterImage>\fP & imageStack 
+.br
+\fIQVector<int>\fP & imageIndexes 
+.br
+\fI\fBMainWindow\fP\fP * pMainWindow 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 35 of file FocusStack\&.cpp\&.
+.SS "cv::Mat * FocusStack::processImageStack2 (std::vector< \fBtargeterImage\fP > & imageStack, std::vector< int > & imageIndexes, \fBMainWindow\fP * pMainWindow)\fC [static]\fP"
+Creates a single 'in focus' image from a vector of images partially in focus (focus stack) (alternative implementation)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::processImageStack2\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQVector<targeterImage>\fP & imageStack 
+.br
+\fIQVector<int>\fP & imageIndexes 
+.br
+\fI\fBMainWindow\fP\fP * pMainWindow 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 290 of file FocusStack\&.cpp\&.
+.SS "cv::Mat * FocusStack::processImageStack3 (std::vector< \fBtargeterImage\fP > & imageStack, std::vector< int > & imageIndexes, \fBMainWindow\fP * pMainWindow)\fC [static]\fP"
+Creates a single 'in focus' image from a vector of images partially in focus (focus stack) (alternative implementation)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::processImageStack3\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIQVector<targeterImage>\fP & imageStack 
+.br
+\fIQVector<int>\fP & imageIndexes 
+.br
+\fI\fBMainWindow\fP\fP * pMainWindow 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 164 of file FocusStack\&.cpp\&.
+.SS "double FocusStack::tenengrad (const cv::Mat & src, int ksize)\fC [static]\fP"
+OpenCV port of 'TENG' algorithm (Krotkov86)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::tenengrad\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP cv::Mat & src 
+.br
+\fIint\fP ksize 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+double Access public 
+.RE
+.PP
+
+.PP
+Definition at line 671 of file FocusStack\&.cpp\&.
+.SS "double FocusStack::varianceOfLaplacian (const cv::Mat & src)\fC [static]\fP"
+OpenCV port of 'LAPV' algorithm (Pech2000)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBFocusStack::varianceOfLaplacian\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP cv::Mat & src 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+double Access public 
+.RE
+.PP
+
+.PP
+Definition at line 643 of file FocusStack\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

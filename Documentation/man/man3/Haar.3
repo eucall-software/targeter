@@ -1,0 +1,424 @@
+.TH "Haar" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Haar
+.SH SYNOPSIS
+.br
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBHaarEnergy\fP (cv::Mat data, cv::Mat &energyImage, int width, int height, int iterations, bool laplace=false, bool bSquare=true)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBPyramidLevels\fP (cv::Mat data, int width, int height, int iterations, const int NoFocusImages)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBLaplacianPyramid\fP (cv::Mat im, int levels, bool includeScale=true)"
+.br
+.ti -1c
+.RI "static void \fBHaar2\fP (cv::Mat &data, int iterations)"
+.br
+.ti -1c
+.RI "template<class T > static T * \fBPyramidLevels\fP (T *data, int width, int height, int iterations, int NoFocusImages)"
+.br
+.ti -1c
+.RI "template<class T > static T * \fBPyramidRegionLevels\fP (T *data, int width, int height, int iterations, int NoFocusImages)"
+.br
+.ti -1c
+.RI "template<class T > static void \fBHaar1\fP (T *data, int n)"
+.br
+.ti -1c
+.RI "template<class T > static void \fBHaar2\fP (T *data, int width, int height, int iterations, bool AbsImage=false)"
+.br
+.ti -1c
+.RI "template<class T > static void \fBiHaar2\fP (T *data, int width, int height, int iterations)"
+.br
+.ti -1c
+.RI "template<class T > static void \fBiHaar1\fP (T *data, int n)"
+.br
+.ti -1c
+.RI "template<class T > static void \fBiHaar2\fP (cv::Mat &data, int iterations)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 18 of file haar\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<class T > static void Haar::Haar1 (T * data, int n)\fC [inline]\fP, \fC [static]\fP"
+Perform 1D \fBHaar\fP wavelet transform
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::Haar1\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP n 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 259 of file haar\&.h\&.
+.SS "void Haar::Haar2 (cv::Mat & data, int iterations)\fC [static]\fP"
+Perform 2D \fBHaar\fP wavelet pyramid transform with OpenCV image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::Haar2\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP & data 
+.br
+\fIint\fP iterations (no of levels) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 214 of file haar\&.cpp\&.
+.SS "template<class T > static void Haar::Haar2 (T * data, int width, int height, int iterations, bool AbsImage = \fCfalse\fP)\fC [inline]\fP, \fC [static]\fP"
+Perform 1D \fBHaar\fP wavelet transform on 1D image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::Haar2\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.br
+\fIbool\fP AbsImage 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 297 of file haar\&.h\&.
+.SS "void Haar::HaarEnergy (cv::Mat data, cv::Mat & energyImage, int width, int height, int iterations, bool laplace = \fCfalse\fP, bool bSquare = \fCtrue\fP)\fC [static]\fP"
+Get energy image (summed coefficient magnitude) from haar wavelet pyramid
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::HaarEnergy\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP data 
+.br
+\fIcv::Mat\fP & energyImage 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.br
+\fIbool\fP laplace 
+.br
+\fIbool\fP bSquare 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 29 of file haar\&.cpp\&.
+.SS "template<class T > static void Haar::iHaar1 (T * data, int n)\fC [inline]\fP, \fC [static]\fP"
+Perform inverse \fBHaar\fP wavelet transform on 1D image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::iHaar1\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP n 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 422 of file haar\&.h\&.
+.SS "template<class T > static void Haar::iHaar2 (T * data, int width, int height, int iterations)\fC [inline]\fP, \fC [static]\fP"
+Perform inverse \fBHaar\fP wavelet transform on 2D image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::iHaar2\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 363 of file haar\&.h\&.
+.SS "template<class T > static void Haar::iHaar2 (cv::Mat & data, int iterations)\fC [inline]\fP, \fC [static]\fP"
+Perform inverse \fBHaar\fP wavelet transform on 2D OpenCV image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::iHaar2\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP & data 
+.br
+\fIint\fP iterations 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 455 of file haar\&.h\&.
+.SS "cv::Mat Haar::LaplacianPyramid (cv::Mat im, int levels, bool includeScale = \fCtrue\fP)\fC [static]\fP"
+perform Laplacian pyramid
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::LaplacianPyramid\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIint\fP levels 
+.br
+\fIbool\fP includeScale 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access private 
+.RE
+.PP
+
+.PP
+Definition at line 81 of file haar\&.cpp\&.
+.SS "cv::Mat Haar::PyramidLevels (cv::Mat data, int width, int height, int iterations, const int NoFocusImages)\fC [static]\fP"
+Get OpenCV image of best (modal) values from Pyramid composition
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::PyramidLevels\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP data 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.br
+\fIconst\fP int NoFocusImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access private 
+.RE
+.PP
+
+.PP
+Definition at line 139 of file haar\&.cpp\&.
+.SS "template<class T > static T* Haar::PyramidLevels (T * data, int width, int height, int iterations, int NoFocusImages)\fC [inline]\fP, \fC [static]\fP"
+Get image of best (modal) values from Pyramid composition
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::PyramidLevels\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.br
+\fIint\fP NoFocusImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+T* Access private 
+.RE
+.PP
+
+.PP
+Definition at line 44 of file haar\&.h\&.
+.SS "template<class T > static T* Haar::PyramidRegionLevels (T * data, int width, int height, int iterations, int NoFocusImages)\fC [inline]\fP, \fC [static]\fP"
+Get image of best (modal) values from local 8 connected neighbours of Pyramid composition
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName \fBHaar::PyramidRegionLevels\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * data 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.br
+\fIint\fP iterations 
+.br
+\fIint\fP NoFocusImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+T* Access private 
+.RE
+.PP
+
+.PP
+Definition at line 122 of file haar\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

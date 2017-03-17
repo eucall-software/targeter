@@ -1,0 +1,41 @@
+﻿  FocusStack.cpp
+h:\codeprojects\qtprojects\targeter-msvc\imagesContainer.h(20): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+FocusStack.cpp(111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+FocusStack.cpp(35): warning C4100: 'pMainWindow': unreferenced formal parameter
+FocusStack.cpp(44): warning C4189: 'probThreshold': local variable is initialized but not referenced
+FocusStack.cpp(40): warning C4101: 'maxI': unreferenced local variable
+FocusStack.cpp(117): warning C4189: 'kernel_length': local variable is initialized but not referenced
+FocusStack.cpp(44): warning C4189: 'EnergyThreshold': local variable is initialized but not referenced
+FocusStack.cpp(250): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+FocusStack.cpp(255): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+FocusStack.cpp(262): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+FocusStack.cpp(174): warning C4189: 'EnergyThreshold': local variable is initialized but not referenced
+FocusStack.cpp(299): warning C4189: 'regionSize': local variable is initialized but not referenced
+FocusStack.cpp(412): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  mainwindow.cpp
+h:\codeprojects\qtprojects\targeter-msvc\imagesContainer.h(20): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+mainwindow.cpp(176): warning C4189: 'rightClickItem': local variable is initialized but not referenced
+mainwindow.cpp(309): warning C4100: 'event': unreferenced formal parameter
+mainwindow.cpp(437): warning C4100: 'icn': unreferenced formal parameter
+mainwindow.cpp(526): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+mainwindow.cpp(568): warning C4100: 'bDisplay': unreferenced formal parameter
+mainwindow.cpp(597): warning C4100: 'bRGBSwap': unreferenced formal parameter
+mainwindow.cpp(625): warning C4100: 'type': unreferenced formal parameter
+mainwindow.cpp(703): warning C4100: 'index': unreferenced formal parameter
+mainwindow.cpp(911): warning C4100: 'item': unreferenced formal parameter
+mainwindow.cpp(1581): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+mainwindow.cpp(1644): warning C4189: 'obj': local variable is initialized but not referenced
+mainwindow.cpp(1642): warning C4101: 'item': unreferenced local variable
+mainwindow.cpp(1684): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+mainwindow.cpp(1673): warning C4101: 'item': unreferenced local variable
+mainwindow.cpp(1678): warning C4189: 'changeCurrent': local variable is initialized but not referenced
+mainwindow.cpp(1942): warning C4189: 'nLabels': local variable is initialized but not referenced
+mainwindow.cpp(2014): warning C4189: 'matchType': local variable is initialized but not referenced
+mainwindow.cpp(2117): warning C4189: 'matchType': local variable is initialized but not referenced
+  Generating Code...
+h:\codeprojects\qtprojects\targeter-msvc\mainwindow.cpp(2096): warning C4715: 'MainWindow::createScoreImage': not all control paths return a value
+h:\codeprojects\qtprojects\targeter-msvc\imagescontainer.h(29): warning C4715: 'ImagesContainer::getImageAt': not all control paths return a value
+h:\codeprojects\qtprojects\targeter-msvc\focusstack.cpp(550): warning C4700: uninitialized local variable 'y' used
+h:\codeprojects\qtprojects\targeter-msvc\focusstack.cpp(550): warning C4700: uninitialized local variable 'x' used
+  Targeter.vcxproj -> H:\CodeProjects\QTProjects\Targeter-msvc\debug\Targeter.exe
+  Targeter.vcxproj -> debug\Targeter.pdb (Full PDB)

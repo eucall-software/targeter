@@ -1,0 +1,465 @@
+.TH "HelperFunctions" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+HelperFunctions
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <HelperFunctions\&.h>\fP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static cv::Mat \fBdisplayHistogram\fP (int histSize, cv::Mat b_hist, int hist_w=512, int hist_h=400)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBputMatScale\fP (cv::Mat im, bool scale=true, bool bRed=true)"
+.br
+.ti -1c
+.RI "static void \fBresizeImagePreserve\fP (cv::Mat &imageIn, cv::Mat &imageOut, int newWidth, int newHeight)"
+.br
+.ti -1c
+.RI "static void \fBDebugPrintMat\fP (cv::Mat mat)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBtestReturn\fP (cv::Mat &im)"
+.br
+.ti -1c
+.RI "static int \fBreflect\fP (int M, int x)"
+.br
+.ti -1c
+.RI "static std::string \fBtype2str\fP (int type)"
+.br
+.ti -1c
+.RI "static bool \fBisGrayImage\fP (cv::Mat img)"
+.br
+.ti -1c
+.RI "static QImage \fBmakeQImage\fP (cv::Mat im, bool bRGBSwap=true)"
+.br
+.ti -1c
+.RI "static QImage::Format \fBgetFormat\fP (int type)"
+.br
+.ti -1c
+.RI "template<typename T > static cv::Mat \fBputImageScale\fP (T *im, int w, int h)"
+.br
+.ti -1c
+.RI "template<typename T > static cv::Mat \fBputImage\fP (T *im, int width, int height)"
+.br
+.ti -1c
+.RI "template<typename T > static T * \fBgetImage\fP (cv::Mat &m)"
+.br
+.ti -1c
+.RI "template<typename T > static void \fBrescale\fP (T *im, int w, int h)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class for useful helper image manipulation functions 
+.PP
+Definition at line 11 of file HelperFunctions\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void HelperFunctions::DebugPrintMat (cv::Mat mat)\fC [static]\fP"
+prints 2D matrix to screen
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::DebugPrintMat\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP mat 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 342 of file HelperFunctions\&.cpp\&.
+.SS "cv::Mat HelperFunctions::displayHistogram (int histSize, cv::Mat b_hist, int hist_w = \fC512\fP, int hist_h = \fC400\fP)\fC [static]\fP"
+Returns an OpenCV image from a histogram (b_hist)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::displayHistogram\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP histSize 
+.br
+\fIcv::Mat\fP b_hist 
+.br
+\fIint\fP hist_w 
+.br
+\fIint\fP hist_h 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+Draw for each channel
+.PP
+Draw for each channel 
+.PP
+Definition at line 71 of file HelperFunctions\&.cpp\&.
+.SS "QImage::Format HelperFunctions::getFormat (int type)\fC [static]\fP"
+Returns QT Image type for OpenCV type
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::getFormat\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+QT_NAMESPACE::QImage::Format Access public 
+.RE
+.PP
+
+.PP
+Definition at line 207 of file HelperFunctions\&.cpp\&.
+.SS "template<typename T > static T* HelperFunctions::getImage (cv::Mat & m)\fC [inline]\fP, \fC [static]\fP"
+Returns a greyscale 1D int* image array from an OpenCV image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::getImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP & m 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+T* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 135 of file HelperFunctions\&.h\&.
+.SS "bool HelperFunctions::isGrayImage (cv::Mat img)\fC [static]\fP"
+determines if image is greyscale
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::isGrayImage\fP Qualifier // returns true if the given 3 channel image is B = G = R 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP img 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+bool Access public 
+.RE
+.PP
+
+.PP
+Definition at line 242 of file HelperFunctions\&.cpp\&.
+.SS "QImage HelperFunctions::makeQImage (cv::Mat im, bool bRGBSwap = \fCtrue\fP)\fC [static]\fP"
+make QImage from OpenCV image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::makeQImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIbool\fP bRGBSwap 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+QT_NAMESPACE::QImage Access public 
+.RE
+.PP
+
+.PP
+Definition at line 181 of file HelperFunctions\&.cpp\&.
+.SS "template<typename T > static cv::Mat HelperFunctions::putImage (T * im, int width, int height)\fC [inline]\fP, \fC [static]\fP"
+creates a opencv image from int* 1D image array
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName putImage Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * im 
+.br
+\fIint\fP width 
+.br
+\fIint\fP height 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public static 
+.RE
+.PP
+
+.PP
+Definition at line 104 of file HelperFunctions\&.h\&.
+.SS "template<typename T > static cv::Mat HelperFunctions::putImageScale (T * im, int w, int h)\fC [inline]\fP, \fC [static]\fP"
+creates a scaled opencv image from int* 1D image array
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/08
+.RE
+.PP
+FullName putImageScale Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * im 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public static 
+.RE
+.PP
+
+.PP
+Definition at line 51 of file HelperFunctions\&.h\&.
+.SS "cv::Mat HelperFunctions::putMatScale (cv::Mat im, bool scale = \fCtrue\fP, bool bRed = \fCtrue\fP)\fC [static]\fP"
+returns a 0-255 scaled opencv image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::putMatScale\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIbool\fP scale 
+.br
+\fIbool\fP bRed 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+
+.PP
+Definition at line 301 of file HelperFunctions\&.cpp\&.
+.SS "int HelperFunctions::reflect (int M, int x)\fC [static]\fP"
+Handles vector boundaries by reflecting values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::reflect\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP M 
+.br
+\fIint\fP x 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int Access public 
+.RE
+.PP
+
+.PP
+Definition at line 271 of file HelperFunctions\&.cpp\&.
+.SS "template<typename T > static void HelperFunctions::rescale (T * im, int w, int h)\fC [inline]\fP, \fC [static]\fP"
+rescales image pixel values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::rescale\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIT\fP * im 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 182 of file HelperFunctions\&.h\&.
+.SS "void HelperFunctions::resizeImagePreserve (cv::Mat & imageIn, cv::Mat & imageOut, int newWidth, int newHeight)\fC [static]\fP"
+Resizes image while preserving aspect ratio
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::resizeImagePreserve\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP & imageIn 
+.br
+\fIcv::Mat\fP & imageOut 
+.br
+\fIint\fP newWidth 
+.br
+\fIint\fP newHeight 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 151 of file HelperFunctions\&.cpp\&.
+.SS "string HelperFunctions::type2str (int type)\fC [static]\fP"
+Returns a string representation of the opencv image type
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBHelperFunctions::type2str\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+std::string Access public 
+.RE
+.PP
+
+.PP
+Definition at line 31 of file HelperFunctions\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

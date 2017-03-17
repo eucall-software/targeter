@@ -1,0 +1,82 @@
+.TH "SuperSliderHandle" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SuperSliderHandle
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits QLabel\&.
+.SS "Public Slots"
+
+.in +1c
+.ti -1c
+.RI "void \fBsetValue\fP (double \fBvalue\fP)"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSuperSliderHandle\fP (\fBSuperSlider\fP *\fBparent\fP=0)"
+.br
+.ti -1c
+.RI "void \fBmousePressEvent\fP (QMouseEvent *event)"
+.br
+.ti -1c
+.RI "int \fBvalue\fP ()"
+.br
+.ti -1c
+.RI "int \fBmapValue\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBSuperSlider\fP * \fBparent\fP"
+.br
+.ti -1c
+.RI "bool \fBhandleActivated\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 64 of file superslider\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SuperSliderHandle::SuperSliderHandle (\fBSuperSlider\fP * parent = \fC0\fP)"
+Constructor 
+.PP
+Definition at line 48 of file superslider\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "int SuperSliderHandle::mapValue ()"
+Maps mouse coordinates to slider values 
+.SS "void SuperSliderHandle::mousePressEvent (QMouseEvent * event)"
+An overloaded mousePressevent so that we can start grabbing the cursor and using it's position for the value 
+.PP
+Definition at line 95 of file superslider\&.cpp\&.
+.SS "void SuperSliderHandle::setValue (double value)\fC [slot]\fP"
+Sets the value of the handle with respect to the slider 
+.PP
+Definition at line 119 of file superslider\&.cpp\&.
+.SS "int SuperSliderHandle::value ()"
+Returns the value of this handle with respect to the slider 
+.PP
+Definition at line 128 of file superslider\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "bool SuperSliderHandle::handleActivated"
+Store a bool to determine if the alternate handle has been activated 
+.PP
+Definition at line 84 of file superslider\&.h\&.
+.SS "\fBSuperSlider\fP* SuperSliderHandle::parent"
+Store the parent as a slider so that you don't have to keep casting it 
+.PP
+Definition at line 81 of file superslider\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

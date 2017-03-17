@@ -1,0 +1,562 @@
+.TH "targeterImage" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+targeterImage
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <targeterimage\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBtargeterImage\fP (\fBImagesContainer\fP *pWin)"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP ()"
+.br
+.ti -1c
+.RI "\fB~targeterImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBaddImageFromFile\fP (std::string filename, imageType::imageType type=imageType::display)"
+.br
+.ti -1c
+.RI "void \fBaddImageEx\fP (cv::Mat im, imageType::imageType type, std::string descriptiveName='', std::string tooltip='', std::string filename='')"
+.br
+.ti -1c
+.RI "void \fBaddImage\fP (cv::Mat im)"
+.br
+.ti -1c
+.RI "cv::Mat & \fBgetImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBcreateQTImage\fP (bool bRGBSwap=true)"
+.br
+.ti -1c
+.RI "QImage \fBgetQTImage\fP ()"
+.br
+.ti -1c
+.RI "std::string \fBsetDefaultName\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetImageType\fP (imageType::imageType type)"
+.br
+.ti -1c
+.RI "imageType::imageType \fBgetImageFunction\fP ()"
+.br
+.ti -1c
+.RI "std::vector< int > & \fBgetDerivedImageArray\fP ()"
+.br
+.ti -1c
+.RI "void \fBaddDerivedIndex\fP (int ind)"
+.br
+.ti -1c
+.RI "void \fBaddDerivedIndexes\fP (const std::vector< int > &to_add)"
+.br
+.ti -1c
+.RI "\fBtargeterImage\fP & \fBgetImageOfType\fP (imageType::imageType imageFunction)"
+.br
+.ti -1c
+.RI "void \fBremoveDerivedIndex\fP (int ind)"
+.br
+.ti -1c
+.RI "void \fBremoveDerivedIndexes\fP (const std::vector< int > &to_remove)"
+.br
+.ti -1c
+.RI "std::string \fBgetName\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetName\fP (std::string s)"
+.br
+.ti -1c
+.RI "int * \fBget1DImage\fP (imageType::imageType type)"
+.br
+.ti -1c
+.RI "void \fBset1DImage\fP (int *im, imageType::imageType type=imageType::display)"
+.br
+.ti -1c
+.RI "void \fBfree1DImages\fP ()"
+.br
+.ti -1c
+.RI "int \fBgetImageRows\fP ()"
+.br
+.ti -1c
+.RI "int \fBgetImageCols\fP ()"
+.br
+.ti -1c
+.RI "cv::Size \fBgetImageSize\fP ()"
+.br
+.ti -1c
+.RI "int \fBgetImageType\fP ()"
+.br
+.ti -1c
+.RI "cv::Mat & \fBgetLabelsImage\fP ()"
+.br
+.ti -1c
+.RI "cv::Mat & \fBgetStatsImage\fP ()"
+.br
+.ti -1c
+.RI "cv::Mat & \fBgetCentroidsImage\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetLabelsImage\fP (cv::Mat im)"
+.br
+.ti -1c
+.RI "void \fBsetStatsImage\fP (cv::Mat im)"
+.br
+.ti -1c
+.RI "void \fBsetCentroidsImage\fP (cv::Mat im)"
+.br
+.ti -1c
+.RI "void \fBsetMaskType\fP (drawingMode::drawingMode mode)"
+.br
+.ti -1c
+.RI "drawingMode::drawingMode \fBgetMaskType\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class to represent targeter image used to store associated image information and group images together 
+.PP
+Definition at line 16 of file targeterimage\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "targeterImage::targeterImage (\fBImagesContainer\fP * pImages)"
+Constructor for \fBtargeterImage\fP class, has pointer to image array
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::targeterImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBImagesContainer\fP\fP * pImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 26 of file targeterimage\&.cpp\&.
+.SS "targeterImage::targeterImage ()"
+Constructor for \fBtargeterImage\fP class
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::targeterImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 50 of file targeterimage\&.cpp\&.
+.SS "targeterImage::~targeterImage ()"
+\fBtargeterImage\fP destructor
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::~targeterImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+Access public 
+.RE
+.PP
+
+.PP
+Definition at line 73 of file targeterimage\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void targeterImage::addImage (cv::Mat im)"
+adds image and creates QT Image copy for display
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::addImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 345 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::addImageEx (cv::Mat im, imageType::imageType type, std::string descriptiveName = \fC''\fP, std::string tooltip = \fC''\fP, std::string filename = \fC''\fP)"
+Extended method to create image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::addImageEx\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIimageType::imageType\fP type 
+.br
+\fIstd::string\fP descriptiveName 
+.br
+\fIstd::string\fP tooltip 
+.br
+\fIstd::string\fP filename 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 282 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::addImageFromFile (std::string filename, imageType::imageType type = \fCimageType::display\fP)"
+loads image from file
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::addImageFromFile\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstd::string\fP filename 
+.br
+\fIimageType::imageType\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 256 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::createQTImage (bool bRGBSwap = \fCtrue\fP)"
+Creates a QImage for display purposes from an OpenCV image (shares memory)
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/13
+.RE
+.PP
+FullName targeterImage::getQImage Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbool\fP bRGBSwap 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access private 
+.RE
+.PP
+
+.PP
+Definition at line 196 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::free1DImages ()"
+free's memory used by image pointers
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::free1DImages\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 130 of file targeterimage\&.cpp\&.
+.SS "int * targeterImage::get1DImage (imageType::imageType type)"
+Returns int* image pointer depending on type of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::get1DImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimageType::imageType\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 90 of file targeterimage\&.cpp\&.
+.SS "cv::Mat & targeterImage::getImage ()"
+returns the current display image if existing or a valid image if not
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/15
+.RE
+.PP
+FullName \fBtargeterImage::getImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat& Access public 
+.RE
+.PP
+
+.PP
+Definition at line 216 of file targeterimage\&.cpp\&.
+.SS "\fBtargeterImage\fP & targeterImage::getImageOfType (imageType::imageType imageFunction)"
+gets associated image of a certain type
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::getImageOfType\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimageType::imageType\fP imageFunction 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBtargeterImage::targeterImage\fP& Access public 
+.RE
+.PP
+
+.PP
+Definition at line 156 of file targeterimage\&.cpp\&.
+.SS "QImage targeterImage::getQTImage ()"
+gets QImage and if not exising creates one from valid cv::Mat image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/15
+.RE
+.PP
+FullName \fBtargeterImage::getQTImage\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+QT_NAMESPACE::QImage Access public 
+.RE
+.PP
+
+.PP
+Definition at line 178 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::removeDerivedIndex (int ind)"
+remove associated image given its ID
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::removeDerivedIndex\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP ind 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 365 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::removeDerivedIndexes (const std::vector< int > & to_remove)"
+remove associated images given their ID's
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::removeDerivedIndexes\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconst\fP std::vector<int> & to_remove 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 384 of file targeterimage\&.cpp\&.
+.SS "void targeterImage::set1DImage (int * im, imageType::imageType type = \fCimageType::display\fP)"
+sets int* image pointer, depending on type of image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::set1DImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP * im 
+.br
+\fIimageType::imageType\fP type 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 111 of file targeterimage\&.cpp\&.
+.SS "std::string targeterImage::setDefaultName ()"
+sets a default name for image based on type
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/17
+.RE
+.PP
+FullName \fBtargeterImage::setDefaultName\fP Qualifier 
+.PP
+\fBReturns:\fP
+.RS 4
+std::string Access public 
+.RE
+.PP
+
+.PP
+Definition at line 310 of file targeterimage\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

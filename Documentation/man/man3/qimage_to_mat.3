@@ -1,0 +1,50 @@
+.TH "qimage_to_mat< Policy >" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+qimage_to_mat< Policy >
+.SH SYNOPSIS
+.br
+.PP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "template<typename Image > static cv::Mat \fBrun\fP (Image &&img, bool swap)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<typename Policy>
+.br
+struct qimage_to_mat< Policy >"
+generic class for reducing duplicate codes 
+.PP
+Definition at line 46 of file opencvtoqt\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<typename Policy > template<typename Image > cv::Mat \fBqimage_to_mat\fP< Policy >::run (Image && img, bool swap)\fC [static]\fP"
+transform QImage to cv::Mat
+.PP
+FullName \fBqimage_to_mat::run\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIImage\fP & & img 
+.br
+\fIbool\fP swap (true : swap RGB to BGR; false, do nothing) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public static 
+.RE
+.PP
+
+.PP
+Definition at line 66 of file opencvtoqt\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

@@ -1,0 +1,207 @@
+.TH "ImageProcessing" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ImageProcessing
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <imageprocessing\&.h>\fP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBGaussianBlur\fP (int *im, int w, int h, int repeat)"
+.br
+.ti -1c
+.RI "static void \fBmodalFilter\fP (int *im, int w, int h, int fSize, int NoFocusImages)"
+.br
+.ti -1c
+.RI "static void \fBmodalFilter\fP (cv::Mat &im, int w, int h, int fSize, int NoFocusImages)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBThreshold\fP (cv::Mat &im, int min, int max)"
+.br
+.ti -1c
+.RI "static int * \fBhistClusterRGBImage\fP (cv::Mat hueHist, int histSize, int NoCluster=2)"
+.br
+.ti -1c
+.RI "static cv::Mat \fBHistogramClusteringGray\fP (cv::Mat im, int NoClusters=2)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+class to for image processing functionality shared by other classes 
+.PP
+Definition at line 11 of file imageprocessing\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void ImageProcessing::GaussianBlur (int * im, int w, int h, int repeat)\fC [static]\fP"
+Performs Guassian blur filter on 1D int* image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBImageProcessing::GaussianBlur\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP * im 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.br
+\fIint\fP repeat 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 504 of file imageprocessing\&.cpp\&.
+.SS "int * ImageProcessing::histClusterRGBImage (cv::Mat hueHist, int histSize, int NoClusters = \fC2\fP)\fC [static]\fP"
+Returns image that has been posterized based on method of histogram variances
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBImageProcessing::histClusterRGBImage\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP hueHist 
+.br
+\fIint\fP histSize 
+.br
+\fIint\fP NoClusters 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+int* Access public 
+.RE
+.PP
+
+.PP
+Definition at line 169 of file imageprocessing\&.cpp\&.
+.SS "cv::Mat ImageProcessing::HistogramClusteringGray (cv::Mat im, int NoClusters = \fC2\fP)\fC [static]\fP"
+Returns posterized opencv image which has NoClusters numbers of levels
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBImageProcessing::HistogramClusteringGray\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcv::Mat\fP im 
+.br
+\fIint\fP NoClusters 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+
+.PP
+Definition at line 80 of file imageprocessing\&.cpp\&.
+.SS "void ImageProcessing::modalFilter (int * im, int w, int h, int fSize, int NoFocusImages)\fC [static]\fP"
+performs modal filter on 1D int* image
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBImageProcessing::modalFilter\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIint\fP * im 
+.br
+\fIint\fP w 
+.br
+\fIint\fP h 
+.br
+\fIint\fP fSize 
+.br
+\fIint\fP NoFocusImages 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void Access public 
+.RE
+.PP
+
+.PP
+Definition at line 431 of file imageprocessing\&.cpp\&.
+.SS "cv::Mat ImageProcessing::Threshold (cv::Mat & im, int min, int max)\fC [static]\fP"
+Threshold image between min and max greyscale values
+.PP
+\fBAuthor:\fP
+.RS 4
+David Watts 
+.RE
+.PP
+\fBSince:\fP
+.RS 4
+2017/03/07
+.RE
+.PP
+FullName \fBImageProcessing::Threshold\fP Qualifier 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIMat\fP & im 
+.br
+\fIint\fP min 
+.br
+\fIint\fP max 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+cv::Mat Access public 
+.RE
+.PP
+
+.PP
+Definition at line 32 of file imageprocessing\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

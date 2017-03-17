@@ -1,0 +1,366 @@
+\hypertarget{class_focus_stack}{}\section{Focus\+Stack Class Reference}
+\label{class_focus_stack}\index{Focus\+Stack@{Focus\+Stack}}
+
+
+{\ttfamily \#include $<$Focus\+Stack.\+h$>$}
+
+
+
+Collaboration diagram for Focus\+Stack\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=237pt]{class_focus_stack__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static cv\+::\+Mat $\ast$ \hyperlink{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75}{process\+Image\+Stack} (std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&image\+Stack, std\+::vector$<$ int $>$ \&image\+Indexes, \hyperlink{class_main_window}{Main\+Window} $\ast$p\+Main\+Window)
+\item 
+static cv\+::\+Mat $\ast$ \hyperlink{class_focus_stack_a6342aff10617c4346b32f61ea549b378}{process\+Image\+Stack2} (std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&image\+Stack, std\+::vector$<$ int $>$ \&image\+Indexes, \hyperlink{class_main_window}{Main\+Window} $\ast$p\+Main\+Window)
+\item 
+static cv\+::\+Mat $\ast$ \hyperlink{class_focus_stack_a141b4869671825fed21068a9c9f2c150}{process\+Image\+Stack3} (std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&image\+Stack, std\+::vector$<$ int $>$ \&image\+Indexes, \hyperlink{class_main_window}{Main\+Window} $\ast$p\+Main\+Window)
+\item 
+static cv\+::\+Mat $\ast$ \hyperlink{class_focus_stack_ac55d6cde57441ffd9b023fc936529802}{merge\+Image\+Stack} (std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&image\+Stack, cv\+::\+Mat index\+Image, int w, int h)
+\item 
+static double \hyperlink{class_focus_stack_a4aaf824aa1df503f99c24e3cf9a40189}{modified\+Laplacian} (const cv\+::\+Mat \&src)
+\item 
+static void \hyperlink{class_focus_stack_a1ab8c45eab892975ad3dbdf039add315}{fill\+Error\+Regions} (int $\ast$im, int w, int h, int f\+Size, int No\+Focus\+Images)
+\item 
+\mbox{\Hypertarget{class_focus_stack_ae47c1a7f8114be3d4b75949516e49002}\label{class_focus_stack_ae47c1a7f8114be3d4b75949516e49002}} 
+static void {\bfseries fill\+Error\+Regions} (cv\+::\+Mat \&im, int w, int h, int f\+Size, int No\+Focus\+Images)
+\item 
+static double \hyperlink{class_focus_stack_afc9e634d57f2b2f0df1d6d615cd44c15}{variance\+Of\+Laplacian} (const cv\+::\+Mat \&src)
+\item 
+static double \hyperlink{class_focus_stack_a6b65715e671ef5a016d9e216705d687d}{tenengrad} (const cv\+::\+Mat \&src, int ksize)
+\item 
+static double \hyperlink{class_focus_stack_ad1ceb7d7b721e11b2861332823c0b09d}{normalized\+Graylevel\+Variance} (const cv\+::\+Mat \&src)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+class that manages performing focus stack, ie. takes image sequence and combines them into single in focus image 
+
+Definition at line 12 of file Focus\+Stack.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_focus_stack_a1ab8c45eab892975ad3dbdf039add315}\label{class_focus_stack_a1ab8c45eab892975ad3dbdf039add315}} 
+\index{Focus\+Stack@{Focus\+Stack}!fill\+Error\+Regions@{fill\+Error\+Regions}}
+\index{fill\+Error\+Regions@{fill\+Error\+Regions}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{fill\+Error\+Regions()}{fillErrorRegions()}}
+{\footnotesize\ttfamily void Focus\+Stack\+::fill\+Error\+Regions (\begin{DoxyParamCaption}\item[{int $\ast$}]{im,  }\item[{int}]{w,  }\item[{int}]{h,  }\item[{int}]{f\+Size,  }\item[{int}]{No\+Focus\+Images }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Compares neighbouring pixels to determine best value for focusing
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_a1ab8c45eab892975ad3dbdf039add315}{Focus\+Stack\+::fill\+Error\+Regions} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em int} & $\ast$ im \\
+\hline
+{\em int} & w \\
+\hline
+{\em int} & h \\
+\hline
+{\em int} & f\+Size \\
+\hline
+{\em int} & No\+Focus\+Images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void Access public 
+\end{DoxyReturn}
+
+
+Definition at line 456 of file Focus\+Stack.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_a1ab8c45eab892975ad3dbdf039add315_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_focus_stack_ac55d6cde57441ffd9b023fc936529802}\label{class_focus_stack_ac55d6cde57441ffd9b023fc936529802}} 
+\index{Focus\+Stack@{Focus\+Stack}!merge\+Image\+Stack@{merge\+Image\+Stack}}
+\index{merge\+Image\+Stack@{merge\+Image\+Stack}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{merge\+Image\+Stack()}{mergeImageStack()}}
+{\footnotesize\ttfamily Mat $\ast$ Focus\+Stack\+::merge\+Image\+Stack (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&}]{image\+Stack,  }\item[{cv\+::\+Mat}]{index\+Image,  }\item[{int}]{w,  }\item[{int}]{h }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Merges images based on indexing the vector using the values in index\+Image
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_ac55d6cde57441ffd9b023fc936529802}{Focus\+Stack\+::merge\+Image\+Stack} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Vector$<$targeter\+Image$>$} & \& image\+Stack \\
+\hline
+{\em Mat} & index\+Image \\
+\hline
+{\em int} & w \\
+\hline
+{\em int} & h \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 408 of file Focus\+Stack.\+cpp.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_ac55d6cde57441ffd9b023fc936529802_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_focus_stack_a4aaf824aa1df503f99c24e3cf9a40189}\label{class_focus_stack_a4aaf824aa1df503f99c24e3cf9a40189}} 
+\index{Focus\+Stack@{Focus\+Stack}!modified\+Laplacian@{modified\+Laplacian}}
+\index{modified\+Laplacian@{modified\+Laplacian}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{modified\+Laplacian()}{modifiedLaplacian()}}
+{\footnotesize\ttfamily double Focus\+Stack\+::modified\+Laplacian (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Open\+CV port of \textquotesingle{}L\+A\+PM\textquotesingle{} algorithm (Nayar89)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_a4aaf824aa1df503f99c24e3cf9a40189}{Focus\+Stack\+::modified\+Laplacian} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat \& src \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Access public 
+\end{DoxyReturn}
+
+
+Definition at line 610 of file Focus\+Stack.\+cpp.
+
+\mbox{\Hypertarget{class_focus_stack_ad1ceb7d7b721e11b2861332823c0b09d}\label{class_focus_stack_ad1ceb7d7b721e11b2861332823c0b09d}} 
+\index{Focus\+Stack@{Focus\+Stack}!normalized\+Graylevel\+Variance@{normalized\+Graylevel\+Variance}}
+\index{normalized\+Graylevel\+Variance@{normalized\+Graylevel\+Variance}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{normalized\+Graylevel\+Variance()}{normalizedGraylevelVariance()}}
+{\footnotesize\ttfamily double Focus\+Stack\+::normalized\+Graylevel\+Variance (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Open\+CV port of \textquotesingle{}G\+L\+VN\textquotesingle{} algorithm (Santos97)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_ad1ceb7d7b721e11b2861332823c0b09d}{Focus\+Stack\+::normalized\+Graylevel\+Variance} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat \& src \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Access public 
+\end{DoxyReturn}
+
+
+Definition at line 698 of file Focus\+Stack.\+cpp.
+
+\mbox{\Hypertarget{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75}\label{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75}} 
+\index{Focus\+Stack@{Focus\+Stack}!process\+Image\+Stack@{process\+Image\+Stack}}
+\index{process\+Image\+Stack@{process\+Image\+Stack}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{process\+Image\+Stack()}{processImageStack()}}
+{\footnotesize\ttfamily Mat $\ast$ Focus\+Stack\+::process\+Image\+Stack (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&}]{image\+Stack,  }\item[{std\+::vector$<$ int $>$ \&}]{image\+Indexes,  }\item[{\hyperlink{class_main_window}{Main\+Window} $\ast$}]{p\+Main\+Window }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Creates a single \textquotesingle{}in focus\textquotesingle{} image from a vector of images partially in focus (focus stack)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75}{Focus\+Stack\+::process\+Image\+Stack} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Vector$<$targeter\+Image$>$} & \& image\+Stack \\
+\hline
+{\em Q\+Vector$<$int$>$} & \& image\+Indexes \\
+\hline
+{\em \hyperlink{class_main_window}{Main\+Window}} & $\ast$ p\+Main\+Window \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 35 of file Focus\+Stack.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_aca40f92aa05f5aa0a2e58c846bb69a75_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_focus_stack_a6342aff10617c4346b32f61ea549b378}\label{class_focus_stack_a6342aff10617c4346b32f61ea549b378}} 
+\index{Focus\+Stack@{Focus\+Stack}!process\+Image\+Stack2@{process\+Image\+Stack2}}
+\index{process\+Image\+Stack2@{process\+Image\+Stack2}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{process\+Image\+Stack2()}{processImageStack2()}}
+{\footnotesize\ttfamily cv\+::\+Mat $\ast$ Focus\+Stack\+::process\+Image\+Stack2 (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&}]{image\+Stack,  }\item[{std\+::vector$<$ int $>$ \&}]{image\+Indexes,  }\item[{\hyperlink{class_main_window}{Main\+Window} $\ast$}]{p\+Main\+Window }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Creates a single \textquotesingle{}in focus\textquotesingle{} image from a vector of images partially in focus (focus stack) (alternative implementation)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_a6342aff10617c4346b32f61ea549b378}{Focus\+Stack\+::process\+Image\+Stack2} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Vector$<$targeter\+Image$>$} & \& image\+Stack \\
+\hline
+{\em Q\+Vector$<$int$>$} & \& image\+Indexes \\
+\hline
+{\em \hyperlink{class_main_window}{Main\+Window}} & $\ast$ p\+Main\+Window \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 290 of file Focus\+Stack.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_a6342aff10617c4346b32f61ea549b378_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_focus_stack_a141b4869671825fed21068a9c9f2c150}\label{class_focus_stack_a141b4869671825fed21068a9c9f2c150}} 
+\index{Focus\+Stack@{Focus\+Stack}!process\+Image\+Stack3@{process\+Image\+Stack3}}
+\index{process\+Image\+Stack3@{process\+Image\+Stack3}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{process\+Image\+Stack3()}{processImageStack3()}}
+{\footnotesize\ttfamily cv\+::\+Mat $\ast$ Focus\+Stack\+::process\+Image\+Stack3 (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{classtargeter_image}{targeter\+Image} $>$ \&}]{image\+Stack,  }\item[{std\+::vector$<$ int $>$ \&}]{image\+Indexes,  }\item[{\hyperlink{class_main_window}{Main\+Window} $\ast$}]{p\+Main\+Window }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Creates a single \textquotesingle{}in focus\textquotesingle{} image from a vector of images partially in focus (focus stack) (alternative implementation)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_a141b4869671825fed21068a9c9f2c150}{Focus\+Stack\+::process\+Image\+Stack3} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em Q\+Vector$<$targeter\+Image$>$} & \& image\+Stack \\
+\hline
+{\em Q\+Vector$<$int$>$} & \& image\+Indexes \\
+\hline
+{\em \hyperlink{class_main_window}{Main\+Window}} & $\ast$ p\+Main\+Window \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::\+Mat$\ast$ Access public 
+\end{DoxyReturn}
+
+
+Definition at line 164 of file Focus\+Stack.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_focus_stack_a141b4869671825fed21068a9c9f2c150_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_focus_stack_a6b65715e671ef5a016d9e216705d687d}\label{class_focus_stack_a6b65715e671ef5a016d9e216705d687d}} 
+\index{Focus\+Stack@{Focus\+Stack}!tenengrad@{tenengrad}}
+\index{tenengrad@{tenengrad}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{tenengrad()}{tenengrad()}}
+{\footnotesize\ttfamily double Focus\+Stack\+::tenengrad (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{src,  }\item[{int}]{ksize }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Open\+CV port of \textquotesingle{}T\+E\+NG\textquotesingle{} algorithm (Krotkov86)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_a6b65715e671ef5a016d9e216705d687d}{Focus\+Stack\+::tenengrad} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat \& src \\
+\hline
+{\em int} & ksize \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Access public 
+\end{DoxyReturn}
+
+
+Definition at line 671 of file Focus\+Stack.\+cpp.
+
+\mbox{\Hypertarget{class_focus_stack_afc9e634d57f2b2f0df1d6d615cd44c15}\label{class_focus_stack_afc9e634d57f2b2f0df1d6d615cd44c15}} 
+\index{Focus\+Stack@{Focus\+Stack}!variance\+Of\+Laplacian@{variance\+Of\+Laplacian}}
+\index{variance\+Of\+Laplacian@{variance\+Of\+Laplacian}!Focus\+Stack@{Focus\+Stack}}
+\subsubsection{\texorpdfstring{variance\+Of\+Laplacian()}{varianceOfLaplacian()}}
+{\footnotesize\ttfamily double Focus\+Stack\+::variance\+Of\+Laplacian (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Open\+CV port of \textquotesingle{}L\+A\+PV\textquotesingle{} algorithm (Pech2000)
+
+\begin{DoxyAuthor}{Author}
+David Watts 
+\end{DoxyAuthor}
+\begin{DoxySince}{Since}
+2017/03/07
+\end{DoxySince}
+Full\+Name \hyperlink{class_focus_stack_afc9e634d57f2b2f0df1d6d615cd44c15}{Focus\+Stack\+::variance\+Of\+Laplacian} Qualifier 
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat \& src \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Access public 
+\end{DoxyReturn}
+
+
+Definition at line 643 of file Focus\+Stack.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/Focus\+Stack.\+h\item 
+H\+:/\+Code\+Projects/\+Q\+T\+Projects/\+Targeter-\/msvc/Focus\+Stack.\+cpp\end{DoxyCompactItemize}

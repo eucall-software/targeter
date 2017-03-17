@@ -1,0 +1,89 @@
+.TH "SuperSlider" 3 "Fri Mar 17 2017" "Version 1" "targeter" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+SuperSlider
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits QSlider\&.
+.SS "Signals"
+
+.in +1c
+.ti -1c
+.RI "void \fBalt_valueChanged\fP (int)"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSuperSlider\fP (QWidget *parent=0)"
+.br
+.ti -1c
+.RI "void \fBmouseReleaseEvent\fP (QMouseEvent *event)"
+.br
+.ti -1c
+.RI "int \fBalt_value\fP ()"
+.br
+.ti -1c
+.RI "void \fBalt_setValue\fP (int value)"
+.br
+.ti -1c
+.RI "void \fBReset\fP ()"
+.br
+.ti -1c
+.RI "void \fBalt_update\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBSuperSliderHandle\fP * \fBalt_handle\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 17 of file superslider\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "SuperSlider::SuperSlider (QWidget * parent = \fC0\fP)"
+Constructor 
+.PP
+Definition at line 28 of file superslider\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void SuperSlider::alt_setValue (int value)"
+Convenience function for setting the value of the alternate handle 
+.PP
+Definition at line 67 of file superslider\&.cpp\&.
+.SS "void SuperSlider::alt_update ()"
+Used to update the position of the alternate handle through the use of an event filter 
+.PP
+Definition at line 82 of file superslider\&.cpp\&.
+.SS "int SuperSlider::alt_value ()"
+Returns the slider value for the alternate handle 
+.PP
+Definition at line 62 of file superslider\&.cpp\&.
+.SS "void SuperSlider::alt_valueChanged (int)\fC [signal]\fP"
+Constructor 
+.SS "void SuperSlider::mouseReleaseEvent (QMouseEvent * event)"
+Overridden mouse release event 
+.PP
+Definition at line 72 of file superslider\&.cpp\&.
+.SS "void SuperSlider::Reset ()"
+Resets the alternate handle to the right side of the slider 
+.PP
+Definition at line 135 of file superslider\&.cpp\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBSuperSliderHandle\fP* SuperSlider::alt_handle"
+Store the alternate handle for this slider 
+.PP
+Definition at line 25 of file superslider\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for targeter from the source code\&.

@@ -1,0 +1,35 @@
+var annotated_dup =
+[
+    [ "Ui", null, [
+      [ "MainWindow", "class_ui_1_1_main_window.html", null ],
+      [ "SettingsDialog", "class_ui_1_1_settings_dialog.html", null ]
+    ] ],
+    [ "drawingShape", "structdrawing_shape.html", "structdrawing_shape" ],
+    [ "entropyCluster", "structentropy_cluster.html", "structentropy_cluster" ],
+    [ "FocusStack", "class_focus_stack.html", null ],
+    [ "Haar", "class_haar.html", null ],
+    [ "HelperFunctions", "class_helper_functions.html", null ],
+    [ "histCluster", "structhist_cluster.html", "structhist_cluster" ],
+    [ "histogramBar", "structhistogram_bar.html", "structhistogram_bar" ],
+    [ "ImageProcessing", "class_image_processing.html", null ],
+    [ "ImagesContainer", "class_images_container.html", "class_images_container" ],
+    [ "MainWindow", "class_main_window.html", "class_main_window" ],
+    [ "MergeSettingsDialog", "class_merge_settings_dialog.html", "class_merge_settings_dialog" ],
+    [ "OpenCVtrilateralFilter", "class_open_c_vtrilateral_filter.html", "class_open_c_vtrilateral_filter" ],
+    [ "PaintQLabel", "class_paint_q_label.html", "class_paint_q_label" ],
+    [ "qimage_to_mat", "structqimage__to__mat.html", null ],
+    [ "qimage_to_mat_cpy_policy", "structqimage__to__mat__cpy__policy.html", null ],
+    [ "qimage_to_mat_ref_policy", "structqimage__to__mat__ref__policy.html", null ],
+    [ "qt_meta_stringdata_MainWindow_t", "structqt__meta__stringdata___main_window__t.html", "structqt__meta__stringdata___main_window__t" ],
+    [ "qt_meta_stringdata_PaintQLabel_t", "structqt__meta__stringdata___paint_q_label__t.html", "structqt__meta__stringdata___paint_q_label__t" ],
+    [ "qt_meta_stringdata_SettingsDialog_t", "structqt__meta__stringdata___settings_dialog__t.html", "structqt__meta__stringdata___settings_dialog__t" ],
+    [ "SettingsDialog", "class_settings_dialog.html", "class_settings_dialog" ],
+    [ "SettingsValues", "struct_settings_values.html", "struct_settings_values" ],
+    [ "SliderEventFilter", "class_slider_event_filter.html", "class_slider_event_filter" ],
+    [ "SliderProxy", "class_slider_proxy.html", "class_slider_proxy" ],
+    [ "SuperSlider", "class_super_slider.html", "class_super_slider" ],
+    [ "SuperSliderHandle", "class_super_slider_handle.html", "class_super_slider_handle" ],
+    [ "targeterImage", "classtargeter_image.html", "classtargeter_image" ],
+    [ "Ui_MainWindow", "class_ui___main_window.html", "class_ui___main_window" ],
+    [ "Ui_SettingsDialog", "class_ui___settings_dialog.html", "class_ui___settings_dialog" ]
+];
