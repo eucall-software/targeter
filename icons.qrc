@@ -9,7 +9,6 @@
         <file>icons/24/polygon.png</file>
         <file>icons/24/circ.png</file>
         <file>icons/24/rect.png</file>
-        <file>icons/24/grabhand.ico</file>
         <file>icons/24/polygonmask.ico</file>
         <file>icons/24/polygonmask.png</file>
         <file>icons/24/settings.png</file>
@@ -21,5 +20,28 @@
         <file>icons/24/invert.png</file>
         <file>icons/24/filter.png</file>
         <file>icons/24/marks.png</file>
+        <file>icons/24/checkerboard.png</file>
+        <file>icons/24/calibrate.png</file>
+        <file>icons/24/movie.png</file>
+        <file>icons/24/hough.png</file>
+        <file>icons/24/entropy.png</file>
+        <file>icons/24/sample.png</file>
+        <file>icons/24/black.png</file>
+        <file>icons/24/white.png</file>
+        <file>icons/24/select.png</file>
+        <file>icons/24/grabhand.png</file>
+        <file>icons/24/fiducial.png</file>
+        <file>icons/24/saveTargets.png</file>
+        <file>icons/24/cross.png</file>
+        <file>icons/24/targetInside.png</file>
+        <file>icons/24/targetOutside.png</file>
+        <file>icons/24/barcode.png</file>
+        <file>icons/24/binarymask.png</file>
+        <file>icons/24/objectivePosition.png</file>
+        <file>icons/24/spacing.png</file>
+        <file>icons/24/background.png</file>
+        <file>icons/24/histogram_equalization.png</file>
+        <file>icons/24/scanareas.png</file>
+        <file>icons/24/mosaic.png</file>
     </qresource>
 </RCC>

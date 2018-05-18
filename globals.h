@@ -3,13 +3,17 @@
 
 //#include <vld.h>
 #include <QPolygon>
+#include <QString>
 #include <QRect>
 #include <QDebug>
 #include <QMessageBox>
 #include <QIcon>
+#include <QString>
 #include <qimage.h>
 
+
 #ifdef _MSC_VER
+#define WINDOWS_LEAN_AND_MEAN
 #include <Windows.h>
 #include <iostream>
 #include <sstream>
@@ -28,32 +32,194 @@
 }
 #endif
 
+#ifndef MIN
+#  define MIN(a,b)  ((a) > (b) ? (b) : (a))
+#endif
+
+#ifndef MAX
+#  define MAX(a,b)  ((a) < (b) ? (b) : (a))
+#endif
+
+namespace NEWPORT_STATUS {
+	enum status { ready, config, notref, disable, jogging, homing, moving, null };
+}
+
+namespace CONSOLECOLOURS {
+	enum colour {Information, Data, Question, Warning, Critical};
+}
+
+namespace SAMPLINGTYPE {
+	enum type {
+		grid, edge, center, noedge
+	};
+}
+
+#define SAMPLINGTYPE_STRINGS(i) (	\
+	(i==SAMPLINGTYPE::type::grid? "Complete region": \
+	(i==SAMPLINGTYPE::type::edge? "Edge of region":  \
+	(i==SAMPLINGTYPE::type::center? "Center of region": \
+	(i==SAMPLINGTYPE::type::noedge? "Avoid edge": \
+	"NOTFOUND") ))) )
+
+namespace FIDUCIAL {
+	enum position {
+		topleft_overview, topright_overview, bottomleft_overview, bottomright_overview, 
+		topleft_microscope, topright_microscope, bottomleft_microscope, bottomright_microscope, 
+	};
+}
+
+namespace ACTIONS {
+	enum action {
+		nothing, getMosaic, displayOnly, focusStack, addToMosaic, MosaicFinished, fineFocus, coarseFocus, jog
+	};
+}
+
+namespace FOCUSALGO {
+	enum algo {
+		LAPM, LAPV, GLVN, TENG, DXDY, HAARPY
+	};
+}
+
+#define FOCUS_ALGO_STRINGS(i) (	\
+	(i==FOCUSALGO::algo::LAPM? "modified Laplacian": \
+	(i==FOCUSALGO::algo::LAPV? "variance Of Laplacian":  \
+	(i==FOCUSALGO::algo::GLVN? "normalized Graylevel Variance": \
+	(i==FOCUSALGO::algo::TENG? "tenengrad": \
+	(i==FOCUSALGO::algo::DXDY? "Horizontal/Vertical derivative energy": \
+	(i==FOCUSALGO::algo::HAARPY? "Haar Pyramid energy":  \
+	"NOTFOUND") ))))) )
+
+
+
+#define FIDUCIAL_POSITION_STRINGS(i) (	\
+	(i==FIDUCIAL::position::topleft_overview? "top left overview camera": \
+	(i==FIDUCIAL::position::topright_overview? "top right overview camera":  \
+	(i==FIDUCIAL::position::bottomleft_overview? "bottom left overview camera": \
+	(i==FIDUCIAL::position::bottomright_overview? "bottom right overview camera": \
+	(i==FIDUCIAL::position::topleft_microscope? "top left microscope camera": \
+	(i==FIDUCIAL::position::topright_microscope? "top right microscope camera":  \
+	(i==FIDUCIAL::position::bottomleft_microscope? "bottom left microscope camera": \
+	(i==FIDUCIAL::position::bottomright_microscope? "bottom right microscope camera": \
+	"NOTFOUND") ))))))) )
+
+
+
+#define FIDUCIAL_POSITION_STRINGS_SHORT(i) (	\
+	(i==FIDUCIAL::position::topleft_overview? "TL_O": \
+	(i==FIDUCIAL::position::topright_overview? "TR_O":  \
+	(i==FIDUCIAL::position::bottomleft_overview? "BL_O": \
+	(i==FIDUCIAL::position::bottomright_overview? "BR_O": \
+	(i==FIDUCIAL::position::topleft_microscope? "TL_M": \
+	(i==FIDUCIAL::position::topright_microscope? "TR_M":  \
+	(i==FIDUCIAL::position::bottomleft_microscope? "BL_M": \
+	(i==FIDUCIAL::position::bottomright_microscope? "BR_M": \
+	"NOTFOUND") ))))))) )
+
+#define NEWPORT_STATUS_STRINGS(i) (	\
+	(i==NEWPORT_STATUS::ready? "READY": \
+	(i==NEWPORT_STATUS::config? "CONFIGURATION":  \
+	(i==NEWPORT_STATUS::notref? "NOT REFERENCED": \
+	(i==NEWPORT_STATUS::disable? "DISABLE": \
+	(i==NEWPORT_STATUS::jogging? "JOGGING": \
+	(i==NEWPORT_STATUS::homing? "HOMING": \
+	(i==NEWPORT_STATUS::moving? "MOVING": \
+	(i==NEWPORT_STATUS::null ? "UNKNOWN" : \
+	"NOTFOUND") ))))))) )
+
+
+
+namespace CALIBRATE {
+	enum { DETECTION = 0, CAPTURING = 1, CALIBRATED = 2 };
+}
+
+/************************************************************************/
+/* enum for camera types                                                */
+/************************************************************************/
+namespace cameraType {
+	enum camera { overview, microscope, none };
+}
+
+#define CAMERATYPE(i) (	\
+	(i==cameraType::camera::overview? "overview": \
+	(i==cameraType::camera::microscope? "microscope":  \
+	(i==cameraType::camera::none? "none":  \
+	"NOTFOUND") )))
+
+namespace drawingItems {
+	enum drawingItems { hough, grid };
+}
+
+#define DRAWINGITEMS(i) (	\
+	(i==drawingItems::hough? "hough": \
+	(i==drawingItems::grid? "grid":  \
+	"NOTFOUND") ))
+
+namespace drawingColour {
+	enum colour { black, white, mask_white, mask_black, none };
+}
+
+#define DRAWINGCOLOUR(i) (	\
+	(i==drawingItems::black? "black": \
+	(i==drawingItems::white? "white":  \
+	(i==drawingItems::mask_white? "mask white":  \
+	(i==drawingItems::mask_black? "mask black":  \
+	(i==drawingItems::none? "none":  \
+	"NOTFOUND") )))) )
+
 /**
 * enum to set drawing mode of drawing object
 */
 namespace drawingMode {
-	enum drawingMode { rect, poly, circle, none };
+	enum drawingMode { rect, poly, circle, cross, fiducial, centerObjective, sampleSpacing, shift, select, any, none };
 }
+
+#define DRAWINGMODESTRINGS(i) (	\
+	(i==drawingMode::rect? "rectangle": \
+	(i==drawingMode::poly? "polygon": \
+	(i==drawingMode::circle? "circle":  \
+	(i==drawingMode::cross? "cross":  \
+	(i==drawingMode::fiducial? "fiducial":  \
+	(i==drawingMode::centerObjective? "Center Objective": \
+	(i==drawingMode::sampleSpacing? "Define Sample Spacing": \
+	(i==drawingMode::shift? "shift":  \
+	(i==drawingMode::select? "select": \
+	(i==drawingMode::any? "any": \
+	(i==drawingMode::none? "none": \
+	"NOTFOUND") )))))))))) )
+
 /**
 * enum to set type of image
 */
 namespace imageType {
-	enum imageType { display, target, test, mask, roi, cclabels, score, centroids };
+	enum imageType { display, target, test, mask, background, roi, cclabels, score, centroids, hue, any, mosaic };
 }
+
+namespace thresholdType {
+	enum thresholdType { Range, Otzu, cluster2, adaptive, posterize };
+}
+
 /**
 * enum to set algorithm type for target detection
 */
 namespace algoType { 
-	enum algoType{ COOC, LAPLACIAN, SQDIFF, SQDIFF_NORMED, CCORR, CCORR_NORMED, CCOEFF, CCOEFF_NORMED };
+	enum algoType { SQDIFF, SQDIFF_NORMED, CCORR, CCORR_NORMED, CCOEFF, CCOEFF_NORMED, COOC, LAPLACIAN, CROSSENTROPY };
+#define LASTALGO algoType::CROSSENTROPY
 }
 
-//0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED
+namespace RotateFlags {
+	enum RotateFlags {
+		ROTATE_90_CLOCKWISE = 0, //Rotate 90 degrees clockwise
+		ROTATE_180 = 1, //Rotate 180 degrees clockwise
+		ROTATE_90_COUNTERCLOCKWISE = 2, //Rotate 270 degrees clockwise
+	};
+}
 
 /**
 * macro function to return strings for enum algoType
 */
 #define ALGOSTRINGS(i) (	\
 	(i==algoType::COOC? "COOC": \
+	(i==algoType::CROSSENTROPY? "CROSSENTROPY": \
 	(i==algoType::LAPLACIAN? "LAPLACIAN":  \
 	(i==algoType::SQDIFF? "SQDIFF": \
 	(i==algoType::SQDIFF_NORMED? "SQDIFF_NORMED": \
@@ -61,98 +227,44 @@ namespace algoType {
 	(i==algoType::CCORR_NORMED? "CCORR_NORMED": \
 	(i==algoType::CCOEFF? "CCOEFF": \
 	(i==algoType::CCOEFF_NORMED ? "CCOEFF_NORMED" : \
-	"NOTFOUND") ))))))) )
+	"NOTFOUND") )))))))) )
 
+/**
+* macro function to return strings for enum algoType
+*/
+#define IMAGETYPESTRINGS(i) (	\
+	(i==imageType::display? "display": \
+	(i==imageType::target? "target": \
+	(i==imageType::test? "detection":  \
+	(i==imageType::mask? "mask": \
+	(i==imageType::background? "background": \
+	(i==imageType::roi? "region of interest": \
+	(i==imageType::cclabels? "connected components": \
+	(i==imageType::score? "score": \
+	(i==imageType::centroids? "centroids": \
+	(i==imageType::hue ? "hue" : \
+	(i==imageType::mosaic ? "mosaic" : \
+	(i==imageType::any ? "miscellaneous" : \
+	"NOTFOUND") ))))))))))) )
+
+namespace calibrateAlgoType {
+	enum algoType { CHESSBOARD, CIRCLES_GRID, ASYMMETRIC_CIRCLES_GRID };
+}
+
+//0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED
+
+
+#define THRESHOLDSTRINGS(i) ( \
+	(i==thresholdType::Range? "Range Threshold": \
+	(i==thresholdType::Otzu? "Auto Threshold (Otzu)":  \
+	(i==thresholdType::cluster2? "Auto Threshold (Cluster)": \
+	(i==thresholdType::adaptive? "Adaptive Threshold": \
+	(i==thresholdType::posterize? "Posterize (greyscale clusters)": \
+	"NOTFOUND"))))) )
 
 //	const char* algoTypes[] = { "COOC", "LAPLACIAN", "SQDIFF", "SQDIFF_NORMED", "CCORR", "CCORR_NORMED", "CCOEFF", "CCOEFF_NORMED"}; \
 //	algoTypes[ i<0?0:(i>CCOEFF_NORMED?CCOEFF_NORMED:i)]; \
 
-/**
-* structure defining setting values (settings values serialised to file and used in settings dialog)
-*/
-struct SettingsValues {
-	int cluster;				/// number of clusters 
-	int distance;				/// number of distance pixels
-	bool autoThreshold;			/// whether to auto threshold
-	int NoClustersThreshold;	/// number of clusters in threshold
-
-	int threshold_min;			/// minimum threshold value
-	int threshold_max;			/// maximum threshold value
-
-	int ScoreThreshold;
-
-	int sizeToleranceSmaller;	/// tolerance to size of detected regions, if smaller than tolerance then not selected
-	int sizeToleranceLarger;	/// tolerance to size of detected regions, if larger than tolerance then not selected
-
-	int huMomentSimilarity;		/// how similar in shape obects should be
-
-	algoType::algoType algorithmType;		/// type of algorithm used to find target
-
-	/**
-	*
-	*  function to serialise settings parameters to file
-	*
-	* @author    David Watts
-	* @since     2017/03/07
-	* 
-	* FullName   SettingsValues::serialize
-	* Qualifier 
-	* @param     QDataStream & stream 
-	* @return    void
-	* Access     public 
-	*/
-	void serialize(QDataStream& stream)
-	{
-		stream.setVersion(QDataStream::Qt_4_5);
-
-		stream << cluster
-			<< distance
-			<< NoClustersThreshold
-			<< threshold_min
-			<< threshold_max
-			<< sizeToleranceSmaller
-			<< sizeToleranceLarger
-			<< huMomentSimilarity
-			<< ScoreThreshold
-			<< autoThreshold
-			<< (int)algorithmType;
-	}
-
-	/**
-	*
-	*  function to read settings values from file
-	*
-	* @author    David Watts
-	* @since     2017/03/07
-	* 
-	* FullName   SettingsValues::deserialize
-	* Qualifier 
-	* @param     QDataStream & stream 
-	* @return    void
-	* Access     public 
-	*/
-	void deserialize(QDataStream& stream)
-	{
-		//QDataStream stream(byteArray);
-		stream.setVersion(QDataStream::Qt_4_5);
-
-		int algo;
-
-		stream >> cluster 
-			>> distance 
-			>> NoClustersThreshold 
-			>> threshold_min 
-			>> threshold_max 
-			>> sizeToleranceSmaller 
-			>> sizeToleranceLarger 
-			>> huMomentSimilarity 
-			>> ScoreThreshold
-			>> autoThreshold 
-			>> algo;
-
-		algorithmType = (algoType::algoType)algo;
-	}
-};
 /**
 * structure to represent histogram bar
 */
@@ -216,11 +328,13 @@ public:
 * structure to represent shape being drawn
 */
 struct drawingShape {
-
     QRect boundingBox;
 	drawingMode::drawingMode type;
+	drawingColour::colour colour;
     QPolygon polygon;
     int radius;
+
+
     void printDebug()
     {
         qDebug() << "boundingBox="<< boundingBox << " type= " << type << " polygon=" << polygon << " radius= " << radius << endl;
@@ -229,7 +343,7 @@ struct drawingShape {
 
 
 
-//#define PYLON
+#define _BASLER_PYLON
 //#define DEBUGPRINT
 //#define ONMOUSEPAINTDEBUGPRINT
 

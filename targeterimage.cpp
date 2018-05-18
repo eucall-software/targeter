@@ -1,3 +1,7 @@
+// Targeter - target identification software for EUCALL workpackage 6
+// Licensed under the GPL License. See LICENSE file in the project root for full license information.
+// Copyright(C) 2017  David Watts 
+
 
 //#include <vld.h>
 
@@ -9,6 +13,8 @@
 #include <QRect>
 #include <QDebug>
 #include <QImage>
+#include <QUuid>
+
 
 /**
 *
@@ -23,16 +29,9 @@
 * @return    
 * Access     public 
 */
-targeterImage::targeterImage(ImagesContainer* pImages)
+targeterImage::targeterImage(ImagesContainer* pImages) : targeterImage()
 { 
 	this->m_ImagesContainer = pImages;
-	pImage = NULL;
-	pMask = NULL;
-	imageFunction = imageType::display;
-	filepathname = "";
-	name = "";
-	tooltip = "";
-	isDisplayed = false;
 }
 
 /**
@@ -51,11 +50,16 @@ targeterImage::targeterImage()
 {
 	pImage = NULL;
 	pMask = NULL;
+	pHue = NULL;
 	imageFunction = imageType::display;
 	filepathname = "";
 	name = "";
 	tooltip = "";
+	cameraType = cameraType::none;
+	maskType = drawingMode::none;
 	isDisplayed = false;
+	UID = QUuid::createUuid();
+	m_FriendIDs.push_back(UID);
 }
 
 /**
@@ -90,6 +94,8 @@ targeterImage::~targeterImage() {
 int* targeterImage::get1DImage(imageType::imageType type) {
 	if (type == imageType::mask)
 		return pMask;
+	else if (type == imageType::hue)
+		return pHue;
 	else
 		return pImage;
 };
@@ -111,6 +117,8 @@ int* targeterImage::get1DImage(imageType::imageType type) {
 void targeterImage::set1DImage(int* im, imageType::imageType type) {
 	if (type == imageType::mask)
 		pMask = im;
+	else if (type == imageType::hue)
+		pHue = im;
 	else
 		pImage = im;
 };
@@ -140,32 +148,11 @@ void targeterImage::free1DImages() {
 	}
 };
 
-/**
-*
-* gets associated image of a certain type  
-*
-* @author    David Watts
-* @since     2017/03/17
-* 
-* FullName   targeterImage::getImageOfType
-* Qualifier 
-* @param     imageType::imageType imageFunction 
-* @return    targeterImage::targeterImage&
-* Access     public 
-*/
-targeterImage& targeterImage::getImageOfType(imageType::imageType imageFunction) {
-	for (int i = 0; i < m_derivedImages.size(); i++)
-	{
-		if (m_ImagesContainer->getImageAt(m_derivedImages[i]).imageFunction == imageFunction)
-		{ 
-			return m_ImagesContainer->getImageAt(m_derivedImages[i]);
-		}
-	}
-}
+
 
 /**
 *
-*  gets QImage and if not exising creates one from valid cv::Mat image
+*  returns QImage copy
 *
 * @author    David Watts
 * @since     2017/03/15
@@ -175,10 +162,12 @@ targeterImage& targeterImage::getImageOfType(imageType::imageType imageFunction)
 * @return    QT_NAMESPACE::QImage
 * Access     public
 */
-QImage targeterImage::getQTImage()
+QImage& targeterImage::getQTImage()
 { 
 	return qt_im; 
 };
+
+
 
 /**
 *
@@ -195,6 +184,15 @@ QImage targeterImage::getQTImage()
 */
 void targeterImage::createQTImage(bool bRGBSwap)
 {
+	// make sure cv image of the correct type
+	if (cv_im.channels() < 3)
+	{
+		DBOUT("image doesnt have enough channels, making 3 channel image");
+
+		cv::Mat in[] = { cv_im, cv_im, cv_im };
+		cv::merge(in, 3, cv_im);
+	}
+
 	qt_im = QImage(cv_im.data, cv_im.cols, cv_im.rows, cv_im.step1(), HelperFunctions::getFormat(cv_im.type()));
 
 	if (bRGBSwap)
@@ -219,23 +217,22 @@ cv::Mat& targeterImage::getImage()
 	return cv_im;
 }
 
-int targeterImage::getImageRows()
+int targeterImage::Rows()
 {
 	return getImage().rows;
 }
 
-int targeterImage::getImageCols()
+int targeterImage::Cols()
 {
 	return getImage().cols;
 }
 
-int targeterImage::getImageType()
+int targeterImage::Type()
 {
 	return getImage().type();
 }
 
-
-cv::Size targeterImage::getImageSize() {
+cv::Size targeterImage::Size() {
 	return getImage().size();
 }
 
@@ -259,7 +256,7 @@ void targeterImage::addImageFromFile(std::string filename, imageType::imageType 
 
 	this->filepathname = filename;
 
-	this->addImageEx(im, type, filename);
+	this->addImageEx(im, QUuid::QUuid(), type, filename);
 }
 
 /**
@@ -267,11 +264,12 @@ void targeterImage::addImageFromFile(std::string filename, imageType::imageType 
 *  Extended method to create image
 *
 * @author    David Watts
-* @since     2017/03/17
+* @since     2017/03/23
 * 
 * FullName   targeterImage::addImageEx
 * Qualifier 
 * @param     cv::Mat im 
+* @param     QUuid UIDParent 
 * @param     imageType::imageType type 
 * @param     std::string descriptiveName 
 * @param     std::string tooltip 
@@ -279,17 +277,17 @@ void targeterImage::addImageFromFile(std::string filename, imageType::imageType 
 * @return    void
 * Access     public 
 */
-void targeterImage::addImageEx(cv::Mat im, imageType::imageType type, std::string descriptiveName, std::string tooltip, std::string filename)
+void targeterImage::addImageEx(cv::Mat im, QUuid UIDParent, imageType::imageType type, std::string descriptiveName, std::string tooltip, std::string filename)
 {
 	this->name = descriptiveName;
 	this->imageFunction = type;
-
 	this->filepathname = filename;
 
+	// stores image
 	addImage(im);
 
 	if (descriptiveName == "")
-		this->name = setDefaultName();
+		this->name = getDefaultName();
 
 	if(tooltip == "")
 		this->tooltip = this->name;
@@ -307,26 +305,28 @@ void targeterImage::addImageEx(cv::Mat im, imageType::imageType type, std::strin
 * @return    std::string
 * Access     public 
 */
-std::string targeterImage::setDefaultName()
+std::string targeterImage::getDefaultName()
 {
 	if (this->imageFunction == imageType::display)
-		return "an image";
+		return std::string("an image");
 	else if (this->imageFunction == imageType::mask)
-		return "mask image";
+		return std::string("mask image");
 	else if (this->imageFunction == imageType::cclabels)
-		return "connected components image";
+		return std::string("labeled image");
 	else if (this->imageFunction == imageType::target)
-		return "target image";
+		return std::string("target image");
 	else if (this->imageFunction == imageType::test)
-		return "detection image";
+		return std::string("detection image");
 	else if (this->imageFunction == imageType::score)
-		return "score image";
+		return std::string("score image");
 	else if (this->imageFunction == imageType::score)
-		return "centroids image";
+		return std::string("centroids image");
 	else if (this->imageFunction == imageType::roi)
-		return "region of interest image";
+		return std::string("region of interest image");
+	else if (this->imageFunction == imageType::any)
+		return std::string("a valid image");
 	else
-		return "an image";
+		return std::string("an image");
 }
 
 /**
@@ -346,6 +346,8 @@ void targeterImage::addImage(cv::Mat im)
 {
 	this->cv_im = im;
 
+	this->IsGray = HelperFunctions::isGrayImage(im);
+
 	createQTImage(true);
 }
 
@@ -356,16 +358,24 @@ void targeterImage::addImage(cv::Mat im)
 * @author    David Watts
 * @since     2017/03/17
 * 
-* FullName   targeterImage::removeDerivedIndex
+* FullName   targeterImage::removeFriendIndex
 * Qualifier 
-* @param     int ind 
+* @param     QUuid ID 
 * @return    void
 * Access     public 
 */
-void targeterImage::removeDerivedIndex(int ind) {
-	std::vector<int>::iterator it = m_derivedImages.begin();
-	std::advance(it, ind);
-	m_derivedImages.erase(it);
+bool targeterImage::removeFriendID(QUuid ID) 
+{
+	bool bFound = false;
+	
+	std::vector<QUuid>::iterator iter = std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID);
+
+	if (iter == m_FriendIDs.end())
+	{
+		bFound = true;
+		m_FriendIDs.erase(iter);
+	}
+	return bFound;
 }
 
 /**
@@ -375,29 +385,73 @@ void targeterImage::removeDerivedIndex(int ind) {
 * @author    David Watts
 * @since     2017/03/17
 * 
-* FullName   targeterImage::removeDerivedIndexes
+* FullName   targeterImage::removeFriendIndexes
 * Qualifier 
-* @param     const std::vector<int> & to_remove 
+* @param     const std::vector<QUuid> & to_remove 
 * @return    void
 * Access     public 
 */
-void targeterImage::removeDerivedIndexes(const std::vector<int>& to_remove)
+void targeterImage::removeFriendIDs(const std::vector<QUuid>& to_remove)
 {
-	auto vector_base = m_derivedImages.begin();
-	std::vector<int>::size_type down_by = 0;
-
-	for (auto iter = to_remove.cbegin();
-		iter < to_remove.cend();
-		iter++, down_by++)
-	{
-		std::vector<int>::size_type next = (iter + 1 == to_remove.cend()
-			? m_derivedImages.size()
-			: *(iter + 1));
-
-		std::move(vector_base + *iter + 1,
-			vector_base + next,
-			vector_base + *iter - down_by);
-	}
-	m_derivedImages.resize(m_derivedImages.size() - to_remove.size());
+	for (std::vector<QUuid>::iterator iter = m_FriendIDs.begin(); iter < m_FriendIDs.end(); iter++)
+		removeFriendID(*iter);
 }
 
+/**
+*
+*  check if object has friend image of a given ID
+*
+* @author    David Watts
+* @since     2017/03/23
+* 
+* FullName   targeterImage::hasFriendID
+* Qualifier 
+* @param     QUuid ID 
+* @return    bool
+* Access     public 
+*/
+bool targeterImage::hasFriendID(QUuid ID)
+{
+	return std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID) == m_FriendIDs.end();
+}
+
+targeterImage& targeterImage::getGlobalImage(int index) {
+	if (index >= 0 && index < m_ImagesContainer->getNumImages())
+		return m_ImagesContainer->getImageAt(index);
+};
+
+std::vector<QUuid>::iterator targeterImage::getFriend(QUuid ID){ return std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID); }
+
+
+/**
+*
+*  gets global image array (m_ImagesContainer) index of friend image of a certain imageType
+*
+* @author    David Watts
+* @since     2017/03/23
+* 
+* FullName   targeterImage::getFriendIndexOfType
+* Qualifier 
+* @param     imageType::imageType imageFunction 
+* @return    int
+* Access     public 
+*/
+int targeterImage::getFriendArrayIndexOfType(imageType::imageType imageFunction)
+{
+	int ret = -1;
+
+	for (std::vector<QUuid>::iterator iter = m_FriendIDs.begin(); iter < m_FriendIDs.end(); iter++)
+	{
+		for (int i = 0; i < m_ImagesContainer->getImages().size(); i++)
+		{
+			targeterImage& t = m_ImagesContainer->getImageAt(i);
+
+			if (t.getUID() == *iter &&  t.getImageFunction() == imageFunction)
+			{	
+				ret =  i;
+				break;
+			}
+		}
+	}
+	return ret;
+}

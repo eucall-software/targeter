@@ -2,11 +2,14 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QTDIR>C:\Qt\5.7\msvc2015_64</QTDIR>
-    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
+    <QTDIR>C:\Qt\5.7\msvc2015_64\</QTDIR>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerDebuggerType>Mixed</LocalDebuggerDebuggerType>
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)%3bC:\opencv-build\bin\Debug%3b$(ProjectDir)zbar64\lib%3b$(ProjectDir)zbar64\libiconv\lib_x64%3b$(ProjectDir)zbar64\libiconv\dll_x64</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QTDIR>C:\Qt\5.7\msvc2015_64</QTDIR>
-    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
+    <QTDIR>C:\Qt\5.7\msvc2015_64\</QTDIR>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b$(PATH)%3bC:\opencv-build\bin\Release%3b$(ProjectDir)zbar64\lib%3b$(ProjectDir)zbar64\libiconv\lib_x64%3b$(ProjectDir)zbar64\libiconv\dll_x64</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>

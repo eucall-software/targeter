@@ -1,3 +1,7 @@
+// Targeter - target identification software for EUCALL workpackage 6
+// Licensed under the GPL License. See LICENSE file in the project root for full license information.
+// Copyright(C) 2017  David Watts 
+
 #include "FocusStack.h"
 #include <cmath>
 #include <QObject>
@@ -6,6 +10,14 @@
 #include "opencv/highgui.h"
 #include "haar.h"
 
+
+double getEnergy(double dVal, double divisor, bool bSquare)
+{
+	if (bSquare)
+		return (dVal*dVal) / divisor;
+	else
+		return fabs(dVal) / divisor;
+}
 
 /**
 *
@@ -21,42 +33,47 @@
 * @param     int width
 * @param     int height
 * @param     int iterations
-* @param     bool laplace
-* @param     bool bSquare
+* @param     bool laplace = true
+* @param     bool bSquare = true
 * @return    void
 * Access     private
 */
 void Haar::HaarEnergy(cv::Mat data, cv::Mat &energyImage, int width, int height, int iterations, bool laplace, bool bSquare)
 {
-	int ii, ij, oi, oj;
-
-	for (int i = 0; i < width; i++)
+	int ii, ij, oi, oj, ind;
+	double divisor, dVal, dNormVal;
+	
+	for (int k = 0; k < iterations; k++)
 	{
-		for (int j = 0; j < height; j++)
+		ind = k + 1;
+
+		oi = data.cols >> ind;
+		oj = data.rows >> ind;
+
+		divisor = 1;// pow(4.0, k + 1.0);
+
+		for (int i = 0; i < width; i++)
 		{
-			for (int k = 0; k < iterations; k++)
+			ii = i >> k;
+			
+			for (int j = 0; j < height; j++)
 			{
-				ii = i >> (k + 1);
-				ij = j >> (k + 1);
+				ij = j >> k;
 
-				oi = width >> (k + 1);
-				oj = height >> (k + 1);
+				//DXDY
+				dVal = data.ptr<double>(oj + ij)[oi + ii];
 
-				if (bSquare)
-					energyImage.ptr<double>(j)[i] += ((double)data.ptr<double>(oj + ij)[oi + ii] * data.ptr<double>(oj + ij)[oi + ii]) / (double)(1 << k); // DXDY
-				else
-					energyImage.ptr<double>(j)[i] += fabs((double)data.ptr<double>(oj + ij)[oi + ii] / (double)(1 << k)); // DXDY
-
-				if (!laplace)
+				energyImage.ptr<double>(j)[i] += getEnergy(dVal, divisor, bSquare); // DXDY
+			
+				if (!laplace) // wavelet SXDY & SYDX
 				{
-					if (bSquare)
-						energyImage.ptr<double>(j)[i] += ((double)data.ptr<double>(oj + ij)[ii] * data.ptr<double>(oj + ij)[ii]) / (double)(1 << k);    // SXDY
-					else
-						energyImage.ptr<double>(j)[i] += fabs((double)data.ptr<double>(oj + ij)[ii] / (double)(1 << k));    // SXDY
-					if (bSquare)
-						energyImage.ptr<double>(j)[i] += ((double)data.ptr<double>(ij)[oi + ii] * data.ptr<double>(ij)[oi + ii]) / (double)(1 << k);    // SYDX
-					else
-						energyImage.ptr<double>(j)[i] += fabs((double)data.ptr<double>(ij)[oi + ii] / (double)(1 << k));    // SYDX
+					dVal = data.ptr<double>(oj + ij)[ii];
+
+					energyImage.ptr<double>(j)[i] += getEnergy(dVal, divisor, bSquare);
+
+					dVal = data.ptr<double>(ij)[ii];
+
+					energyImage.ptr<double>(j)[i] += getEnergy(dVal, divisor, bSquare);
 				}
 			}
 		}

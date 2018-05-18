@@ -1,3 +1,7 @@
+// Targeter - target identification software for EUCALL workpackage 6
+// Licensed under the GPL License. See LICENSE file in the project root for full license information.
+// Copyright(C) 2017  David Watts 
+
 #include <iostream>
 #include <iomanip>
 #include <limits>
@@ -13,6 +17,19 @@
 #include "HelperFunctions.h"
 
 using namespace std;
+
+cv::Scalar HelperFunctions::QC2S(QColor color)
+{
+	int r, g, b;
+	color.getRgb(&r, &g, &b);
+	return cv::Scalar(b, g, r); // swap RGB-->BGR
+}
+//scalar --> qcolor
+
+QColor HelperFunctions::S2QC(cv::Scalar color)
+{
+	return QColor(color[2], color[1], color[0]); // swap RGB-->BGR
+}
 
 
 /**
@@ -52,6 +69,132 @@ string HelperFunctions::type2str(int type)
 	return r;
 }
 
+// RLHistogram should be binary array where 0 is bar 1 is white
+QString HelperFunctions::getBarcodeStringfromVector(int* vect, int& size)
+{
+	// find out size of bar - by constructing histogram
+	int* hist = new int[size]; // sufficiently long to capture 
+
+	// get pixel sizes of black bars
+	int length = 0;
+
+	for(int i=0;i<size;i++)
+	{
+		hist[i] = 0;
+
+		if (vect[i] > 0)
+			length++;
+		
+		if (vect[i] == 0 && length > 0)
+		{
+			hist[length]++;
+			length = 0;
+		}
+	}
+
+	if(length>0)
+		hist[length]++;
+
+	int newSize = size;
+	int maxPeak = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		if(hist[i] > 0)
+			newSize = i;
+
+		maxPeak = MAX(maxPeak, hist[i]);
+	}
+
+	newSize+=1;
+
+	// find second biggest peak use this as threshold
+	for (int i = 0; i < newSize; i++)
+	{
+		if(hist[i] != maxPeak)
+			maxPeak = MAX(maxPeak, hist[i]);
+	}
+
+	int singleLine = -1;
+
+	for (int i = 0; i < newSize; i++)
+	{
+		if (hist[i] >= maxPeak)
+		{
+			singleLine = i;
+			break;
+		}
+	}
+
+	int lengthBlack = 0;
+	int lengthWhite = 0;
+
+	QString str;
+
+	for (int i = 0; i < size; i++)
+	{
+
+
+		if (vect[i] > 0)	// black
+			lengthBlack++;
+		else
+			lengthWhite++;
+			
+		if (vect[i] == 0 && lengthBlack > 0)				// change to black
+		{
+			if (abs(lengthBlack - singleLine) < abs(lengthBlack - singleLine * 2))
+				str += "1";
+			else
+				str += "2";
+
+			lengthBlack = 0;
+		}
+		else if(vect[i] > 0 && lengthWhite>0)	// change to white
+		{
+			if (abs(lengthWhite - singleLine) < abs(lengthWhite - singleLine * 2))
+				str += "_";
+			else
+				str += "__";
+
+			lengthWhite = 0;
+		}
+	}
+
+	if (lengthWhite > 0)
+	{
+		if (abs(lengthWhite - singleLine) < abs(lengthWhite - singleLine * 2))
+			str += "_";
+		else
+			str += "__";
+
+		lengthWhite = 0;
+	}
+	else if (lengthBlack > 0)
+	{
+		if (abs(lengthBlack - singleLine) < abs(lengthBlack - singleLine * 2))
+			str += "1";
+		else
+			str += "2";
+
+		lengthBlack = 0;
+	}
+
+	// now find single, double bars & spaces
+	return str;
+}
+
+QString HelperFunctions::toDataURL(cv::Mat image)
+{
+	std::vector<uint8_t> buffer;
+	cv::imencode(".png", image, buffer);
+
+	QByteArray byteArray = QByteArray::fromRawData((const char*)buffer.data(), buffer.size());
+
+	QString base64Image(byteArray.toBase64());
+
+	return base64Image;
+}
+
 /**
 *
 *  Returns an OpenCV image from a histogram (b_hist)
@@ -68,11 +211,11 @@ string HelperFunctions::type2str(int type)
 * @return    cv::Mat
 * Access     public 
 */
-cv::Mat HelperFunctions::displayHistogram(int histSize, cv::Mat b_hist, int hist_w, int hist_h)
+cv::Mat HelperFunctions::displayHistogram(cv::Mat b_hist, int histSize, int hist_w, int hist_h)
 {
 	// Draw the histograms for B, G and R
 		
-	int fontFace = cv::FONT_HERSHEY_SCRIPT_SIMPLEX;
+	int fontFace = cv::FONT_HERSHEY_TRIPLEX;
 	int fontScale = 1, thickness=1;
 	cv::Scalar red(255, 0, 0);
 	cv::Scalar green(0, 255, 0);
@@ -130,6 +273,28 @@ cv::Mat HelperFunctions::displayHistogram(int histSize, cv::Mat b_hist, int hist
 	}
 
 	return histImage;
+}
+
+void HelperFunctions::rotate90(cv::Mat &matImage, RotateFlags::RotateFlags rotflag)
+{
+	//1=CW, 2=CCW, 3=180
+	if (rotflag == RotateFlags::ROTATE_90_CLOCKWISE) {
+		transpose(matImage, matImage);
+		flip(matImage, matImage, 1); //transpose+flip(1)=CW
+	}
+	else if (rotflag == RotateFlags::ROTATE_180) {
+		transpose(matImage, matImage);
+		flip(matImage, matImage, 0); //transpose+flip(0)=CCW     
+	}
+	else if (rotflag == RotateFlags::ROTATE_90_COUNTERCLOCKWISE) {
+		flip(matImage, matImage, -1);    //flip(-1)=180          
+	}
+	else
+	{
+		// ROTATE_90_CLOCKWISE
+		transpose(matImage, matImage);
+		flip(matImage, matImage, 1); //transpose+flip(1)=CW
+	}
 }
 
 /**
@@ -239,7 +404,7 @@ QImage::Format HelperFunctions::getFormat(int type)
 * @return    bool
 * Access     public 
 */
-bool HelperFunctions::isGrayImage(cv::Mat img) // returns true if the given 3 channel image is B = G = R
+bool HelperFunctions::isGrayImage(const cv::Mat& img) // returns true if the given 3 channel image is B = G = R
 {
 	for (int j = 0; j < img.rows; j++)
 	{
@@ -253,6 +418,21 @@ bool HelperFunctions::isGrayImage(cv::Mat img) // returns true if the given 3 ch
 	return true;
 }
 
+int* HelperFunctions::getCImage(const cv::Mat& img) // returns true if the given 3 channel image is B = G = R
+{
+	int* im = new int[img.rows*img.cols];
+	
+	for (int j = 0; j < img.rows; j++)
+	{
+		for (int i = 0; i < img.cols; i++)
+		{
+			cv::Vec3b val = img.at<cv::Vec3b>(j, i);
+
+			im[i + j*img.cols] = (int)val[0] * 0.114 + val[1] * 0.587 + val[2] * 0.299;
+		}
+	}
+	return im;
+}
 
 /**
 *
@@ -306,7 +486,6 @@ cv::Mat HelperFunctions::putMatScale(cv::Mat im, bool scale, bool bRed)
 
 	return cMat;
 }
-
 
 cv::Mat HelperFunctions::testReturn(cv::Mat& im)
 {

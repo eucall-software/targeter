@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<project_Name>Solid Sample Experiment XYZ</project_Name>
+	<project_Institute>XFEL</project_Institute>
+	<project_ID>XYZ</project_ID>
+	<project_Version>1</project_Version>
+	<project_Description>This is a experiment on material XYZ</project_Description>
+	<project_FilenamePrefix>SampleXYZ_</project_FilenamePrefix>
+	<project_SampleDescription>material XYZ type 1</project_SampleDescription>
+	<project_Barcode></project_Barcode>
+	<project_Directory>D:\temp\</project_Directory>
+	<project_Date>2018-03-07</project_Date>
+	<fiducials>
+		<top_left_overview_camera>
+			<X>102</X>
+			<Y>258</Y>
+		</top_left_overview_camera>
+		<top_right_overview_camera>
+			<X>1954</X>
+			<Y>263</Y>
+		</top_right_overview_camera>
+		<bottom_left_overview_camera>
+			<X>101</X>
+			<Y>1951</Y>
+		</bottom_left_overview_camera>
+		<bottom_right_overview_camera>
+			<X>1950</X>
+			<Y>1952</Y>
+		</bottom_right_overview_camera>
+		<top_left_microscope_camera>
+			<X>1020</X>
+			<Y>1107</Y>
+		</top_left_microscope_camera>
+		<top_right_microscope_camera>
+			<X>1160</X>
+			<Y>1020</Y>
+		</top_right_microscope_camera>
+		<bottom_left_microscope_camera>
+			<X>1059</X>
+			<Y>1030</Y>
+		</bottom_left_microscope_camera>
+		<bottom_right_microscope_camera>
+			<X>1107</X>
+			<Y>1044</Y>
+		</bottom_right_microscope_camera>
+		<top_left_microscope_camera_stage>
+			<X>136</X>
+			<Y>130</Y>
+		</top_left_microscope_camera_stage>
+		<top_right_microscope_camera_stage>
+			<X>17</X>
+			<Y>129</Y>
+		</top_right_microscope_camera_stage>
+		<bottom_left_microscope_camera_stage>
+			<X>137</X>
+			<Y>19</Y>
+		</bottom_left_microscope_camera_stage>
+		<bottom_right_microscope_camera_stage>
+			<X>16</X>
+			<Y>19</Y>
+		</bottom_right_microscope_camera_stage>
+	</fiducials>
+</config>
+e_camera_stage>
+	</fiducials>
+</config>

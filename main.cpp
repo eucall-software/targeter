@@ -1,10 +1,17 @@
-#include "mainwindow.h"
-#include <QApplication>
+// Targeter - target identification software for EUCALL workpackage 6
+// Licensed under the GPL License. See LICENSE file in the project root for full license information.
+// Copyright(C) 2017  David Watts 
 
+#include "mainwindow.h"
+#include "TargeterApplication.h"
+#include <exception>
+
+/*
 void customHandler(QtMsgType type, const char* msg) {
 	fprintf(stderr, msg);
 	fflush(stderr);
 }
+*/
 
 /**
 *
@@ -22,14 +29,15 @@ void customHandler(QtMsgType type, const char* msg) {
 */
 int main(int argc, char *argv[]) 
 {
-    QApplication a(argc, argv);
+    TargeterApplication a(argc, argv);
 
-	std::cout << "hi" << std::endl;
-
-	
-    a.setOrganizationName("XFEL");
+    a.setOrganizationName("European XFEL");
+	a.setOrganizationDomain("xfel.eu");
     a.setApplicationName("Targeter");
+
     MainWindow w;
+
+	a.setMainWindow(&w);
     w.show();
 
     return a.exec();

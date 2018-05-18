@@ -1,3 +1,7 @@
+// Targeter - target identification software for EUCALL workpackage 6
+// Licensed under the GPL License. See LICENSE file in the project root for full license information.
+// Copyright(C) 2017  David Watts 
+
 #ifndef HAAR_H
 #define HAAR_H
 
