@@ -15,7 +15,7 @@
 
 XMLWriter::XMLWriter()
 {
-	m_pXMLFile = NULL;
+	m_pXMLFile = nullptr;
 }
 
 XMLWriter::~XMLWriter()
@@ -58,7 +58,7 @@ bool XMLWriter::openXMLFile(QString XMLFilename, QFlags<QIODevice::OpenModeFlag>
 {
 	normalizeString(XMLFilename);
 
-	if (m_pXMLFile == NULL)
+	if (m_pXMLFile == nullptr)
 		m_pXMLFile = new QFile(XMLFilename);
 
 	return m_pXMLFile->open(flag);

@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <qimage.h>
 #include <QUuid>
+#include <QVector3D>
 #include "globals.h"
 
 class ImagesContainer;
@@ -41,6 +42,8 @@ public:
 	imageType::imageType getImageFunction() { return imageFunction; };
 
 	std::vector<QUuid>& getFriendImageArray() {return m_FriendIDs;};
+
+	QString toString();
 
 	// derived images - index to other 
 	void addFriendID(QUuid uid) { m_FriendIDs.push_back(uid); };
@@ -83,6 +86,13 @@ public:
 	cv::Mat& getCentroidsImage() {	return centroids; };
 	cv::Rect& getImagePosition() { return imagePosition; };
 	cameraType::camera getCameraType() { return cameraType; };
+
+	void setImagePosition(QVector3D pos, bool bFiducial = true) { 
+		if (bFiducial)
+			m_positionFiducial = pos;
+		else
+			m_positionStage = pos;
+	}
 	
 	targeterImage& getGlobalImage(int index);
 
@@ -113,6 +123,9 @@ public:		// public properties
 
 private:
 	ImagesContainer* m_ImagesContainer;
+
+	QVector3D m_positionFiducial;
+	QVector3D m_positionStage;
 
 	std::vector<QUuid> m_FriendIDs;	    /// array index of images that are the result of processing this image (eg. mask images, target images, ccimages)
 	

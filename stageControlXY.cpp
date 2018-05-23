@@ -24,7 +24,7 @@ StageControlXY::StageControlXY()
 
 StageControlXY::~StageControlXY()
 {
-	if (m_pMarz != NULL)
+	if (m_pMarz != nullptr)
 		delete m_pMarz;
 }
 

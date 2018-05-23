@@ -103,7 +103,7 @@ public:
 	void draw(QPainter* painter);
 	bool hitTest(QPoint pt, bool bMouseDown = false);
 
-	drawingPoly() { m_pPoly = NULL; }
+	drawingPoly() { m_pPoly = nullptr; }
 	void moveObject(QPoint offset);
 
 	~drawingPoly() {

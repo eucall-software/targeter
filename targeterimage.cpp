@@ -48,9 +48,9 @@ targeterImage::targeterImage(ImagesContainer* pImages) : targeterImage()
 */
 targeterImage::targeterImage()
 {
-	pImage = NULL;
-	pMask = NULL;
-	pHue = NULL;
+	pImage = nullptr;
+	pMask = nullptr;
+	pHue = nullptr;
 	imageFunction = imageType::display;
 	filepathname = "";
 	name = "";
@@ -139,12 +139,12 @@ void targeterImage::free1DImages() {
 	if (pImage)
 	{
 		delete[] pImage;
-		pImage = NULL;
+		pImage = nullptr;
 	}
 	if (pMask)
 	{
 		delete[] pMask;
-		pMask = NULL;
+		pMask = nullptr;
 	}
 };
 
@@ -395,6 +395,43 @@ void targeterImage::removeFriendIDs(const std::vector<QUuid>& to_remove)
 {
 	for (std::vector<QUuid>::iterator iter = m_FriendIDs.begin(); iter < m_FriendIDs.end(); iter++)
 		removeFriendID(*iter);
+}
+
+QString targeterImage::toString()
+{
+	//QString type = IMAGETYPESTRINGS(tim.imageFunction);
+
+	QString strTooltip = "<b>name:</b> " + QString::fromStdString(this->name) + "<br><b>filename:</b> "
+		+ QString::fromStdString(filepathname) + "<br><b>type:</b> "
+		+ IMAGETYPESTRINGS(imageFunction) + "<br>";
+
+	QString masktype = DRAWINGMODESTRINGS(maskType);
+
+	if (maskType != drawingMode::drawingMode::none)
+		strTooltip += "<b>mask type:</b> " + masktype + "<br>";
+
+	QString tt = QString::fromStdString(getTooltip());
+
+	if (tt != "")
+		strTooltip += "<b>info:</b> " + tt + "<br>";
+
+	cameraType::camera cam = getCameraType();
+	QString s = CAMERATYPE(cam);
+
+	if (cam != cameraType::none)
+		strTooltip += "<b>from camera:</b> " + s + "<br>";
+
+	if(m_positionFiducial.x() >= 0 && m_positionFiducial.y() >= 0 && m_positionFiducial.z() >= 0)
+		strTooltip += "<b>fiducial position:</b> x:" + QString::number(m_positionFiducial.x()) + 
+		" y:"+  QString::number(m_positionFiducial.y()) + 
+		" z:" + QString::number(m_positionFiducial.z()) + "<br>";
+
+	if (m_positionStage.x() >= 0 && m_positionStage.y() >= 0 && m_positionStage.z() >= 0)
+		strTooltip += "<b>stage position:</b> x:" + QString::number(m_positionStage.x()) +
+		" y:" + QString::number(m_positionStage.y()) +
+		" z:" + QString::number(m_positionStage.z()) + "<br>";
+
+	return strTooltip;
 }
 
 /**

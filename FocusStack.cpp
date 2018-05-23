@@ -180,7 +180,7 @@ Mat* FocusStack::processImageStack(std::vector<targeterImage>& imageStack, std::
             if(w != m.cols || h != m.rows)
             {
                 std::cout << "cannot process images of different size, exiting" << std::endl;
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -308,7 +308,7 @@ cv::Mat* FocusStack::processImageStack3(std::vector<targeterImage>& imageStack, 
             if(w != m.cols || h != m.rows)
             {
                 std::cout << "cannot process images of different size, exiting" << std::endl;
-                return NULL;
+                return nullptr;
             }
         }
 

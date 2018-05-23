@@ -3,7 +3,7 @@
 
 TargeterApplication::TargeterApplication(int& argc, char** argv) :
 	QApplication(argc, argv) {
-	pMain = NULL;
+	pMain = nullptr;
 }
 
 

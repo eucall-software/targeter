@@ -24,7 +24,7 @@ StageControlZ::StageControlZ()
 
 StageControlZ::~StageControlZ()
 {
-	if (m_pNewport != NULL)
+	if (m_pNewport != nullptr)
 		delete m_pNewport;
 }
 

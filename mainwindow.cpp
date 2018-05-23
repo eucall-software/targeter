@@ -91,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
-    //m_CurrentQImage = NULL;
+    //m_CurrentQImage = nullptr;
     this->m_scale = 1;
 	m_noFocusStackImages = 25;
 	m_zdistance = 1.0;
@@ -547,9 +547,9 @@ void MainWindow::shutDownInstruments()
 
 void MainWindow::addTargeterImage(targeterImage tim, QAction* pAction)
 {
-	addCVImage(tim, NULL, true);
+	addCVImage(tim, nullptr, true);
 
-	if (pAction != NULL)
+	if (pAction != nullptr)
 		pAction->setChecked(false);
 }
 
@@ -557,7 +557,7 @@ void MainWindow::addMatImage(cv::Mat img, QString imagename, imageType::imageTyp
 {
 	addCVImage(img, QUuid::QUuid(), imagename, true, type, true);
 
-	if (pAction != NULL)
+	if (pAction != nullptr)
 		pAction->setChecked(false);
 }
 
@@ -566,7 +566,7 @@ bool MainWindow::updateQTImage(cv::Mat img, QString imagename, QAction* pAction)
 	// update last cv image trigger show image on paint control
 	targeterImage* pTar = m_ImagesContainer.getLastImagePtr();
 	
-	if (pTar == NULL)
+	if (pTar == nullptr)
 	{
 		addCVImage(img, imagename);
 
@@ -578,7 +578,7 @@ bool MainWindow::updateQTImage(cv::Mat img, QString imagename, QAction* pAction)
 	// sets the last image as the one to be displayed
 	ui->display_image->setImageIndex(m_ImagesContainer.getNumImages()-1);
 
-	if (pAction != NULL)
+	if (pAction != nullptr)
 		return pAction->isChecked();
 	else
 		return false;
@@ -1234,6 +1234,12 @@ void MainWindow::addCVImage(cv::Mat im, QUuid UID, QString imageName, bool bRGBS
 
 	tim.addImageEx(im, UID, type, name, name, fname);
 
+	QVector3D pt = getMosaicPositionFromName(imageName, true);
+	tim.setImagePosition(pt, true);
+
+	pt = getMosaicPositionFromName(imageName, false);
+	tim.setImagePosition(pt, false);
+
 	addCVImage(tim, imageName, bRGBSwap);
 }
 
@@ -1259,7 +1265,7 @@ void MainWindow::addCVImage(targeterImage& tim, QString imageName, bool bRGBSwap
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	if (imageName == NULL)
+	if (imageName == nullptr)
 		addQImageThumbnail(tim, QString::fromStdString(tim.name));
 	else
 		addQImageThumbnail(tim, imageName);
@@ -1296,8 +1302,6 @@ void MainWindow::addImage(const QString &fileName, imageType::imageType type)
     String s = qs.toLocal8Bit().data();
 
 	fh_setCurrentFile(qs);
-
-	targeterImage tim(&m_ImagesContainer);
 
     cv::Mat im = imread(s);
 
@@ -1352,6 +1356,20 @@ QImage MainWindow::copyImageToSquareRegion(QImage qim, QColor col)
     return destImage;
 }
 
+QString MainWindow::limitString(const QString& aString, int maxLength) {
+	
+	if (aString.length() <= maxLength)
+		return aString;
+
+	QString ELLIPSIS = "...";
+
+	float spacePerPart = (maxLength - ELLIPSIS.length()) / 2.0;
+	QString beforeEllipsis = aString.left(std::ceil(spacePerPart));
+	QString afterEllipsis = aString.right(std::floor(spacePerPart));
+
+	return beforeEllipsis + ELLIPSIS + afterEllipsis;
+}
+
 /**
 *
 *  update labels of thumbnail images
@@ -1382,35 +1400,10 @@ void MainWindow::updateThumbs()
 		else if (type == imageType::test)
 			s = "detection image";
 
-		ui->ImageThumbList->item(row)->setText(s.section("/", -1));
+		QString filename = s.section("/", -1);
+
+		ui->ImageThumbList->item(row)->setText(limitString(filename, 15));
 	}
-}
-
-QString MainWindow::createTooltip(targeterImage& tim, QString imageName)
-{
-	//QString type = IMAGETYPESTRINGS(tim.imageFunction);
-
-	QString strTooltip = "<b>name:</b> " + imageName+ "<br><b>filename:</b> " 
-		+ QString::fromStdString(tim.filepathname) + "<br><b>type:</b> " 
-		+ IMAGETYPESTRINGS(tim.imageFunction) + "<br>";
-
-	QString masktype = DRAWINGMODESTRINGS(tim.maskType);
-
-	if (tim.maskType != drawingMode::drawingMode::none)
-		strTooltip += "<b>mask type:</b> " + masktype + "<br>";
-
-	QString tt = QString::fromStdString(tim.getTooltip());
-
-	if (tt != "")
-		strTooltip += "<b>info:</b> " + tt + "<br>";
-
-	cameraType::camera cam = tim.getCameraType();
-	QString s = CAMERATYPE(cam);
-
-	if( cam != cameraType::none)
-		strTooltip += "<b>from camera:</b> " + s + "<br>";
-
-	return strTooltip;
 }
 
 /**
@@ -1439,11 +1432,11 @@ void MainWindow::addQImageThumbnail(targeterImage& tim, QString imageName)
 
 	QImage iconImage = copyImageToSquareRegion(qim, ui->display_image->palette().color(QWidget::backgroundRole()));
 
-	QListWidgetItem* pItem = new QListWidgetItem(QIcon(QPixmap::fromImage(iconImage)), NULL);//QFileInfo(qs).fileName());
+	QListWidgetItem* pItem = new QListWidgetItem(QIcon(QPixmap::fromImage(iconImage)), nullptr);//QFileInfo(qs).fileName());
 
 	pItem->setData(Qt::UserRole, "thumb" + QString::number(ui->ImageThumbList->count()));
 
-	QString strTooltip = createTooltip(tim, imageName);
+	QString strTooltip = tim.toString();
 
 	pItem->setToolTip(strTooltip);
 
@@ -1478,7 +1471,7 @@ QImage qim = qi.rgbSwapped();
 
 m_QImages.push_back(qim);
 
-QlistWidgetItem* pItem = new QlistWidgetItem(QIcon(QPixmap::fromImage(qim)), NULL);//QFileInfo(qs).fileName());
+QlistWidgetItem* pItem = new QlistWidgetItem(QIcon(QPixmap::fromImage(qim)), nullptr);//QFileInfo(qs).fileName());
 
 pItem->setToolTip(qs);
 
@@ -3186,7 +3179,7 @@ void MainWindow::getTargetImage()
 
 	if (tim.Rows() > 0 && tim.Cols() > 0)
 	{
-		cv::Mat im = getTargetPositions(tim, NULL, imageIndex);
+		cv::Mat im = getTargetPositions(tim, nullptr, imageIndex);
 
 		QMetaObject::invokeMethod(this, // obj
 			"addMatImage", // member
@@ -3213,37 +3206,46 @@ void  MainWindow::on_actionSave_Target_Positions_triggered()
 }
 
 // extract out image position from file name
-QVector3D MainWindow::getMosaicPositionFromName(QString str)
+
+// QString filename = pathname + "_stageXYZ[" + QString::number(absolutePosition.x()) + "," + QString::number(absolutePosition.y()) + "," + QString::number(absolutePosition.z()) + "]" +
+// +"_fidXYZ[" + QString::number(relativePosition.x()) + "," + QString::number(relativePosition.y()) + "," + QString::number(relativePosition.z()) + "]" + ".png";
+
+QVector3D MainWindow::getMosaicPositionFromName(QString str, bool relative)
 {
 	bool ok = true;
+	QString pos;
 
-	int startX = str.lastIndexOf("[");
+	if (relative)
+		pos = "_fid";
+	else
+		pos = "_stage";
+
+	int startX = str.lastIndexOf(pos);
+	
+	startX = str.indexOf("[", startX);
 	int endX = str.indexOf("]", startX);
 
 	float x = -1, y = -1, z = -1;
 
-	if(startX != -1 & endX != -1 )
+	if(startX != -1 & endX != -1 && startX<endX)
 	{
 		QString nums = str.mid(startX + 1, endX - startX-1);
 
-		QStringList lstr = nums.split(" ");
+		QStringList lstr = nums.split(",");
 
-		for(int i=0;i<lstr.length();i++)
+		if(lstr.length() == 3)
 		{
-			QString s = lstr.at(i);
-			QString snum = s.mid(2);
+			QString s = lstr.at(0);
+			float val = s.toFloat(&ok);
+			if (ok)	x = val;
 
-			float val = snum.toFloat(&ok);
+			s = lstr.at(1);
+			val = s.toFloat(&ok);
+			if (ok)	y = val;
 
-			if(ok)
-			{
-				if (s.contains("x="))
-					x = val;
-				if (s.contains("y="))
-					y = val;
-				if (s.contains("z="))
-					z = val;
-			}
+			s = lstr.at(2);
+			val = s.toFloat(&ok);
+			if (ok)	z = val;
 		}
 	}
 
@@ -3445,9 +3447,9 @@ cv::Mat MainWindow::getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& b
 {
 	cv::Mat targets;
 
-	targeterImage *tarBin = NULL, *tar = NULL;
+	targeterImage *tarBin = nullptr, *tar = nullptr;
 
-	if(bFilter && targetImage != NULL && binImage.rows > 0)
+	if(bFilter && targetImage != nullptr && binImage.rows > 0)
 	{
 		cv::Rect r = targetImage->getImagePosition();
 
@@ -3458,7 +3460,7 @@ cv::Mat MainWindow::getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& b
 		}
 	}
 
-	if (displayImage != NULL)
+	if (displayImage != nullptr)
 	{
 		cv::Mat& originalImage = displayImage->getImage();
 
@@ -4147,7 +4149,7 @@ void MainWindow::on_actionFilter_Binary_Objects_triggered()
 	{
 		targeterImage& tim = m_ImagesContainer.getImageAt(ind);
 
-		targeterImage *tarBin = NULL, *tar = NULL;
+		targeterImage *tarBin = nullptr, *tar = nullptr;
 
 		int index = tim.getFriendArrayIndexOfType(imageType::cclabels);
 
@@ -4170,11 +4172,11 @@ void MainWindow::on_actionFilter_Binary_Objects_triggered()
 				consoleLog(imageType::target, CONSOLECOLOURS::colour::Warning);
 
 			
-			if(tarBin != NULL)
+			if(tarBin != nullptr)
 			{
 				cv::Rect r;
 
-				if (tar != NULL)
+				if (tar != nullptr)
 					r = tar->getImagePosition();
 
 				// exclude those % > or < than stdev etc
@@ -4686,7 +4688,7 @@ void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D toprigh
 	// rotational transformation coefficients relative to stage
 	
 	// This matrix will transform points from the fiducial axis to the stage coordinates
-	// these are the rotation, skew and reflection cooefficients
+	// these are the rotation, skew and reflection coefficients
 
 									// destination=stage, source=fiducial
 	M11 = (float)QVector3D::dotProduct(XAxisStage, XAxisFiducial);
@@ -4707,6 +4709,17 @@ void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D toprigh
 	m_settings->m_invTransformationMatrix = m_settings->m_transformationMatrix.inverted();
 }	
 
+// translates coordinates from absolute stage coordinates to coordinates relative to fiducial marks
+QVector3D MainWindow::getRelativePosition(QVector3D absolutePosition)
+{
+	return m_settings->m_transformationMatrix*absolutePosition;
+}
+
+// translates coordinates from coordinates relative to fiducial marks to absolute stage coordinates
+QVector3D MainWindow::getAbsolutePosition(QVector3D relativePosition)
+{
+	return m_settings->m_invTransformationMatrix*relativePosition;
+}
 
 void MainWindow::createFocusStackAndMove(double minPos, double maxPos, double step, ACTIONS::action act)
 {
@@ -4893,8 +4906,15 @@ void MainWindow::addImageMosaic(cv::Mat& image, double focusDistance)
 	{
 		QString pathname = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_";
 
+		QVector3D absolutePosition = QVector3D(pt);
+		absolutePosition.setZ(focusDistance);
+
+		QVector3D relativePosition = getRelativePosition(absolutePosition);
+
 		// add image to mosaic and save to file.
-		QString filename = pathname + "[x=" + QString::number(pt.x()) + ", y=" + QString::number(pt.y()) + ", z=" + QString::number(focusDistance) + "].png";
+		QString filename = pathname + "_stage[" + QString::number(absolutePosition.x()) + "," + QString::number(absolutePosition.y()) + "," + QString::number(absolutePosition.z()) + "]" +
+			+"_fid[" + QString::number(relativePosition.x()) + "," + QString::number(relativePosition.y()) + "," + QString::number(relativePosition.z()) + "]" +
+			".png";
 
 		// save file name in list
 		m_MosiacImageList[filename] = image;

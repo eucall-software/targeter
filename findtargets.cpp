@@ -215,9 +215,9 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 	//distance = (distance >> 1) << 1;
 
 	// allocate matrix
-	float* coMatrix_TargetIntensity = NULL;
-	float* coMatrix_TargetHue = NULL;
-	float* scoreImage = NULL;
+	float* coMatrix_TargetIntensity = nullptr;
+	float* coMatrix_TargetHue = nullptr;
+	float* scoreImage = nullptr;
 
 	// clusters test and training images for RGB values
 
@@ -244,7 +244,7 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 		for (int i = 0; i < trainingImages.size(); i++)
 		{
 			// generate coocurrence matrices from training images
-			getCoocuranceHistogram(trainingImages[i], coMatrix_TargetIntensity, NULL, regionWidth, regionHeight, inc_W, inc_H, NoClusters, NoClusters, distance);
+			getCoocuranceHistogram(trainingImages[i], coMatrix_TargetIntensity, nullptr, regionWidth, regionHeight, inc_W, inc_H, NoClusters, NoClusters, distance);
 		}
 	}
 	else
@@ -302,10 +302,10 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 	scoreImage = FindTargets::findTargets(detectionImage, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetIntensity, coMatrix_TargetHue, NoClusters, distance, bCrossEntropy);
 #endif
 
-	if (coMatrix_TargetHue != NULL)
+	if (coMatrix_TargetHue != nullptr)
 		delete[] coMatrix_TargetHue;
 
-	if (coMatrix_TargetIntensity != NULL)
+	if (coMatrix_TargetIntensity != nullptr)
 		delete[] coMatrix_TargetIntensity;
 
 	cv::Mat sim;
@@ -319,7 +319,7 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 		sim = cv::Mat();
 	}
 	
-	if (scoreImage != NULL)
+	if (scoreImage != nullptr)
 		delete[] scoreImage;
 
 	return sim;
@@ -582,7 +582,7 @@ void FindTargets::labelTrainingImagesGray(std::vector<targeterImage>& TrainImage
 	cv::Mat image1_gray;
 	cv::Mat dst, hsvImage;
 	std::vector<cv::Mat> hsv_planes;
-	int* pImage = NULL;
+	int* pImage = nullptr;
 
 	// assign clusters to training images
 	for (int k = 0; k < TrainImages.size(); k++)
@@ -615,7 +615,7 @@ void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages
 	cv::Mat image1_gray;
 	cv::Mat dst, hsvImage;
 	std::vector<cv::Mat> hsv_planes;
-	int* pImage = NULL;
+	int* pImage = nullptr;
 
 	// assign clusters to training images
 	for (int k = 0; k < TrainImages.size(); k++)
@@ -682,7 +682,7 @@ float FindTargets::getCoocMatrixGray(targeterImage& m, int* pMask, drawingMode::
 	int w = m.Cols(), h = m.Rows();
 	int* pImage = m.get1DImage(imageType::display);
 
-	bool bHasMask = (pMask != NULL && (maskType == drawingMode::circle || maskType == drawingMode::poly));
+	bool bHasMask = (pMask != nullptr && (maskType == drawingMode::circle || maskType == drawingMode::poly));
 
 	for (j = 0; j<regionHeight; j++)
 		for (i = 0; i<regionWidth; i++)
@@ -762,7 +762,7 @@ float FindTargets::getCoocMatrixHSV2(int* pImage, int* pHue, int w, int h, int* 
 	long ind;
 	float sum = 0;
 
-	bool bHasMask = (pMask != NULL && (maskType == drawingMode::circle || maskType == drawingMode::poly));
+	bool bHasMask = (pMask != nullptr && (maskType == drawingMode::circle || maskType == drawingMode::poly));
 
 	for (j = 0; j < regionHeight; j++)
 		for (i = 0; i < regionWidth; i++)
@@ -916,7 +916,7 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 	//	CoocSize = NoClusters*NoClusters*NoClusters*NoClusters*maxD;
 
 	float* coMatrixIntensity = new float[CoocSize];
-	float* coMatrixHue = NULL;
+	float* coMatrixHue = nullptr;
 
 	if(!detectionImage.IsGray)
 		coMatrixHue = new float[CoocSize];

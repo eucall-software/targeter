@@ -26,8 +26,8 @@ drawingObject::drawingObject()
 	m_bDragging = false;
 	m_type = drawingMode::none;
 
-	m_pRect = NULL;
-	m_pParent = NULL;
+	m_pRect = nullptr;
+	m_pParent = nullptr;
 
 	m_ImageIndex = -1;
 }
@@ -244,7 +244,7 @@ bool drawingPoly::hitTest(QPoint p, bool bMouseDown)
 	int i, j;
 	bool inObject = false;
 
-	if (this->m_pPoly != NULL)
+	if (this->m_pPoly != nullptr)
 	{
 		for (i = 0, j = this->m_pPoly->length() - 1; i < this->m_pPoly->length(); j = i++)
 		{
@@ -366,7 +366,7 @@ void drawingCross::draw(QPainter* painter)
 
 void drawingPoly::draw(QPainter* painter)
 {
-	if (m_pPoly == NULL || m_pPoly->length() < 1)
+	if (m_pPoly == nullptr || m_pPoly->length() < 1)
 		return;
 
 	drawingObject::getPenBrush(painter);

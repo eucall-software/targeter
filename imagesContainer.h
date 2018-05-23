@@ -32,7 +32,7 @@ public:
 		if (i >= 0 && i < m_Images.size())
 			return &(m_Images[i]);
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	targeterImage* getLastImagePtr() 
@@ -42,7 +42,7 @@ public:
 		if (size >= 0)
 			return &(m_Images[m_Images.size() - 1]);
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	targeterImage& getImageAt(int i) { 
@@ -55,8 +55,8 @@ public:
 		if (i >= 0 && i < m_Images.size()) 
 			return &(m_Images[m_Images[i].getFriendArrayIndexOfType(type)]);
 		else
-			return NULL;
-		return NULL;
+			return nullptr;
+		return nullptr;
 	}
 
 	std::vector<targeterImage> getImages() { 

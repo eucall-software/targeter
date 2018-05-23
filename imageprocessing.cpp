@@ -30,7 +30,7 @@ QString ImageProcessing::scanForBarCodes(const cv::Mat& src, cv::Mat& dst, bool 
 	int height = src.rows;
 
 	/// Detector parameters
-	uchar* raw = NULL;
+	uchar* raw = nullptr;
 	cv::Mat gray = Mat::zeros(src.size(), CV_8UC1);
 
 	dst = src.clone();
@@ -239,7 +239,7 @@ int* ImageProcessing::getRunLengthHistogram(cv::Mat& src, int& size, bool barLef
 	else
 		gray = src;
 
-	double* hist = NULL;
+	double* hist = nullptr;
 
 	if (src.cols > src.rows)
 	{
@@ -484,7 +484,7 @@ QString ImageProcessing::getBarcode(cv::Mat& src, QRect roi)
 	else
 		gray = roiIm;
 
-	ulong* hist = NULL;
+	ulong* hist = nullptr;
 	int size = 0;
 	
 	if(roi.width()>roi.height())
@@ -1180,7 +1180,7 @@ cv::Mat ImageProcessing::HistogramClusteringGray(cv::Mat im, int NoClusters)
 
 	// pClusterHist has the cluster for each hue value
 	std::vector<int*> cImages;
-	int* pClusterHist = NULL;
+	int* pClusterHist = nullptr;
 	cv::Mat* histImage;
 	cv::Mat b_hist;
 	std::vector<cv::Mat> hsv_planes;
@@ -1683,7 +1683,7 @@ void thinningIteration(cv::Mat& img, int iter)
 	uchar *pDst;
 
 	// initialize row pointers
-	pAbove = NULL;
+	pAbove = nullptr;
 	pCurr = img.ptr<uchar>(0);
 	pBelow = img.ptr<uchar>(1);
 

@@ -59,7 +59,7 @@ NewportController::NewportController(StageControlZ* pTSM)
 
 NewportController::NewportController() 
 {
-	m_pTSM = NULL;
+	m_pTSM = nullptr;
 	m_COMPortZ = "";
 
 	m_pSMC = gcnew CommandInterfaceSMC100::SMC100();
@@ -105,8 +105,8 @@ bool NewportController::connectToPort(System::String^ port)
 
 	if (result == 0)
 	{
-		if(m_pTSM != NULL) m_pTSM->showMessage(ss2q("Newport Z axis stage connected to port " + port));
-		if(m_pTSM != NULL) m_pTSM->showMessage(ss2q("Software Version= " + outText + "\n"));
+		if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Newport Z axis stage connected to port " + port));
+		if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Software Version= " + outText + "\n"));
 
 		// change stage state to ready
 		changeState(NEWPORT_STATUS::status::ready);
@@ -315,7 +315,7 @@ void NewportController::getPosition(double& z)
 	// Get position
 	if (!m_pSMC->TP(1, z, errString))
 	{
-		if (m_pTSM != NULL)
+		if (m_pTSM != nullptr)
 			m_pTSM->showMessage(ss2q(errString));
 	}
 }
@@ -341,7 +341,7 @@ void NewportController::SendSomeCommands()
 	result = m_pSMC->PT_Set(1, 10.0, errString);
 	result = m_pSMC->PT_Get(1, time, errString);
 
-	if(m_pTSM != NULL) m_pTSM->showMessage("time to move 10mm = " + QString::number(time));
+	if(m_pTSM != nullptr) m_pTSM->showMessage("time to move 10mm = " + QString::number(time));
 
 	_sleep(time);
 
@@ -377,12 +377,12 @@ void NewportController::reportResult(int result, QString s, System::String^ err)
 {
 	if (result == 0)
 	{
-		if (m_pTSM != NULL) 
+		if (m_pTSM != nullptr) 
 			m_pTSM->showMessage(s);
 	}
 	else
 	{
-		if (m_pTSM != NULL) 
+		if (m_pTSM != nullptr) 
 			m_pTSM->showMessage(ss2q(err));
 	}
 }
@@ -412,25 +412,25 @@ void NewportController::getInfo()
 		int result = m_pSMC->SR_Get(1, RightLimit, errString);
 
 		if (result == 0)
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q("Right Limit= " + RightLimit.ToString() + "\n"));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Right Limit= " + RightLimit.ToString() + "\n"));
 		else
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q(errString));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q(errString));
 
 		// Get negative software limit
 		result = m_pSMC->SL_Get(1, LeftLimit, errString);
 
 		if (result == 0)
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q("Left Limit= " + LeftLimit.ToString() + "\n"));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Left Limit= " + LeftLimit.ToString() + "\n"));
 		else
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q(errString));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q(errString));
 
 		// Get controller revision information 
 		result = m_pSMC->VE(1, version, errString);
 
 		if (result == 0)
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q("Version= " + version + "\n"));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Version= " + version + "\n"));
 		else
-			if(m_pTSM != NULL) m_pTSM->showMessage(ss2q(errString));
+			if(m_pTSM != nullptr) m_pTSM->showMessage(ss2q(errString));
 
 		
 		// move relative
@@ -440,7 +440,7 @@ void NewportController::getInfo()
 		result = m_pSMC->PT_Set(1, 10.0, errString);
 		result = m_pSMC->PT_Get(1, time, errString);
 
-		if(m_pTSM != NULL) m_pTSM->showMessage("time to move 10mm = " + QString::number(time));
+		if(m_pTSM != nullptr) m_pTSM->showMessage("time to move 10mm = " + QString::number(time));
 
 		_sleep(time);
 
@@ -473,7 +473,7 @@ void NewportController::moveAbsolute(double z, bool async)
 		result = m_pSMC->PT_Set(1, z-z1, errString);
 		result = m_pSMC->PT_Get(1, time, errString);
 
-		if (m_pTSM != NULL) m_pTSM->showMessage("time to move 10mm (in ms)= " + QString::number(time * 1000));
+		if (m_pTSM != nullptr) m_pTSM->showMessage("time to move 10mm (in ms)= " + QString::number(time * 1000));
 		*/
 
 		// move absolute
@@ -488,7 +488,7 @@ void NewportController::moveAbsolute(double z, bool async)
 
 		while (z < pos)
 		{
-			if (m_pTSM != NULL) m_pTSM->showMessage(ss2q("Movement needs more time, current position = ") + QString::number(pos) + "\n");
+			if (m_pTSM != nullptr) m_pTSM->showMessage(ss2q("Movement needs more time, current position = ") + QString::number(pos) + "\n");
 			_sleep(100);
 		}
 		*/
@@ -509,7 +509,7 @@ void NewportController::moveAbsolute(double z, bool async)
 	}
 	else
 	{
-		if (m_pTSM != NULL) 
+		if (m_pTSM != nullptr) 
 			m_pTSM->showMessage("you are already at this position \n");
 		reportPosition(Q_FUNC_INFO);
 	}
@@ -529,7 +529,7 @@ bool NewportController::checkIfMoving(bool& bError)
 	_sleep(10);
 
 	if(errCode != "0000")
-		if (m_pTSM != NULL) m_pTSM->showMessage(getErrorState(ss2q(errCode)), CONSOLECOLOURS::Critical);
+		if (m_pTSM != nullptr) m_pTSM->showMessage(getErrorState(ss2q(errCode)), CONSOLECOLOURS::Critical);
 
 	if (state == "28" || state == "1E" || state == "1F")
 		return true;
@@ -564,7 +564,7 @@ void NewportController::moveRelative(double z, bool async)
 	}
 	else
 	{
-		if (m_pTSM != NULL)
+		if (m_pTSM != nullptr)
 			m_pTSM->showMessage("there's no point moving a relative distance of 0!\n");
 		reportPosition(Q_FUNC_INFO);
 	}
@@ -597,7 +597,7 @@ void NewportController::reportPosition(QString functionCall)
 
 	QString s = str + "current position ->z: " + QString::number(z);
 
-	if (m_pTSM != NULL)
+	if (m_pTSM != nullptr)
 	{
 		m_pTSM->updatePosition(z);
 		m_pTSM->showMessage(s.toLocal8Bit().data());
@@ -610,7 +610,7 @@ void NewportController::sendCommand(QString cmd)
 
 	int result = m_pSMC->WriteToInstrument(q2ss(cmd), outText, 1);
 
-	if (m_pTSM != NULL) m_pTSM->showMessage("command response = " +  ss2q(outText) + "\n");
+	if (m_pTSM != nullptr) m_pTSM->showMessage("command response = " +  ss2q(outText) + "\n");
 }
 
 std::wstring NewportController::MarshalString(System::String^ s)

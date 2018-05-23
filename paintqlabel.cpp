@@ -41,7 +41,7 @@ PaintQLabel::PaintQLabel(QWidget * parent) : QLabel(parent)
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
-	m_pImagesContainer = NULL;
+	m_pImagesContainer = nullptr;
 	imageContainerIndex = 0;
 
     resetDrawingObjects();
@@ -89,7 +89,7 @@ void PaintQLabel::resetDrawingObjects()
 
 	m_fidPosition = FIDUCIAL::position::topleft_overview;
 
-    emit unsetDrawingButtons(NULL);
+    emit unsetDrawingButtons(nullptr);
 }
 
 /**
@@ -580,7 +580,7 @@ void PaintQLabel::mouseMoveEvent(QMouseEvent * event)
 void PaintQLabel::addObject(drawingMode::drawingMode mode)
 {
 	m_ObjectPositionRectangle = m_MouseRectangle;
-	drawingObject* dObj = NULL;
+	drawingObject* dObj = nullptr;
 
 	if (mode == drawingMode::fiducial)
 		dObj = new drawingFiducial(this);
@@ -598,7 +598,7 @@ void PaintQLabel::addObject(drawingMode::drawingMode mode)
 	dObj->m_fillColour = m_fillColour;
 	dObj->m_ImageIndex = imageContainerIndex;
 
-	if(dObj != NULL)
+	if(dObj != nullptr)
 	{
 		dObj->m_type = mode;
 
@@ -695,7 +695,7 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
 		{
 			drawingObject* pObj = getObjectAtPoint(pt, drawingMode::fiducial);
 
-			if (pObj != NULL)
+			if (pObj != nullptr)
 				emit addFiducialMark(((drawingFiducial*)pObj)->getPosition(), pObj->getCenter());
 		}
 	}
@@ -708,7 +708,7 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
 	{
 		drawingObject* pObj = getObjectInMouseRect();
 
-		if(pObj != NULL)
+		if(pObj != nullptr)
 			pObj->m_bSelected = true;
 	}
 
@@ -754,7 +754,7 @@ drawingObject* PaintQLabel::getObjectInMouseRect(drawingMode::drawingMode mode)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 drawingObject* PaintQLabel::getObjectAtPoint(QPoint pt, drawingMode::drawingMode mode)
 {
@@ -767,7 +767,7 @@ drawingObject* PaintQLabel::getObjectAtPoint(QPoint pt, drawingMode::drawingMode
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -920,7 +920,7 @@ QImage& PaintQLabel::getImage()
 {
 	targeterImage* t = m_pImagesContainer->getImageAtPtr(imageContainerIndex);
 
-	if (t != NULL)
+	if (t != nullptr)
 		return t->getQTImage();
 	else
 		return QImage();
@@ -1432,7 +1432,7 @@ void PaintQLabel::drawGrid(cv::Mat& im, int gridSpacing, cv::Scalar s, bool bPoi
 
 void PaintQLabel::drawTempPoly(QVector<QPoint>* pPoly, QRect* pBoundingRect, QPainter* painter)
 {
-	if (pPoly == NULL || pPoly->length() < 1)
+	if (pPoly == nullptr || pPoly->length() < 1)
 		return;
 
 	getPenBrush(painter, false, false, m_drawingMode == drawingMode::none, 
@@ -1501,7 +1501,7 @@ void PaintQLabel::paintEvent(QPaintEvent* event)
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 #endif
-    if ( !getImage().isNull() && getImage().paintEngine() != NULL )
+    if ( !getImage().isNull() && getImage().paintEngine() != nullptr )
     {
         QPainter painter(this);
 

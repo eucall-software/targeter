@@ -123,7 +123,7 @@ MarzController::MarzController(StageControlXY* pTSM)
 
 MarzController::MarzController()
 {
-	m_pTSM = NULL;
+	m_pTSM = nullptr;
 	m_flag = false;
 
 	m_COMPortXY = "";
@@ -145,7 +145,7 @@ MarzController::~MarzController()
 		if(int err = m_pTango->Disconnect()>0)
 			m_pTSM->showMessage(getDLLError(err));
 /*
-		if(m_pTSM != NULL) 
+		if(m_pTSM != nullptr) 
 			m_pTSM->showMessage("Disconnecting XY Axis Stage");
 */
 		delete m_pTango;
@@ -161,12 +161,12 @@ int MarzController::checkForDLL()
 
 	if(result == -1)
 	{
-		if(m_pTSM != NULL) 
+		if(m_pTSM != nullptr) 
 			m_pTSM->showMessage("Error: DLL not found.\n\nCheck the .dll file name or copy the .dll file into this directory!");
 	}
 	else if (result == -2)
 	{
-		if(m_pTSM != NULL) 
+		if(m_pTSM != nullptr) 
 			m_pTSM->showMessage("Warning: Not all DLL functions present.");
 	}
 
@@ -175,7 +175,7 @@ int MarzController::checkForDLL()
 
 bool MarzController::connectToPort(QString port)
 {
-	if(m_pTSM != NULL) 
+	if(m_pTSM != nullptr) 
 		m_pTSM->showMessage(port.toLocal8Bit().data());
 
 	// connect to Tango controller
@@ -188,7 +188,7 @@ bool MarzController::connectToPort(QString port)
 
 		QString s = "Tango XY stage connected to port " + port;
 
-		if(m_pTSM != NULL) 
+		if(m_pTSM != nullptr) 
 			m_pTSM->showMessage(s.toLocal8Bit().data());
 
 		char version[64];
@@ -204,7 +204,7 @@ bool MarzController::connectToPort(QString port)
 
 		s += s1;
 
-		if(m_pTSM != NULL) 
+		if(m_pTSM != nullptr) 
 			m_pTSM->showMessage(s.toLocal8Bit().data());
 
 		setJoystick(false);
@@ -214,7 +214,7 @@ bool MarzController::connectToPort(QString port)
 		if (int err = m_pTango->GetStatusAxis(msg, 20) > 0)
 			m_pTSM->showMessage(getDLLError(err));
 
-		if (m_pTSM != NULL)
+		if (m_pTSM != nullptr)
 			m_pTSM->showMessage(msg);
 
 		m_pTango->FlushBuffer(0);
@@ -236,7 +236,7 @@ bool MarzController::connectToPort(QString port)
 
 void MarzController::disconnect()
 {
-	if(m_pTango != NULL)
+	if(m_pTango != nullptr)
 		m_pTango->Disconnect();
 }
 
@@ -293,7 +293,7 @@ void MarzController::sendCommand(QString cmd)
 
 	reportPosition(Q_FUNC_INFO);
 
-	if (m_pTSM != NULL)
+	if (m_pTSM != nullptr)
 		m_pTSM->showMessage(answer);
 
 	m_pTango->FlushBuffer(0);
@@ -313,7 +313,7 @@ void MarzController::reportPosition(QString functionCall)
 	QString s = str + "current position -> x:" + QString::number(x) + ", y:" + QString::number(y);
 
 
-	if (m_pTSM != NULL)
+	if (m_pTSM != nullptr)
 	{
 		m_pTSM->updatePositions(x, y);
 		m_pTSM->showMessage(s.toLocal8Bit().data());

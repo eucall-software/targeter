@@ -72,6 +72,8 @@ public:
 
     QImage copyImageToSquareRegion(QImage im, QColor col);
 
+	QString limitString(const QString& aString, int maxLength);
+
     void resizeEvent(QResizeEvent* event);
     std::vector<int> getCheckedImages();
     void resizeImagePreserve(cv::Mat& in, cv::Mat& out, int newWidth, int newHeight);
@@ -107,18 +109,21 @@ public:
 	// get image masked by drawn objects
 	cv::Mat getDrawnImage(int index);
 
-	cv::Mat getTargetPositions(targeterImage scoreImage, targeterImage* targetImage = NULL, int imageIndex=-1);
-	cv::Mat getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& binImage, targeterImage* targetImage = NULL, targeterImage* displayImage = NULL, int imageIndex =-1, bool bFilter = true);
+	cv::Mat getTargetPositions(targeterImage scoreImage, targeterImage* targetImage = nullptr, int imageIndex=-1);
+	cv::Mat getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& binImage, targeterImage* targetImage = nullptr, targeterImage* displayImage = nullptr, int imageIndex =-1, bool bFilter = true);
 
 	void entropyFilterImage();
 
 	void drawShape(cv::Mat& im, drawingShape shape, cv::Scalar col);
 
+	QVector3D getRelativePosition(QVector3D position);
+	QVector3D getAbsolutePosition(QVector3D position);
+
 	void createFocusStackAndMove(double minPos, double maxPos, double step, ACTIONS::action act);
 	void getFocusValue(cv::Mat im, double z, ACTIONS::action act);
 
 	cv::Mat createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> indexes);
-	QVector3D getMosaicPositionFromName(QString str);
+	QVector3D getMosaicPositionFromName(QString str, bool relative = true);
 	void rasterSortVectors(QVector<QPointF>& positions);
 	static bool compareQPointF(const QPointF& first, const QPointF& second);
    
@@ -208,9 +213,9 @@ public slots:
 
 	void createTransformationMatrix(QVector3D topleft, QVector3D topright, QVector3D bottomleft);
 
-	bool updateQTImage(cv::Mat img, QString name = "camera image", QAction* pAction = NULL);
+	bool updateQTImage(cv::Mat img, QString name = "camera image", QAction* pAction = nullptr);
 
-	void addTargeterImage(targeterImage tim, QAction* pAction = NULL);
+	void addTargeterImage(targeterImage tim, QAction* pAction = nullptr);
 
 	void addMatImage(cv::Mat img, QString imagename, imageType::imageType type, QAction* pAction);
 

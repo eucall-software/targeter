@@ -70,7 +70,7 @@ bool BaslerCamera::openCamera(cameraType::camera cameraType)
 			/*
 			GenApi::CIntegerPtr pHeartbeat = pMicroscopeCamera->GetTLNodeMap().GetNode("HeartbeatTimeout");
 			// set heartbeat to 600 seconds. (Note: Only GigE cameras have a "HeartbeatTimeout" node)
-			if (pHeartbeat != NULL) pHeartbeat->SetValue(1000);
+			if (pHeartbeat != nullptr) pHeartbeat->SetValue(1000);
 			*/
 			return true;
 		}
@@ -89,7 +89,7 @@ bool BaslerCamera::openCamera(cameraType::camera cameraType)
 			/*
 			GenApi::CIntegerPtr pHeartbeat = pOverviewCamera->GetTLNodeMap().GetNode("HeartbeatTimeout");
 			// set heartbeat to 600 seconds. (Note: Only GigE cameras have a "HeartbeatTimeout" node)
-			if (pHeartbeat != NULL) pHeartbeat->SetValue(1000);
+			if (pHeartbeat != nullptr) pHeartbeat->SetValue(1000);
 			*/
 			try
 			{
@@ -120,7 +120,7 @@ void BaslerCamera::setCameras(QString overviewSerialNumber, QString microscopeSe
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 	
-	if (pOverviewCamera==NULL || !pOverviewCamera->IsOpen())
+	if (pOverviewCamera== nullptr || !pOverviewCamera->IsOpen())
 	{
 		try
 		{
@@ -134,7 +134,7 @@ void BaslerCamera::setCameras(QString overviewSerialNumber, QString microscopeSe
 		}
 	}
 
-	if (pMicroscopeCamera==NULL || !pMicroscopeCamera->IsOpen())
+	if (pMicroscopeCamera== nullptr || !pMicroscopeCamera->IsOpen())
 	{
 		try
 		{
@@ -160,7 +160,7 @@ Pylon::CInstantCamera* BaslerCamera::getCamera(cameraType::camera cameraType)
 		else
 		{
 			emit LOGCONSOLE("getCamera: Error - Cannot open microscope camera");
-			return NULL;
+			return nullptr;
 		}
 	}
 	else
@@ -172,7 +172,7 @@ Pylon::CInstantCamera* BaslerCamera::getCamera(cameraType::camera cameraType)
 		else
 		{
 			emit LOGCONSOLE("getCamera: Error - Cannot open overview camera");
-			return NULL;
+			return nullptr;
 		}
 	}
 }
@@ -198,7 +198,7 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	Pylon::CInstantCamera* pCamera = NULL;
+	Pylon::CInstantCamera* pCamera = nullptr;
 
 	if(!bCalledInLoop)
 		pCamera = getCamera(cameraType);
@@ -210,7 +210,7 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 			pCamera = pOverviewCamera.get();
 	}
 
-	if (pCamera == NULL)
+	if (pCamera == nullptr)
 	{
 		QString s = CAMERATYPE(cameraType);
 		emit LOGCONSOLE("grabImage: Error - camera "+ s + " invalid");
@@ -313,7 +313,7 @@ void BaslerCamera::grabVideo(cameraType::camera cameraType)
 #endif
 	Pylon::CInstantCamera* pCamera = getCamera(cameraType);
 
-	if (pCamera != NULL)
+	if (pCamera != nullptr)
 	{
 		int delay = (1000 / 60);
 
@@ -360,14 +360,14 @@ void BaslerCamera::stopGrabbing()
 {
 	emit LOGCONSOLE("stopGrabbing called");
 
-	if(pMicroscopeCamera != NULL)
+	if(pMicroscopeCamera != nullptr)
 		pMicroscopeCamera->StopGrabbing();
-	if(pOverviewCamera != NULL)
+	if(pOverviewCamera != nullptr)
 		pOverviewCamera->StopGrabbing();
 
-	if(pMicroscopeCamera != NULL)
+	if(pMicroscopeCamera != nullptr)
 		pMicroscopeCamera->Close();
-	if(pOverviewCamera != NULL)
+	if(pOverviewCamera != nullptr)
 		pOverviewCamera->Close();
 }
 

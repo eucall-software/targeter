@@ -20,8 +20,8 @@ class BaslerCamera : public QObject
 private:
 	int frameRate;
 	
-	std::unique_ptr<Pylon::CInstantCamera> pOverviewCamera = NULL;
-	std::unique_ptr<Pylon::CInstantCamera> pMicroscopeCamera = NULL;
+	std::unique_ptr<Pylon::CInstantCamera> pOverviewCamera = nullptr;
+	std::unique_ptr<Pylon::CInstantCamera> pMicroscopeCamera = nullptr;
 
 public:
 
@@ -32,8 +32,8 @@ public:
 
 	CVideoEventHandler* pEventHandler;
 
-	bool isOverviewCameraEmpty() { return pOverviewCamera == NULL; };
-	bool isMicroscopeCameraEmpty() { return pOverviewCamera == NULL; };
+	bool isOverviewCameraEmpty() { return pOverviewCamera == nullptr; };
+	bool isMicroscopeCameraEmpty() { return pOverviewCamera == nullptr; };
 
 	bool openCamera(cameraType::camera cameraType);
 	Pylon::CInstantCamera*  getCamera(cameraType::camera cameraType);
