@@ -4913,7 +4913,6 @@ void MainWindow::stageMovedZ(double stageZ, ACTIONS::action act)
 
 void MainWindow::startFocusThreads(cv::Mat image, double z, ACTIONS::action act)
 {
-	
 	MultiWatcher* mWatcher = new MultiWatcher;
 
 	QFutureWatcher<FocusResult>* watcher = new QFutureWatcher<FocusResult>();
@@ -4926,7 +4925,6 @@ void MainWindow::startFocusThreads(cv::Mat image, double z, ACTIONS::action act)
 	mWatcher->_sync.addFuture(future);
 
 	connect(mWatcher, &MultiWatcher::MultiWatchDone, this, &MainWindow::allFocusValuesCompleted);
-	
 }
 
 // called in separate thread, gets focus value for image
@@ -4963,19 +4961,6 @@ void MainWindow::allFocusValuesCompleted()
 	sender()->deleteLater();
 
 	// process focus images
-
-
-}
-
-void MainWindow::addFocusValue(cv::Mat im, double z, double focusStrength, ACTIONS::action act)
-{
-	FocusImage fi;
-	fi.focusValue = focusStrength;
-	fi.focusImage = im;
-
-	// add focus information to array
-	m_focusStackData.insert(z, fi);
-
 	if (m_focusStackData.size() >= m_noFocusStackImages)
 	{
 		// get focus position and best focused image
@@ -5004,6 +4989,19 @@ void MainWindow::addFocusValue(cv::Mat im, double z, double focusStrength, ACTIO
 			addImageMosaic(bestImage, bestPosition);
 		}
 	}
+
+}
+
+void MainWindow::addFocusValue(cv::Mat im, double z, double focusStrength, ACTIONS::action act)
+{
+	FocusImage fi;
+	fi.focusValue = focusStrength;
+	fi.focusImage = im;
+
+	// add focus information to array
+	m_focusStackData.insert(z, fi);
+
+	
 }
 
 double MainWindow::getBestFocusValue(QMap<double, FocusImage> focusValues)
