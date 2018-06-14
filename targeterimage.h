@@ -109,8 +109,6 @@ public:
 	drawingMode::drawingMode getMaskType() { return maskType; };
 
 public:		// public properties
-	bool IsGray;
-
 	imageType::imageType imageFunction;		/// type of image
 
 	drawingMode::drawingMode maskType;		/// type of mask

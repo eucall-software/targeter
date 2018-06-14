@@ -495,7 +495,6 @@ bool SettingsDialog::checkOrder(int startIndex, QPointF top_Left, QPointF top_Ri
 
 	QModelIndex index1, index2;
 
-
 	ind1 = startIndex;
 
 	if (!checkIndex(top_Left.x(), top_Right.x()))
@@ -544,6 +543,15 @@ bool SettingsDialog::checkFiducialsOrder(bool bFlagRed)
 			spinFiducials_stage_Z[i]->setStyleSheet("color: rgb(0,0,0); ");
 	}
 
+	return checkFiducialsOrder(m_Settings->fiducial_marks_stage, m_Settings->fiducial_marks_image, true);
+}
+
+bool SettingsDialog::checkFiducialsOrder(QInt3DMap fiducial_marks_stage, QIntPointMap fiducial_marks_image, bool bFlagRed)
+{
+	bool bInOrder = true;
+
+	QString str = "";
+
 	int startIndex = FIDUCIAL::position::topleft_overview;
 
 	QPointF tl = m_Settings->fiducial_marks_image[startIndex];
@@ -569,6 +577,7 @@ bool SettingsDialog::checkFiducialsOrder(bool bFlagRed)
 		str += " fiducial marks of microscope image are not in order";
 		bInOrder = false;
 	}
+
 	ui->lblFiducialCheck->setText(str);
 
 	return bInOrder;

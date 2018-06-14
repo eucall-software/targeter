@@ -206,9 +206,20 @@ cudaScore::~cudaScore()
 	cudaFree(cuda_score_count_image);
 }
 
-template<class T>
+
 __global__
-void mycudaMemset(T* image, int n)
+void mycudaMemsetInt(int* image, int n)
+{
+	int i = blockIdx.x*blockDim.x + threadIdx.x;
+
+	if (i < n)
+	{
+		image[i] = 0;
+	}
+}
+
+__global__
+void mycudaMemsetFloat(float* image, int n)
 {
 	int i = blockIdx.x*blockDim.x + threadIdx.x;
 
@@ -217,8 +228,6 @@ void mycudaMemset(T* image, int n)
 		image[i] = 0.0;
 	}
 }
-
-
 
 /**
 *
@@ -385,9 +394,9 @@ void scoreTargetsGPU(int w, int h, int regionWidth, int regionHeight, int increm
 	atomicAdd(ct, 1);
 }
 
-template<class T>
+
 __global__
-void cudaEnergy(T* image, int w, int h, double* dev_score)
+void cudaEnergy(int* image, int w, int h, double* dev_score)
 {
 	int i = (blockIdx.y * blockDim.y + threadIdx.y);
 	int j = (blockIdx.x * blockDim.x + threadIdx.x);
@@ -500,8 +509,8 @@ bool cudaScore::FindTargets(int* intensityImage, float* scoreImage, int w_d, int
 	//checkCudaErrors(cudaMemcpy(cuda_intensity_image, intensityImage, w_d * h_d * sizeof(int), cudaMemcpyHostToDevice));
 	checkCudaErrors(cudaMemcpy(cuda_target_cooc, coMatrixTarget, CoocSize * sizeof(float), cudaMemcpyHostToDevice));
 
-	mycudaMemset << < (N + 255) / 256, 256 >> > (cuda_score_image, N);
-	mycudaMemset << < (N + 255) / 256, 256 >> > (cuda_score_count_image, N);
+	mycudaMemsetFloat << < (N + 255) / 256, 256 >> > (cuda_score_image, N);
+	mycudaMemsetInt << < (N + 255) / 256, 256 >> > (cuda_score_count_image, N);
 
 	cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc(8*sizeof(int), 0, 0, 0, cudaChannelFormatKindSigned);
 

@@ -31,6 +31,18 @@ QColor HelperFunctions::S2QC(cv::Scalar color)
 	return QColor(color[2], color[1], color[0]); // swap RGB-->BGR
 }
 
+bool HelperFunctions::checkMatCompatibility(cv::Mat& in, cv::Mat& out, const int expectedType, bool checkType)
+{
+	if (in.type() != out.type())
+		return false;
+	if (checkType)
+	{
+		if (in.type() != expectedType)
+			return false;
+	}
+	return true;
+}
+
 
 /**
 *

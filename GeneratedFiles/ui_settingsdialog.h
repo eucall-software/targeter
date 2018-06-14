@@ -465,7 +465,7 @@ public:
     {
         if (SettingsDialog->objectName().isEmpty())
             SettingsDialog->setObjectName(QStringLiteral("SettingsDialog"));
-        SettingsDialog->resize(1025, 586);
+        SettingsDialog->resize(798, 543);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -509,7 +509,7 @@ public:
 
         layoutWidget = new QWidget(ProjectSettingsTab);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(9, 9, 741, 285));
+        layoutWidget->setGeometry(QRect(9, 9, 721, 285));
         gridLayout_6 = new QGridLayout(layoutWidget);
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
         gridLayout_6->setSizeConstraint(QLayout::SetMinimumSize);
@@ -2945,7 +2945,7 @@ public:
         QObject::connect(spnTopLeft_Overview_Stage_X, SIGNAL(valueChanged(QString)), label_217, SLOT(setText(QString)));
         QObject::connect(spnTopLeft_Overview_Stage_X, SIGNAL(valueChanged(QString)), label_219, SLOT(setText(QString)));
 
-        SettingsTab->setCurrentIndex(4);
+        SettingsTab->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(SettingsDialog);

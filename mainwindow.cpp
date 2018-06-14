@@ -14,11 +14,12 @@
 #include "imagesContainer.h"
 #include "targeterimage.h"
 #include "BaslerCamera.h"
+#include "MultiWatcher.h"
 
 //#include <QThread>
 #include <QtConcurrent/QtConcurrent>
-#include <QFuture>
 #include <QFutureWatcher>
+#include <QFuture>
 
 // end Qconcurent stuff
 #include <QTimer>
@@ -93,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
     //m_CurrentQImage = nullptr;
     this->m_scale = 1;
-	m_noFocusStackImages = 25;
+	m_noFocusStackImages = 0;
 	m_zdistance = 1.0;
 
     ui->setupUi(this);
@@ -274,6 +275,8 @@ void MainWindow::deSerialiseSettings(bool fromBackup)
 		QDataStream in(&settingsFile);   // we will serialize the data into the file
 		m_settings->deserialize(in);
 
+		registerFiducialMarks();
+
 		settingsFile.close();
 	}
 	else
@@ -297,6 +300,45 @@ void MainWindow::deSerialiseSettings(bool fromBackup)
 
 	// update dialog
 	m_settingsDlg.initControls();
+}
+
+void MainWindow::registerFiducialMarks()
+{
+	if (m_settingsDlg.checkFiducialsOrder(m_settings->fiducial_marks_stage, m_settings->fiducial_marks_image, false))
+	{
+		// create QRect of fiducial positions in image
+		QPolygonF imageFiducials;
+		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_overview].y()));
+		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::topright_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::topright_overview].y()));
+		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_overview].y()));
+		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_overview].y()));
+
+		QPolygonF stageFiducials;
+
+		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope].y()));
+		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope].y()));
+		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope].y()));
+		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomright_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomright_microscope].y()));
+
+		QTransform trans;
+
+		// if possible to get transformation matrix
+		if (QTransform::quadToQuad(imageFiducials, stageFiducials, m_settings->m_coordinateTransform))
+			LOGCONSOLE("coordinate transform successfully registered", CONSOLECOLOURS::Information);
+		else
+			LOGCONSOLE("unable to calculate coordinate transform", CONSOLECOLOURS::Information);
+
+		// now create Fiducials to Stage transformation matrix
+		/*
+		emit createTransformationMatrix(QVector3D(3,3,3), QVector3D(6,3,3), QVector3D(3, 6,6));	// test matrix
+		*/
+
+		createTransformationMatrix(m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope],
+			m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope],
+			m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope]);
+	}
+	else
+		LOGCONSOLE("please ensure that fiducial marks correctly registered", CONSOLECOLOURS::Information);
 }
 
 void MainWindow::logFeedback(int score, QString name, QString email, QString institute, QString desc)
@@ -378,6 +420,10 @@ void MainWindow::setUpSlotsSignals()
 	connect(this, &MainWindow::getPositionXY, m_pStageXY, CONNECTCAST(StageControlXY, updatePositions, (bool)));
 	connect(this, &MainWindow::reportCOMPORTS, &m_settingsDlg, &SettingsDialog::updateCOMPORTS);
 
+#ifdef _HAVE_IMAGEMAGICK
+	connect(&m_imageReadWrite, &ImageReadWrite::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
+#endif
+
 	connect(m_pStageXY, &StageControlXY::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 	connect(m_pStageXY, &StageControlXY::ACTIONCOMPLETED, this, &MainWindow::StageMovementCompleted);
 	connect(m_pStageXY, &StageControlXY::UPDATEPOSITIONS, this, &MainWindow::updatePositionXY);
@@ -408,11 +454,8 @@ void MainWindow::setUpSlotsSignals()
 
 	connect(m_pStageZ, &StageControlZ::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 	connect(m_pStageZ, &StageControlZ::ACTIONCOMPLETED, this, &MainWindow::StageMovementCompleted);
-	connect(m_pStageZ, &StageControlZ::CONNECTEDTOPORT, this, &MainWindow::StageConnectedZ);
 	connect(m_pStageZ, &StageControlZ::UPDATEPOSITION, this, &MainWindow::updatePositionZ);
 	connect(m_pStageZ, &StageControlZ::STAGEMOVED, this, &MainWindow::stageMovedZ);
-
-	connect(this, &MainWindow::connectToPortZ, m_pStageZ, &StageControlZ::assignPort);
 	connect(this, &MainWindow::getPositionZ, m_pStageZ, CONNECTCAST(StageControlZ, updatePosition, (bool)));
 
 	// clean up
@@ -473,13 +516,28 @@ void MainWindow::addFiducialMark(FIDUCIAL::position pos, QPoint p)
 	emit getPositionXY(true);
 }
 
+void MainWindow::assignPortZ(QVector<QString> AvailablePorts, QString excludePort)
+{
+	for (int i = 0; i < AvailablePorts.length(); i++)
+	{
+		if (AvailablePorts[i] == excludePort)
+			continue;
+
+		if (m_pStageZ->connectToPort(AvailablePorts[i]))
+		{
+			StageConnectedZ(AvailablePorts[i]);
+			break;
+		}
+	}
+}
+
 void MainWindow::StageConnectedXY(QString port)
 {
 	// update dialog label
 	m_settingsDlg.updateCONNECTPORT(true, port);
 
-	// emit connect to avaialbleportZ
-	emit connectToPortZ(m_AvailablePorts, port);
+	// connect to available Z
+	assignPortZ(m_AvailablePorts, port);
 }
 
 void MainWindow::StageConnectedZ(QString port)
@@ -929,7 +987,7 @@ void MainWindow::SaveImage()
 			{
 				// ask user to modify filename
 				filename = dialog.getSaveFileName(this, "Save Image File",
-					filename, tr("Image Files [*.jpg, *.jpeg, *.bmp, *.png , *.pgm, *.pbm, *.ppm *.tiff *.tif]"),
+					filename, tr("Image Files [*.jpg, *.jpeg, *.jp2, *.bmp, *.png , *.pgm, *.pbm, *.ppm *.tiff *.tif]"),
 					0, QFileDialog::DontUseNativeDialog);
 
 				// get directory
@@ -960,7 +1018,11 @@ void MainWindow::SaveImage()
 					if (ct <= 0)
 					{
 						// save the image
+#ifdef _HAVE_IMAGEMAGICK
+						m_imageReadWrite.writeImage(filename, rectImage);
+#else
 						imwrite(filename.toLocal8Bit().data(), rectImage);
+#endif
 					}
 					else
 					{
@@ -971,14 +1033,22 @@ void MainWindow::SaveImage()
 						file.insert(file.lastIndexOf('.'), sRect);
 
 						// save the image
+#ifdef _HAVE_IMAGEMAGICK
+						m_imageReadWrite.writeImage(file, rectImage);
+#else
 						imwrite(file.toLocal8Bit().data(), rectImage);
+#endif
 					}
 				}
 			}
 			else
 			{
 				// save the image
-				imwrite(filename.toLocal8Bit().data(), im);
+#ifdef _HAVE_IMAGEMAGICK
+					m_imageReadWrite.writeImage(filename, im); 
+#else
+					imwrite(filename.toLocal8Bit().data(), im);
+#endif
 			}
 		
 
@@ -1277,7 +1347,23 @@ void MainWindow::addCVImage(targeterImage& tim, QString imageName, bool bRGBSwap
 	DisplayImage();
 }
 
+QJsonObject ObjectFromString(const QString& in)
+{
+	QJsonObject obj;
 
+	QJsonDocument doc = QJsonDocument::fromJson(in.toUtf8());
+
+	// check validity of the document
+	if (!doc.isNull())
+	{
+		if (doc.isObject())
+		{
+			obj = doc.object();
+		}
+	}
+
+	return obj;
+}
 
 /**
 *
@@ -1299,12 +1385,23 @@ void MainWindow::addImage(const QString &fileName, imageType::imageType type)
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
     QString qs = fileName;
-    String s = qs.toLocal8Bit().data();
-
+ 
 	fh_setCurrentFile(qs);
+#ifdef _HAVE_IMAGEMAGICK
+	QString jsonData;
+	cv::Mat im =  m_imageReadWrite.readImage(qs, jsonData); 
 
-    cv::Mat im = imread(s);
+	// add json data to targeter image 
+	QJsonObject obj = ObjectFromString(jsonData);
 
+	if(!obj.isEmpty())
+	{
+
+	}
+
+#else
+	cv::Mat im = imread(qs.toLocal8Bit().data());
+#endif
 	addCVImage(im, QUuid::QUuid(), qs, true, imageType::display, false, fileName);
 }
 
@@ -1515,7 +1612,7 @@ void MainWindow::OpenImage()
 			st = "";
 
 		// unfortunately cannot use native file dialog as it crashes on network drive access
-		fileNames = dialog.getOpenFileNames(this, tr("Open Image or XML file"), st, tr("Image Files [ *.jpg , *.jpeg , *.bmp , *.png , *.gif, *.tif, *.tiff *.xml]"), 0, QFileDialog::DontUseNativeDialog);
+		fileNames = dialog.getOpenFileNames(this, tr("Open Image or XML file"), st, tr("Image Files (*.jpg *.jpeg *.jp2 *.bmp *.png *.gif *.tif *.tiff);;XML files (*.xml)"), nullptr, QFileDialog::DontUseNativeDialog);
 	}
 	catch (...) {
 		DBOUT("error opening file");
@@ -2620,14 +2717,18 @@ void MainWindow::on_actionGrab_Image_From_Camera_triggered()
 			QUuid id = QUuid::createUuid();
 
 			if (!image.empty())
+			{
 				addCVImage(image, id, "overview camera image");
 
-			QString filename = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + id.toString() + ".png";
-			
-			imwrite(filename.toLocal8Bit().data(), image);
+				QString filename = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + id.toString() + ".png";
+#ifdef _HAVE_IMAGEMAGICK
+				m_imageReadWrite.writeImage(filename, image);
+#else
+				imwrite(filename.toLocal8Bit().data(), image);
+#endif
 
-			DBOUT("camera image written to file: " << filename.toLocal8Bit().data() << std::endl);
-
+				DBOUT("camera image written to file: " << filename.toLocal8Bit().data() << std::endl);
+			}
 		}
 		else
 			DBOUT("problem connecting to overview camera");
@@ -2836,7 +2937,7 @@ void MainWindow::on_actionRemoveBlackPixels_triggered()
 	
 		cv::cvtColor(im, bin, cv::COLOR_BGR2GRAY, 1);
 
-		FillMissingPixels<uchar>(bin, pbin, false);
+		FocusStack::FillMissingPixels<uchar>(bin, pbin, false);
 
 		addCVImage(pbin, m_ImagesContainer.getImageAt(ind).getUID(), "remove black pixels image", true, imageType::display, true);
 	}
@@ -3362,12 +3463,12 @@ cv::Mat MainWindow::createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> i
 		}
 	}
 
+	cv::Mat mosaicImage;
+
 	if(bSameSize)
 	{
 		int w = images[0].cols;
 		int h = images[0].rows;
-
-		cv::Mat mosaicImage;
 
 		if(indexes.length()>0)
 		{
@@ -3411,11 +3512,11 @@ cv::Mat MainWindow::createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> i
 				}
 			}
 		}
-		
-		return mosaicImage;
 	}
 	else
 		consoleLog("Images not the same size!", CONSOLECOLOURS::colour::Warning);
+
+	return mosaicImage;
 }
 
 cv::Mat MainWindow::getTargetPositions(targeterImage scoreImage, targeterImage* targetImage, int imageIndex)
@@ -3525,8 +3626,11 @@ void MainWindow::drawCentroids(targeterImage& tim, cv::Mat& drawimage, int image
 				drawimage(rect).copyTo(sub_image);
 
 				file = filename + QString::number(x) + "-" + QString::number(x) + ".png";
+#ifdef _HAVE_IMAGEMAGICK
+				m_imageReadWrite.writeImage(file, sub_image); 
+#else
 				cv::imwrite(file.toLocal8Bit().data(), sub_image);
-
+#endif
 				DBOUT("target image written: " << file.toLocal8Bit().data() <<std::endl);
 			}
 			else
@@ -3604,7 +3708,12 @@ cv::Mat MainWindow::drawCentroids(targeterImage& tim, cv::Mat& display, bool bWr
 				display(rect).copyTo(sub_image);
 
 				file = filename + QString::number(x) + "-" + QString::number(x) + ".png";
+
+#ifdef _HAVE_IMAGEMAGICK
+				m_imageReadWrite.writeImage(file, sub_image); 
+#else
 				imwrite(file.toLocal8Bit().data(), sub_image);
+#endif
 
 				DBOUT("target image written: " << file.toLocal8Bit().data() << std::endl);
 			}
@@ -4554,9 +4663,11 @@ void MainWindow::on_actionCorrectImage_triggered()
 				pathname.insert(pos-1, "cal");
 			else
 				pathname.append(".png");
-		
+#ifdef _HAVE_IMAGEMAGICK
+			m_imageReadWrite.writeImage(QString::fromStdString(pathname), im2);
+#else
 			cv::imwrite(pathname, im2);
-
+#endif
 			addCVImage(im2, t.getUID(), "corrected image", true, t.getImageFunction());
 		}
 	}
@@ -4573,6 +4684,81 @@ void MainWindow::moveObjective(QPoint pt)
 	emit MoveAbsoluteXY(stagePosition.x(), stagePosition.y(), ACTIONS::action::nothing);
 }
 
+void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D topright, QVector3D bottomleft)
+{
+	float M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M44;
+
+	//QVector3D topleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope];
+	//QVector3D topright = m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope];
+	//QVector3D bottomleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope];
+
+	// this is the translation offset from the stage to the fiducial marks
+	M14 = topleft.x();
+	M24 = topleft.y();
+	M34 = topleft.z();
+
+	// translate of fiducial coordinate system so that origin is the same as stage
+
+	// take topleft point as vector origin
+	// vector centered on fiducial top left
+	QVector3D XAxisFiducial = topright - topleft;
+	QVector3D YAxisFiducial = bottomleft - topleft;
+
+	// Z axis is vector orthogonal to XY plane
+	QVector3D ZAxisFiducial = QVector3D::crossProduct(XAxisFiducial, YAxisFiducial);
+
+	// normalise vectors to unit length, stage scale space will be the same as fiducial scale space
+	// only the rotation angles will differ between the vector frames.
+	XAxisFiducial.normalize();
+	YAxisFiducial.normalize();
+	ZAxisFiducial.normalize();
+
+	// unit Cartesian vectors, frame of reference for stage
+	// direction same & scale same as fiducial frame of reference
+	// as fiducial vectors have been normalised to length of 1
+
+	QVector3D XAxisStage = QVector3D(1, 0, 0);
+	QVector3D YAxisStage = QVector3D(0, 1, 0);
+	QVector3D ZAxisStage = QVector3D(0, 0, 1);
+
+	// rotational transformation coefficients relative to stage
+
+	// This matrix will transform points from the fiducial axis to the stage coordinates
+	// these are the rotation, skew and reflection coefficients
+
+	// destination=stage, source=fiducial
+	M11 = (float)QVector3D::dotProduct(XAxisStage, XAxisFiducial);
+	M12 = (float)QVector3D::dotProduct(XAxisStage, YAxisFiducial);
+	M13 = (float)QVector3D::dotProduct(XAxisStage, ZAxisFiducial);
+	M21 = (float)QVector3D::dotProduct(YAxisStage, XAxisFiducial);
+	M22 = (float)QVector3D::dotProduct(YAxisStage, YAxisFiducial);
+	M23 = (float)QVector3D::dotProduct(YAxisStage, ZAxisFiducial);
+	M31 = (float)QVector3D::dotProduct(ZAxisStage, XAxisFiducial);
+	M32 = (float)QVector3D::dotProduct(ZAxisStage, YAxisFiducial);
+	M33 = (float)QVector3D::dotProduct(ZAxisStage, ZAxisFiducial);
+
+	// the inverse of the transform matrix reverses the operation
+
+	// create and return transformation matrix M=RT, where T = [M14, M24, M34]', RT are combined into M
+	m_settings->m_transformationMatrix = QMatrix4x4(M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, 0, 0, 0, 1);
+
+	m_settings->m_invTransformationMatrix = m_settings->m_transformationMatrix.inverted();
+}
+
+// translates coordinates from absolute stage coordinates to coordinates relative to fiducial marks
+QVector3D MainWindow::getRelativePosition(QVector3D absolutePosition)
+{
+	return m_settings->m_transformationMatrix*absolutePosition;
+}
+
+// translates coordinates from coordinates relative to fiducial marks to absolute stage coordinates
+QVector3D MainWindow::getAbsolutePosition(QVector3D relativePosition)
+{
+	return m_settings->m_invTransformationMatrix*relativePosition;
+}
+
+// stage scanning functions ///////////////////////////////////////////////////////////////////
+
 void MainWindow::on_action_scan_regions_triggered()
 {
 	// get masked regions
@@ -4582,6 +4768,10 @@ void MainWindow::on_action_scan_regions_triggered()
 
 	if (ind >= 0)
 	{
+		// make sure microscope camera selected
+		if (m_settings->activeCamera != cameraType::microscope)
+			m_settings->activeCamera = cameraType::microscope;
+
 		targeterImage tim = m_ImagesContainer.getImageAt(ind);
 		cv::Mat& im = tim.getImage();
 
@@ -4589,7 +4779,7 @@ void MainWindow::on_action_scan_regions_triggered()
 
 		QVector<drawingShape> shapes = ui->display_image->getTargetImage(false, true, ind);
 
-		m_stageStateXY.placeToMove.clear();
+		m_stageStateXY.removeAll();
 
 		foreach(drawingShape s, shapes)
 		{
@@ -4615,17 +4805,19 @@ void MainWindow::on_action_scan_regions_triggered()
 					for (double j = y1; j< y2; j += imageHeightInMM)
 					{
 						// move to stage position
-						m_stageStateXY.placeToMove.append(QPointF(i, j));
+						m_stageStateXY.addValue(QPointF(i, j));
 					}
 			}
 		}
 
 		// will call a lot of events but should wait for process to complete before next stage movement.
-		if(!m_stageStateXY.placeToMove.isEmpty())
+		if(!m_stageStateXY.isEmpty())
 		{
-			m_stageStateXY.currentPosition = m_stageStateXY.placeToMove.begin();
+			m_stageStateXY.resetPosition();
 
-			QPointF pt = *(m_stageStateXY.currentPosition++);
+			QPointF pt = m_stageStateXY.getValue();
+
+			m_stageStateXY.moveNext();
 
 			emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::coarseFocus);
 		}
@@ -4637,115 +4829,39 @@ void MainWindow::stageMovedXY(double x, double y, ACTIONS::action act)
 	// stage moved now start coarse focusing
 	if (act == ACTIONS::coarseFocus)
 	{
-		// remove all previous images
-		m_focusStackImages.clear();
-
 		double fromPos = m_settings->m_MinFocus;
 		double toPos = m_settings->m_MaxFocus;
+
+		m_FOCUS_STATE = ACTIONS::coarseFocus;
 
 		// from 5mm to 8 mm do a coarse focusing
 		createFocusStackAndMove(fromPos, toPos, m_settings->m_CoarseFocusStep, act);
 	}
 }
 
-void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D topright, QVector3D bottomleft)
-{
-	float M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M44;
-
-	//QVector3D topleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope];
-	//QVector3D topright = m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope];
-	//QVector3D bottomleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope];
-
-	// this is the translation offset from the stage to the fiducial marks
-	M14 = topleft.x();
-	M24 = topleft.y();
-	M34 = topleft.z();
-	
-	// translate of fiducial coordinate system so that origin is the same as stage
-
-	// take topleft point as vector origin
-	// vector centered on fiducial top left
-	QVector3D XAxisFiducial = topright - topleft;
-	QVector3D YAxisFiducial = bottomleft - topleft;
-
-	// Z axis is vector orthogonal to XY plane
-	QVector3D ZAxisFiducial = QVector3D::crossProduct(XAxisFiducial, YAxisFiducial);
-
-	// normalise vectors to unit length, stage scale space will be the same as fiducial scale space
-	// only the rotation angles will differ between the vector frames.
-	XAxisFiducial.normalize();
-	YAxisFiducial.normalize();
-	ZAxisFiducial.normalize();
-
-	// unit Cartesian vectors, frame of reference for stage
-	// direction same & scale same as fiducial frame of reference
-	// as fiducial vectors have been normalised to length of 1
-
-	QVector3D XAxisStage = QVector3D(1, 0, 0);     
-	QVector3D YAxisStage = QVector3D(0, 1, 0);     
-	QVector3D ZAxisStage = QVector3D(0, 0, 1);
-
-	// rotational transformation coefficients relative to stage
-	
-	// This matrix will transform points from the fiducial axis to the stage coordinates
-	// these are the rotation, skew and reflection coefficients
-
-									// destination=stage, source=fiducial
-	M11 = (float)QVector3D::dotProduct(XAxisStage, XAxisFiducial);
-	M12 = (float)QVector3D::dotProduct(XAxisStage, YAxisFiducial);
-	M13 = (float)QVector3D::dotProduct(XAxisStage, ZAxisFiducial);
-	M21 = (float)QVector3D::dotProduct(YAxisStage, XAxisFiducial);
-	M22 = (float)QVector3D::dotProduct(YAxisStage, YAxisFiducial);
-	M23 = (float)QVector3D::dotProduct(YAxisStage, ZAxisFiducial);
-	M31 = (float)QVector3D::dotProduct(ZAxisStage, XAxisFiducial);
-	M32 = (float)QVector3D::dotProduct(ZAxisStage, YAxisFiducial);
-	M33 = (float)QVector3D::dotProduct(ZAxisStage, ZAxisFiducial);
-
-	// the inverse of the transform matrix reverses the operation
-
-	// create and return transformation matrix M=RT, where T = [M14, M24, M34]', RT are combined into M
-	m_settings->m_transformationMatrix =  QMatrix4x4(M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, 0, 0, 0, 1);
-
-	m_settings->m_invTransformationMatrix = m_settings->m_transformationMatrix.inverted();
-}	
-
-// translates coordinates from absolute stage coordinates to coordinates relative to fiducial marks
-QVector3D MainWindow::getRelativePosition(QVector3D absolutePosition)
-{
-	return m_settings->m_transformationMatrix*absolutePosition;
-}
-
-// translates coordinates from coordinates relative to fiducial marks to absolute stage coordinates
-QVector3D MainWindow::getAbsolutePosition(QVector3D relativePosition)
-{
-	return m_settings->m_invTransformationMatrix*relativePosition;
-}
-
 void MainWindow::createFocusStackAndMove(double minPos, double maxPos, double step, ACTIONS::action act)
 {
 	// clear position array and image array
-	m_stageStateZ.placeToMove.clear();
-	m_focusStackImages.clear();
-
-	m_noFocusStackImages = 0;	// record of number of positions to move to, to check for completion
+	m_stageStateZ.removeAll();
+	m_noFocusStackImages = 0;
 
 	// add focus positions to array
 	for (double z = minPos; z <= maxPos; z += step)
 	{
 		m_noFocusStackImages++;
-		m_stageStateZ.placeToMove.append(z);
+		m_stageStateZ.addValue(z);
 	}
 
 	// move to first position
-	if (!m_stageStateZ.placeToMove.isEmpty())
+	if (!m_stageStateZ.isEmpty())
 	{
-		m_stageStateZ.currentPosition = m_stageStateZ.placeToMove.begin();
+		m_stageStateZ.resetPosition();
 
 		// get position to move to 
-		double z = *m_stageStateZ.currentPosition;
+		double z = m_stageStateZ.getValue();
 		
 		// increment iterator to next position
-		m_stageStateZ.currentPosition++;
+		m_stageStateZ.moveNext();
 
 		// calls Z axis stage move
 		emit MoveAbsoluteZ(z, act);
@@ -4753,9 +4869,9 @@ void MainWindow::createFocusStackAndMove(double minPos, double maxPos, double st
 }
 
 // called after Z axis stage has moved
-void MainWindow::stageMovedZ(double z, ACTIONS::action act)
+void MainWindow::stageMovedZ(double stageZ, ACTIONS::action act)
 {
-	if (!ACTIONS::addToMosaic)
+	if (!(act == ACTIONS::addToMosaic))
 	{
 		cv::Mat image = basCamera->grabImage(cameraType::microscope);
 
@@ -4763,19 +4879,20 @@ void MainWindow::stageMovedZ(double z, ACTIONS::action act)
 		{
 			if (act == ACTIONS::coarseFocus || act == ACTIONS::fineFocus)
 			{
-				// image needs to be saved for fine focusing
-				if (act == ACTIONS::fineFocus)
-					m_focusStackImages.append(image);
+				// get focus position
+				double z = m_stageStateZ.getValue();
 
 				// get focus value from image
-				QFuture<void> t1 = QtConcurrent::run(this, &MainWindow::getFocusValue, image, z, act);
+				startFocusThreads(image, z, act);
 			}
 		}
 		else
-			consoleLog("stageMovedZ - no image grabbed!", CONSOLECOLOURS::colour::Warning);
+		{
+			consoleLog("stageMovedZ - no image grabbed - aborting!", CONSOLECOLOURS::colour::Warning);
+			return;
+		}
 
-		// get next focus stack position
-		double z = *(m_stageStateZ.currentPosition++);
+		double z = m_stageStateZ.moveGetValue();
 
 		// move stage to next focus position
 		emit MoveAbsoluteZ(z, act);
@@ -4794,117 +4911,140 @@ void MainWindow::stageMovedZ(double z, ACTIONS::action act)
 	}
 }
 
-// called in separate thread, gets focus value for image
-void MainWindow::getFocusValue(cv::Mat im, double z, ACTIONS::action act)
+void MainWindow::startFocusThreads(cv::Mat image, double z, ACTIONS::action act)
 {
-	double focusStrength = FocusStack::getFocusImage(im, m_settings->FocusAlgorithm);
-
-	// invoke method in main thread now
-	QMetaObject::invokeMethod(this, "addFocusValue", Qt::QueuedConnection, Q_ARG(double, z), Q_ARG(double, focusStrength), Q_ARG(ACTIONS::action, act));
-}
-
-void MainWindow::addFocusValue(double z, double focusStrength, ACTIONS::action act)
-{
-	if (act == ACTIONS::coarseFocus)
-		m_focusStackCoarseFocusValues.insert(z, focusStrength);
-	else if (act == ACTIONS::fineFocus)
-		m_focusStackFineFocusValues.insert(z, focusStrength);
-	else
-		return;	// should never get here
-
-	// check if coarse images completed if so then do fine focus
-	getBestFocusValue(m_focusStackCoarseFocusValues, m_noFocusStackImages, z, act);
 	
-	// check if fine focus images completed if so do addToMosaic
-	getBestFocusValue(m_focusStackFineFocusValues, m_noFocusStackImages, z, act);
+	MultiWatcher* mWatcher = new MultiWatcher;
+
+	QFutureWatcher<FocusResult>* watcher = new QFutureWatcher<FocusResult>();
+
+	connect(watcher, &QFutureWatcher<FocusResult>::finished, this, &MainWindow::addFocusValueCompleted);
+
+	QFuture<FocusResult> future = QtConcurrent::run(this, &MainWindow::getFocusValue, image, z, act);
+	watcher->setFuture(future);
+
+	mWatcher->_sync.addFuture(future);
+
+	connect(mWatcher, &MultiWatcher::MultiWatchDone, this, &MainWindow::allFocusValuesCompleted);
+	
 }
 
-bool MainWindow::getBestFocusValue(QMap<double, double> focusValues, int arraySize, double z, ACTIONS::action act)
+// called in separate thread, gets focus value for image
+FocusResult MainWindow::getFocusValue(cv::Mat im, double z, ACTIONS::action act)
 {
-	bool bResult = false;
-	// get best z position
+	FocusResult res;
 
-	// got enough focus images?
-	if (focusValues.size() >= arraySize)
+	res.z = z;
+	res.focusValue = FocusStack::getFocusImage(im, m_settings->FocusAlgorithm);
+	res.act = act;
+	res.focusImage = im;
+
+	return res;
+}
+
+void MainWindow::addFocusValueCompleted()
+{
+	QFutureWatcher<FocusResult>* pWatcher = dynamic_cast<QFutureWatcher<FocusResult>*>(sender());
+
+	if (pWatcher)
 	{
-		double bestPosition=0, minVal =0;
+		QFuture<FocusResult> future = pWatcher->future();
 
-		QMapIterator<double, double> i = QMapIterator<double, double>(focusValues);
+		FocusResult result = pWatcher->future().result();
 
-		int index, ct = 0;
+		addFocusValue(result.focusImage, result.z, result.focusValue, result.act);
 
-		// get first element
-		if(i.hasNext())
+		delete pWatcher;
+	}
+}
+
+void MainWindow::allFocusValuesCompleted()
+{
+	sender()->deleteLater();
+
+	// process focus images
+
+
+}
+
+void MainWindow::addFocusValue(cv::Mat im, double z, double focusStrength, ACTIONS::action act)
+{
+	FocusImage fi;
+	fi.focusValue = focusStrength;
+	fi.focusImage = im;
+
+	// add focus information to array
+	m_focusStackData.insert(z, fi);
+
+	if (m_focusStackData.size() >= m_noFocusStackImages)
+	{
+		// get focus position and best focused image
+		double bestPosition = getBestFocusValue(m_focusStackData);
+		cv::Mat bestImage = m_focusStackData[bestPosition].focusImage;
+
+		// clear the data array now we have the best focus position and image
+		m_focusStackData.clear();
+
+		// do next operation
+		if (m_FOCUS_STATE == ACTIONS::coarseFocus)
 		{
-			i.next();
-			minVal = i.value();
-			bestPosition = i.key();
-			index = ct;
-			ct++;
+			// get best focus position
+			double fromPos = bestPosition - m_settings->m_CoarseFocusStep;
+			double toPos = bestPosition + m_settings->m_CoarseFocusStep;
+
+			// change focus state
+			m_FOCUS_STATE = ACTIONS::fineFocus;
+
+			// 	now do fine focusing
+			createFocusStackAndMove(fromPos, toPos, m_settings->m_FineFocusStep, ACTIONS::fineFocus);
 		}
-
-		// get best focus value
-		while (i.hasNext())
+		else if (m_FOCUS_STATE == ACTIONS::fineFocus)
 		{
-			i.next();
-
-			if (i.value() >= minVal)
-			{
-				minVal = i.value();
-				bestPosition = i.key();
-				index = ct;
-			}
-			ct++;
-		}
-
-		if (minVal != -999)
-		{
-			// clear the arrays so that it is not called again
-			focusValues.clear();
-
-			// change state 
-			if (act == ACTIONS::coarseFocus)
-			{
-				// get best focus position
-				double fromPos = bestPosition - m_settings->m_CoarseFocusStep;
-				double toPos = bestPosition + m_settings->m_CoarseFocusStep;
-
-				// 	now do fine focusing
-				createFocusStackAndMove(fromPos, toPos, m_settings->m_FineFocusStep, ACTIONS::fineFocus);
-			}
-			else
-			{
-				// get best focused image from fine image stack save image
-				if (m_focusStackImages.length() > 0)
-					addImageMosaic(m_focusStackImages[index], bestPosition);
-				else
-				{
-					addImageMosaic(cv::Mat(), -999);
-				}
-			}
-			bResult = true;
+			// add best focused image from fine image stack & save image
+			addImageMosaic(bestImage, bestPosition);
 		}
 	}
-	return bResult;
 }
 
-double MainWindow::getBestFocus(double minPos, double step)
+double MainWindow::getBestFocusValue(QMap<double, FocusImage> focusValues)
 {
-	// process focus stack, get best focus position
-	int bestImageIndex = FocusStack::getBestFocusImage(m_focusStackImages, m_focusValues, m_settings->FocusAlgorithm);
+	QMapIterator<double, FocusImage> i = QMapIterator<double, FocusImage>(focusValues);
 
-	// move Z axis position to that of best focus image
-	return minPos + step*((double)bestImageIndex);
+	double bestPosition = 0, minVal = 0;
+
+	// get first element
+	if(i.hasNext())
+	{
+		i.next();
+		minVal = i.value().focusValue;
+		bestPosition = i.key();
+	}
+
+	// get best focus value
+	while (i.hasNext())
+	{
+		i.next();
+
+		if (i.value().focusValue >= minVal)
+		{
+			minVal = i.value().focusValue;
+			bestPosition = i.key();
+		}
+	}
+
+	return bestPosition;
 }
 
 void MainWindow::addImageMosaic(cv::Mat& image, double focusDistance)
 {
 	// check here if position valid 
-	QPointF pt = *m_stageStateXY.currentPosition;	// increment XY position
+	
 
 	if (focusDistance > -990)
 	{
 		QString pathname = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_";
+
+		QPointF pt = m_stageStateXY.getValue();	
 
 		QVector3D absolutePosition = QVector3D(pt);
 		absolutePosition.setZ(focusDistance);
@@ -4919,21 +5059,40 @@ void MainWindow::addImageMosaic(cv::Mat& image, double focusDistance)
 		// save file name in list
 		m_MosiacImageList[filename] = image;
 
+#ifdef _HAVE_IMAGEMAGICK
+		m_imageReadWrite.writeImage(filename, image);
+#else
 		imwrite(filename.toLocal8Bit().data(), image);
+#endif
 	}
 	else
 		consoleLog("error - addImageMosaic - bad focus image!", CONSOLECOLOURS::Critical);
 
+
+
 	// move with action end
-	if (m_stageStateXY.currentPosition != m_stageStateXY.placeToMove.end())
+	if(m_stageStateXY.okToMove())
 	{
 		// get next position
-		m_stageStateXY.currentPosition++;
+		QPointF pt = m_stageStateXY.moveGetValue();
 
 		emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::coarseFocus);
 	}
 	else
+	{
+		QPointF pt = m_stageStateXY.getValue();
+
 		emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
-	
+	}
 }
 
+/*
+double MainWindow::getBestFocus(double minPos, double step)
+{
+// process focus stack, get best focus position
+int bestImageIndex = FocusStack::getBestFocusImage(m_focusStackImages, m_focusValues, m_settings->FocusAlgorithm);
+
+// move Z axis position to that of best focus image
+return minPos + step*((double)bestImageIndex);
+}
+*/

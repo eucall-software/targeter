@@ -15,9 +15,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv/highgui.h"
 #include "mainwindow.h"
-
-
-
+#include "HelperFunctions.h"
 
 /**
 * class that manages performing focus stack, ie. takes image sequence and combines them into single in focus image
@@ -61,106 +59,112 @@ public:
 	static double simpleDerivativeEnergy(const cv::Mat& data, bool horizontal);
 
     // helper pixel access functions
-};
-
-template<typename T>
-T spiralIteration(cv::Mat& im, int i, int j, int w, int h, int n, bool bLessThanZero = true)
-{
-	int d = 1;
-	int	m = 1;
-	int x = 0;
-	int y = 0;
-	int count = 0;
-	int noValues = 5;
-	int sum = 0;
-
-	std::multiset<int> sortedPixelList;
-
-	//DBOUT(im.ptr<T>(j)[i]<<", ");
-
-	if (im.ptr<T>(j)[i] > (bLessThanZero?-1:0))
-		return im.ptr<T>(j)[i];
-
-	for (int k = 0; k < n; k++)
+	template<typename T>
+	static T spiralIteration(cv::Mat& im, int i, int j, int w, int h, int n, bool bLessThanZero = true)
 	{
-		while (2 * x * d < m)
+		int d = 1;
+		int	m = 1;
+		int x = 0;
+		int y = 0;
+		int count = 0;
+		int noValues = 5;
+
+
+		std::multiset<int> sortedPixelList;
+
+		//DBOUT(im.ptr<T>(j)[i]<<", ");
+
+		if (im.ptr<T>(j)[i] > (bLessThanZero ? -1 : 0))
+			return im.ptr<T>(j)[i];
+
+		for (int k = 0; k < n; k++)
 		{
-			x = x + d;
-
-			if (i + x < w && i + x >= 0 && j + y < h && j + y >= 0)
+			while (2 * x * d < m)
 			{
-				// check x,y position here
-				if (im.ptr<T>(j + y)[i + x] > (bLessThanZero ? -1 : 0))
+				x = x + d;
+
+				if (i + x < w && i + x >= 0 && j + y < h && j + y >= 0)
 				{
-					//sum += im.ptr<T>(j + y)[i + x];
-					
-					sortedPixelList.insert(im.ptr<T>(j + y)[i + x]);
-					count++;
-
-					if (count >= noValues)
+					// check x,y position here
+					if (im.ptr<T>(j + y)[i + x] > (bLessThanZero ? -1 : 0))
 					{
-						auto iter = sortedPixelList.cbegin();
-						std::advance(iter, noValues / 2);	// median
+						//sum += im.ptr<T>(j + y)[i + x];
 
-						//return sum / count;
-						return *iter; 
+						sortedPixelList.insert(im.ptr<T>(j + y)[i + x]);
+						count++;
+
+						if (count >= noValues)
+						{
+							auto iter = sortedPixelList.cbegin();
+							std::advance(iter, noValues / 2);	// median
+
+																//return sum / count;
+							return *iter;
+						}
 					}
 				}
 			}
-		}
 
-		while (2 * y * d < m)
-		{
-			y = y + d;
-
-			if (i + x < w && i + x >= 0 && j + y < h && j + y >= 0)
+			while (2 * y * d < m)
 			{
-				// check x,y position here
-				if (im.ptr<T>(j + y)[i + x] > (bLessThanZero ? -1 : 0))
+				y = y + d;
+
+				if (i + x < w && i + x >= 0 && j + y < h && j + y >= 0)
 				{
-					//sum += im.ptr<T>(j + y)[i + x];
-
-					sortedPixelList.insert(im.ptr<T>(j + y)[i + x]);
-					count++;
-
-					if (count >= noValues)
+					// check x,y position here
+					if (im.ptr<T>(j + y)[i + x] > (bLessThanZero ? -1 : 0))
 					{
-						auto iter = sortedPixelList.cbegin();
-						std::advance(iter, noValues / 2);	// median
+						//sum += im.ptr<T>(j + y)[i + x];
 
-						//return sum / count;
-						return *iter;
+						sortedPixelList.insert(im.ptr<T>(j + y)[i + x]);
+						count++;
+
+						if (count >= noValues)
+						{
+							auto iter = sortedPixelList.cbegin();
+							std::advance(iter, noValues / 2);	// median
+
+																//return sum / count;
+							return *iter;
+						}
 					}
 				}
 			}
+
+			d = -1 * d;
+			m = m + 1;
 		}
 
-		d = -1 * d;
-		m = m + 1;
+		return im.ptr<T>(j)[i];
 	}
 
-	return im.ptr<T>(j)[i];
-}
+	// pixels <0 are mask pixels, input image is integer image
+	template<typename T>
+	static void FillMissingPixels(cv::Mat& in, cv::Mat& out, bool bLessThanZero)
+	{
+		int w = in.cols;
+		int h = in.rows;
 
-
-// pixels <0 are mask pixels, input image is integer image
-template<typename T>
-void FillMissingPixels(cv::Mat& in, cv::Mat& out,  bool bLessThanZero = true)
-{
-	int w = in.cols;
-	int h = in.rows;
-
-	for (int i = 0; i < w; i++)
-		for (int j = 0; j < h; j++)
+		if (HelperFunctions::checkMatCompatibility(in, out, CV_8UC1) || HelperFunctions::checkMatCompatibility(in, out, CV_16SC1))
 		{
-			if (in.ptr<T>(j)[i] < (bLessThanZero ? 0 : 1))	// if pixel is masked then get best neighbour
-			{
-				out.ptr<T>(j)[i] = spiralIteration<T>(in, i, j, w, h, 80, bLessThanZero);
-			}
-			else
-				out.ptr<T>(j)[i] = in.ptr<T>(j)[i];
+			for (int i = 0; i < w; i++)
+				for (int j = 0; j < h; j++)
+				{
+					if (in.ptr<T>(j)[i] < (bLessThanZero ? 0 : 1))	// if pixel is masked then get best neighbour
+					{
+						out.ptr<T>(j)[i] = spiralIteration<T>(in, i, j, w, h, 80, bLessThanZero);
+					}
+					else
+						out.ptr<T>(j)[i] = in.ptr<T>(j)[i];
+				}
 		}
-}
+	}
+};
+
+
+
+
+
 
 
 #endif // IMAGEPROCESSING_H

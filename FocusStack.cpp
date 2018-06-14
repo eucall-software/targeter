@@ -54,13 +54,14 @@ double FocusStack::getFocusImage(cv::Mat& m, FOCUSALGO::algo Algorithm)
 
 	if (Algorithm == FOCUSALGO::DXDY)
 	{
-
+		/*
 #ifdef _CUDA_CODE_COMPILE_
 		energy = getFocusScore(HelperFunctions::getCImage(m), m.rows, m.cols);
 #else  
+*/
 		energy = simpleDerivativeEnergy(m, true);	// horizontal 
 		energy += simpleDerivativeEnergy(m, false);			// vertical
-#endif
+//#endif
 
 	}
 	else if (Algorithm == FOCUSALGO::GLVN)

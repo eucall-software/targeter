@@ -28,8 +28,7 @@ private:
 public slots:
 	void updatePosition(double z);
 	void updatePosition(bool bFiducial);
-
-	void assignPort(QVector<QString> AvailablePorts, QString excludePort);
+	bool connectToPort(QString port);
 	void moveAbsolute(double z, ACTIONS::action act);
 	void MoveRelative(double z, ACTIONS::action act);
 	void stopMotion(ACTIONS::action act);
@@ -44,7 +43,6 @@ public slots:
 	void go(double fz);
 signals:
 	void ACTIONCOMPLETED(QString msg);
-	void CONNECTEDTOPORT(QString port);
 	void LOGCONSOLE(QString strText, CONSOLECOLOURS::colour col);
 	void UPDATEPOSITION(bool bFid, double z);
 	void STAGECONNECTED(bool isXY, QString);

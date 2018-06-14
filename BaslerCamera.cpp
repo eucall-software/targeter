@@ -200,14 +200,22 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 
 	Pylon::CInstantCamera* pCamera = nullptr;
 
-	if(!bCalledInLoop)
-		pCamera = getCamera(cameraType);
+	// try to get existing camera
+	if (cameraType == cameraType::microscope)
+		pCamera = pMicroscopeCamera.get();
 	else
+		pCamera = pOverviewCamera.get();
+
+	// otherwise create camera then get it
+	if (pCamera == nullptr)
 	{
-		if (cameraType == cameraType::microscope)
-			pCamera = pMicroscopeCamera.get();
-		else
-			pCamera = pOverviewCamera.get();
+		if (openCamera(cameraType))
+		{
+			if (cameraType == cameraType::microscope)
+				pCamera = pMicroscopeCamera.get();
+			else
+				pCamera = pOverviewCamera.get();
+		}
 	}
 
 	if (pCamera == nullptr)
@@ -233,8 +241,13 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 
 			converter.Convert(target, ptrGrabResult);
 
+			int type = CV_8UC3;
+/*
+			if (BitPerPixel(target.GetPixelType()) == 16)
+				type = CV_16UC3;
+*/
 			// target data is on stack therefore local copy, need to clone image object before storing
-			cv::Mat image(target.GetWidth(), target.GetHeight(), CV_8UC3, target.GetBuffer(), cv::Mat::AUTO_STEP);
+			cv::Mat image(target.GetWidth(), target.GetHeight(), type, target.GetBuffer(), cv::Mat::AUTO_STEP);
 
 			if (image.empty())
 			{

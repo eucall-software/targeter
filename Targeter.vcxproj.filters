@@ -159,15 +159,6 @@
     <ClCompile Include="ExperimentalData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Debug\moc_MouseMoveLabel.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Release\moc_MouseMoveLabel.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="MouseMoveLabel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Debug\moc_drawingObjects.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -203,6 +194,21 @@
     </ClCompile>
     <ClCompile Include="stageControlZ.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_ImageReadWrite.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_ImageReadWrite.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageReadWrite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_MultiWatcher.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_MultiWatcher.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,9 +301,6 @@
     <CustomBuild Include="XMLWriter.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="MouseMoveLabel.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="drawingObjects.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -311,6 +314,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="stageControlZ.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ImageReadWrite.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MultiWatcher.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

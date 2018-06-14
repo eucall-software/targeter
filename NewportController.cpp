@@ -90,8 +90,10 @@ void NewportController::setKeypad(bool on)
 	reportResult(result, "Keypad on " + QString::number(on), errString);
 }
 
-bool NewportController::connectToPort(System::String^ port)
+bool NewportController::connectToPort(QString qsPort)
 {
+	System::String^ port = q2ss(qsPort);
+
 	int result;
 	double pos = -1;
 	System::String^ errString;

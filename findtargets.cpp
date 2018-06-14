@@ -229,7 +229,7 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 		coMatrix_TargetIntensity[i] = 0.0;
 
 	// cluster intensity and hue of images
-	if (detectionImage.IsGray)
+	if (HelperFunctions::isGrayImage(detectionImage.getImage()))
 	{
 		int* pClusterHistIntensity;
 
@@ -294,9 +294,9 @@ cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& traini
 
 	cudaS.FindTargets(detectionImage.get1DImage(imageType::display), scoreImage, w_d, h_d, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetIntensity, NoClusters, NoClusters, distance, false);
 
-	if (!detectionImage.IsGray)
+	if (!HelperFunctions::isGrayImage(detectionImage.getImage()))
 	{
-			bSuccess = cudaS.FindTargets(detectionImage.get1DImage(imageType::hue), scoreImage, w_d, h_d, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetHue, NoClusters, NoClusters, distance, false);
+		bSuccess = cudaS.FindTargets(detectionImage.get1DImage(imageType::hue), scoreImage, w_d, h_d, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetHue, NoClusters, NoClusters, distance, false);
 	}
 #else  
 	scoreImage = FindTargets::findTargets(detectionImage, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetIntensity, coMatrix_TargetHue, NoClusters, distance, bCrossEntropy);
@@ -847,7 +847,7 @@ void FindTargets::getCoocuranceHistogram(targeterImage& m, float* coMatrixIntens
 	int* mask = m.get1DImage(imageType::mask);
 
 	// should not step through target - should get cooc from whole target region - but then larger distances
-	if (m.IsGray)
+	if (HelperFunctions::isGrayImage(m.getImage()))
 	{
 		for (y = 0; y < h; y += inc_H)
 			for (x = 0; x < w; x += inc_W)
@@ -912,13 +912,15 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 
 	long CoocSize =coDIMX*coDIMY*coDIMZ;
 
-	//if (!detectionImage.IsGray)
+	bool bIsGray = HelperFunctions::isGrayImage(detectionImage.getImage());
+
+	//if (!bIsGray)
 	//	CoocSize = NoClusters*NoClusters*NoClusters*NoClusters*maxD;
 
 	float* coMatrixIntensity = new float[CoocSize];
 	float* coMatrixHue = nullptr;
 
-	if(!detectionImage.IsGray)
+	if(!bIsGray)
 		coMatrixHue = new float[CoocSize];
 
 	float* scoreImage = new float[w*h];
@@ -961,7 +963,7 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 			// no mask - I can't think how to use one properly
 			// a) because of size being different to region 
 			// b) in the case of multiple targets -> multiple masks?!
-			if (detectionImage.IsGray)
+			if (HelperFunctions::isGrayImage(detectionImage.getImage()))
 			{
 				sum = getCoocMatrixGray(detectionImage, NULL, drawingMode::none, x, y, regionWidth, regionHeight, coMatrixIntensity, coDIMX, coDIMY, coDIMZ);
 			}
@@ -996,7 +998,7 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 							//score += fmin(coMatrixIntensity[i] / sum, coMatrixIntensity_Target[i]);	//fabs(coMatrixF[i]- coMatrixTestF[i]);		// minimum intersection
 							score += sqrt(float(coMatrixIntensity[i]) / float(sum)*coMatrixIntensity_Target[i]);		// Bhattacharyya distance
 
-							if(!detectionImage.IsGray)
+							if(!bIsGray)
 								score += sqrt(float(coMatrixHue[i]) / float(sum)*coMatrixHue_Target[i]);		// Bhattacharyya distance
 						}
 					}

@@ -9,9 +9,7 @@
 #include "globals.h"
 #include "Camera.h"
 
-typedef QMap<int, QColor> QIntColorMap;
-typedef QMap<int, QVector3D> QInt3DMap;
-typedef QMap<int, QPointF> QIntPointMap;
+
 
 /**
 * structure defining setting values (settings values serialised to file and used in settings dialog)

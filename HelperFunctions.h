@@ -25,6 +25,8 @@ public:
 
 	static void DebugPrintMat(cv::Mat mat);
 
+	static bool checkMatCompatibility(cv::Mat& in, cv::Mat& out, const int expectedType, bool checkType = true);
+
 	static cv::Mat testReturn(cv::Mat& im);
 	
 	static int reflect(int M, int x);
@@ -147,7 +149,7 @@ public:
 			{ 128, 0, 128 },{ 0, 128, 128 },{ 0, 0, 128 } };
 
 		int fontFace = cv::FONT_HERSHEY_TRIPLEX;
-		int fontScale = 1, thickness = 1;
+		int fontScale = 1;
 		cv::Scalar red(255, 0, 0);
 		cv::Scalar green(0, 255, 0);
 		cv::Scalar blue(0, 0, 255);
@@ -201,8 +203,6 @@ public:
 			
 			for (int j = 0; j < data.length(); j++)
 			{
-				T* vect = data[j];
-
 				// Normalize the result to [ 0, histImage.rows ] - i.e. fit in screen
 				for (int i = 0; i < datasize; i++)
 				{

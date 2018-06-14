@@ -210,6 +210,31 @@ void SettingsValues::serialize(QDataStream& stream)
 	}
 	m_settings.endGroup();
 
+	// write fiducials
+	m_settings.setValue("overview_stage_position", overviewStagePosition);
+
+	QIntPointMap::const_iterator ifm = fiducial_marks_image.constBegin();
+
+	QString s("fiducials");
+
+	while (ifm != fiducial_marks_image.constEnd()) 
+	{
+		QString s2 = FIDUCIAL_POSITION_STRINGS(ifm.key());
+		m_settings.setValue(s2 + "_imageXY", ifm.value());
+		++ifm;
+	}
+
+	QInt3DMap::const_iterator ifm3 = fiducial_marks_stage.constBegin();
+
+	while (ifm3 != fiducial_marks_stage.constEnd()) 
+	{
+		QString s2 = FIDUCIAL_POSITION_STRINGS(ifm3.key());
+		m_settings.setValue(s2 + "_stageX", ifm3.value().x());
+		m_settings.setValue(s2 + "_stageY", ifm3.value().y());
+		m_settings.setValue(s2 + "_stageZ", ifm3.value().z());
+		++ifm3;
+	}
+
 	// save project settings to xml
 	//saveProjectInfo();
 }
@@ -318,6 +343,24 @@ void SettingsValues::deserialize(QDataStream& stream)
 	}
 	m_settings.endGroup();
 
+	// write fiducials
+
+	overviewStagePosition = m_settings.value("overview_stage_position").toPointF();   
+
+	QString s("fiducials");
+
+	float x, y, z;
+
+	for (int i = 0; i <= FIDUCIAL::position::bottomright_microscope; i++)
+	{
+		QString s2 = FIDUCIAL_POSITION_STRINGS(i);
+
+		fiducial_marks_image[i] = m_settings.value(s2 + "_imageXY").toPointF();
+
+		fiducial_marks_stage[i] = QVector3D(m_settings.value(s2 + "_stageX").toFloat(), 
+			m_settings.value(s2 + "_stageY").toFloat(),
+			m_settings.value(s2 + "_stageZ").toFloat());
+	}
 }
 
 /*
@@ -373,16 +416,18 @@ QMap<QString, QVariant> SettingsValues::getProjectInfoMap()
 	map[appendNumber("project_Barcode", count)] = s_project_Barcode;
 	map[appendNumber("project_Directory", count)] = s_project_Directory;
 	map[appendNumber("project_Date", count)]= d_project_Date;
+
+/*
 	map[appendNumber("overview_stage_position/x", count)] = overviewStagePosition.x();
 	map[appendNumber("overview_stage_position/y", count)] = overviewStagePosition.y();
 
 	QIntPointMap::const_iterator ifm = fiducial_marks_image.constBegin();
 
 	QString s("fiducials");
-	
+
 	while (ifm != fiducial_marks_image.constEnd()) {
 		QString s2 = FIDUCIAL_POSITION_STRINGS(ifm.key());
-		
+
 		map[appendNumber(s, count) + "/" + s2.replace(" ", "_") + "/image/" + "X"] = ifm.value().x();
 		map[appendNumber(s, count) + "/" + s2.replace(" ", "_") + "/image/" + "Y"] = ifm.value().y();
 		++ifm;
@@ -398,6 +443,7 @@ QMap<QString, QVariant> SettingsValues::getProjectInfoMap()
 		map[appendNumber(s, count) + "/" + s2.replace(" ", "_") + "/stage/" + "Z"] = ifm3.value().z();
 		++ifm3;
 	}
+*/
 
 	return map;
 }
@@ -416,6 +462,7 @@ void SettingsValues::setProjectInfoMap(QMap<QString, QVariant>& map)
 	s_project_Directory = map["project_Directory"].toString();
 	d_project_Date = map["project_Date"].toDate();
 
+/*
 	overviewStagePosition = QPoint(map["overview_stage_position/x"].toFloat(), map["overview_stage_position/y"].toFloat());
 
 	QString s("fiducials");
@@ -437,6 +484,7 @@ void SettingsValues::setProjectInfoMap(QMap<QString, QVariant>& map)
 
 		fiducial_marks_stage[i] = QVector3D(x, y, z);
 	}
+*/
 }
 
 /*

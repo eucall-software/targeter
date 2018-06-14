@@ -346,8 +346,6 @@ void targeterImage::addImage(cv::Mat im)
 {
 	this->cv_im = im;
 
-	this->IsGray = HelperFunctions::isGrayImage(im);
-
 	createQTImage(true);
 }
 

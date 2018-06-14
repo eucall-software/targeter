@@ -19,6 +19,8 @@
 #include <sstream>
 #include <opencv/cxcore.h>
 
+#define _HAVE_IMAGEMAGICK
+
 #define DBOUT( s )            \
 {                             \
    std::wostringstream os_;    \
@@ -39,6 +41,10 @@
 #ifndef MAX
 #  define MAX(a,b)  ((a) < (b) ? (b) : (a))
 #endif
+
+typedef QMap<int, QColor> QIntColorMap;
+typedef QMap<int, QVector3D> QInt3DMap;
+typedef QMap<int, QPointF> QIntPointMap;
 
 namespace NEWPORT_STATUS {
 	enum status { ready, config, notref, disable, jogging, homing, moving, null };
@@ -70,7 +76,7 @@ namespace FIDUCIAL {
 
 namespace ACTIONS {
 	enum action {
-		nothing, getMosaic, displayOnly, focusStack, addToMosaic, MosaicFinished, fineFocus, coarseFocus, jog
+		nothing, getMosaic, displayOnly, focusStack, addToMosaic, MosaicFinished, fineFocus, coarseFocus, jog, quit
 	};
 }
 
@@ -264,6 +270,19 @@ namespace calibrateAlgoType {
 
 //	const char* algoTypes[] = { "COOC", "LAPLACIAN", "SQDIFF", "SQDIFF_NORMED", "CCORR", "CCORR_NORMED", "CCOEFF", "CCOEFF_NORMED"}; \
 //	algoTypes[ i<0?0:(i>CCOEFF_NORMED?CCOEFF_NORMED:i)]; \
+
+
+typedef struct {
+	double focusValue;
+	cv::Mat focusImage;
+} FocusImage;
+
+typedef struct {
+	double z;
+	ACTIONS::action act; 
+	double focusValue;
+	cv::Mat focusImage;
+} FocusResult;
 
 /**
 * structure to represent histogram bar

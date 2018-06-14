@@ -4,7 +4,6 @@
 #include "globals.h"
 #include "Settings.h"
 #include "settingsdialog.h"
-#include "MouseMoveLabel.h"
 #include <memory>
 #include <QDialog>
 #include <QLabel>
@@ -41,6 +40,7 @@ public:
 	bool checkIndex(const double& val1, const double& val2);
 
 	void updateFiducialComboIndex();
+	bool checkFiducialsOrder(QInt3DMap fiducial_marks_stage, QIntPointMap fiducial_marks_image, bool bFlagRed = false);
 
 	void setFiducial();
 	void updatePositions();

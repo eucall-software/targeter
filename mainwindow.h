@@ -5,12 +5,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "globals.h"
 #include "settingsdialog.h"
+
 #include "opencv2/opencv.hpp"
-#include "opencv/highgui.h"
 #include "imagesContainer.h"
 #include "targeterimage.h"
-#include "globals.h"
+
 #include "Camera.h"
 #include "BaslerCamera.h"
 #include "imageprocessing.h"
@@ -20,12 +21,18 @@
 #include "stageControlZ.h"
 #include "xmlWriter.h"
 
+#ifdef _HAVE_IMAGEMAGICK
+#include "ImageReadWrite.h"
+#endif
+
 #include <QMainWindow>
-#include <QFile>
+//#include <QFile>
 #include <QMenu>
 #include <QListWidgetItem>
 #include <QThread>
 
+
+	
 #include <pylon/PylonIncludes.h>
 using namespace Pylon;
 
@@ -57,7 +64,10 @@ public:
     void loadFile(const QString &fileName);
 	QString getSaveFilename(targeterImage im, int& number, bool bIsCompleteImage = true);
 
+	void registerFiducialMarks();
+
 	void getAvailablePorts();
+	void assignPortZ(QVector<QString> AvailablePorts, QString excludePort);
 
     QImage::Format getFormat(int type);
 	int getValidImageIndex();
@@ -120,7 +130,9 @@ public:
 	QVector3D getAbsolutePosition(QVector3D position);
 
 	void createFocusStackAndMove(double minPos, double maxPos, double step, ACTIONS::action act);
-	void getFocusValue(cv::Mat im, double z, ACTIONS::action act);
+	FocusResult getFocusValue(cv::Mat im, double z, ACTIONS::action act);
+
+	double getBestFocusValue(QMap<double, FocusImage> focusValues);
 
 	cv::Mat createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> indexes);
 	QVector3D getMosaicPositionFromName(QString str, bool relative = true);
@@ -146,16 +158,19 @@ private:
 	QThread* m_pWorkerThreadXY;
 	QThread* m_pWorkerThreadZ;
 
+#ifdef _HAVE_IMAGEMAGICK
+	ImageReadWrite m_imageReadWrite;
+#endif
+
 	QVector<QString> m_AvailablePorts;
 
 	QMap<QString, cv::Mat> m_MosiacImageList;
 
-	QVector<cv::Mat> m_focusStackImages;	/// list of images used for focus stack focus finding or to make focus stack image
-	QMap<double, double> m_focusStackCoarseFocusValues;	/// list of images used for focus stack focus finding or to make focus stack image
-	QMap<double, double> m_focusStackFineFocusValues;	/// list of images used for focus stack focus finding or to make focus stack image
+	QMap<double, FocusImage> m_focusStackData;	/// list of images used for focus stack focus finding or to make focus stack image
 	int m_noFocusStackImages;
 	double m_zdistance;
 	QVector<double> m_focusValues;			// focus values to use for optimising focus routine.
+	ACTIONS::action m_FOCUS_STATE;
 
 	QImage imdisplay;					//This will create QImage which is shown in Qt label
 	QTimer* Timer;						// A timer is needed in GUI application
@@ -211,6 +226,10 @@ public slots:
 		updateQTImage(im);
 	};
 
+	void startFocusThreads(cv::Mat im, double z, ACTIONS::action act);
+	void addFocusValueCompleted();
+	void allFocusValuesCompleted();
+
 	void createTransformationMatrix(QVector3D topleft, QVector3D topright, QVector3D bottomleft);
 
 	bool updateQTImage(cv::Mat img, QString name = "camera image", QAction* pAction = nullptr);
@@ -233,9 +252,7 @@ public slots:
 
 	void enableFiducial(bool bEnable);
 
-	double getBestFocus(double minPos, double step);
-	bool getBestFocusValue(QMap<double, double> focusValues, int arraySize, double z, ACTIONS::action act);
-
+	//double getBestFocus(double minPos, double step);
 private slots:
 	void updatePositionXY(bool bFid, double x, double y);
 	void updatePositionZ(bool bFid, double z);
@@ -251,7 +268,7 @@ private slots:
 	void stageMovedXY(double x, double y, ACTIONS::action act);
 	void stageMovedZ(double z, ACTIONS::action act);
 
-	void addFocusValue(double z, double focusStrength, ACTIONS::action act);
+	void addFocusValue(cv::Mat im, double z, double focusStrength, ACTIONS::action act);
 
 	void moveObjective(QPoint pt);
 

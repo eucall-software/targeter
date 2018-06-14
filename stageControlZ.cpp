@@ -3,21 +3,13 @@
 
 #include <QString>
 #include "globals.h"
-#include "MarzController.h"
 #include "NewportController.h"
 #include "stageControlZ.h"
-/*
-#using <System.dll>
 
-using namespace System;
-using namespace System::ComponentModel;
-using namespace System::IO::Ports;
-using namespace System::Runtime::InteropServices;
-*/
 
 StageControlZ::StageControlZ()
 {
-	m_COMPort = "";
+	m_COMPort = "not available";
 
 	m_pNewport = new NewportController(this);
 }
@@ -43,24 +35,6 @@ void StageControlZ::updatePosition(bool bFiducial)
 	emit UPDATEPOSITION(bFiducial, z);
 
 	emit ACTIONCOMPLETED("Z get position");
-}
-
-void StageControlZ::assignPort(QVector<QString> AvailablePorts, QString excludePort)
-{
-	m_COMPort = "not available";
-
-	for (int i = 0; i < AvailablePorts.length(); i++)
-	{
-		if (AvailablePorts[i] == excludePort)
-			continue;
-
-		if (m_pNewport->connectToPort(NewportController::q2ss(AvailablePorts[i])))
-		{
-			m_COMPort = AvailablePorts[i];
-			break;
-		}
-	}
-	emit CONNECTEDTOPORT(m_COMPort);
 }
 
 void StageControlZ::moveAbsolute(double z, ACTIONS::action act)
@@ -92,9 +66,7 @@ void StageControlZ::stopMotion(ACTIONS::action act)
 
 	if (act != ACTIONS::jog)
 		emit ACTIONCOMPLETED("stop motion complete");
-
 }
-
 
 void StageControlZ::go(double fz)
 {
@@ -130,7 +102,6 @@ void StageControlZ::Calibrate()
 {
 	//m_pMarz->calibrateXY();
 
-
 	emit ACTIONCOMPLETED("calibration complete");
 }
 void StageControlZ::MeasureRange()
@@ -151,10 +122,22 @@ bool StageControlZ::Connect()
 	if (m_COMPort == "")
 		return false;
 
-	if (m_COMPort != "")
-		m_pNewport->connectToPort(NewportController::q2ss(m_COMPort));
+	connectToPort(m_COMPort);
 
 	emit ACTIONCOMPLETED("stage connected");
+}
+
+bool StageControlZ::connectToPort(QString port)
+{
+	if (port != "")
+	{
+		if (m_pNewport->connectToPort(port))
+		{
+			m_COMPort = port;
+			return true;
+		}
+	}
+	return false;
 }
 
 void StageControlZ::Disconnect()

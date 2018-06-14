@@ -13,7 +13,7 @@ public:
 	NewportController();
 	NewportController(StageControlZ* pTSM);
 	~NewportController();
-	bool connectToPort(System::String^ port);
+	bool connectToPort(QString qsPort);
 	void disconnect();
 
 	void moveAbsolute(double z, bool async = false);
