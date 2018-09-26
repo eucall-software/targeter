@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>914</width>
+    <width>939</width>
     <height>682</height>
    </rect>
   </property>
@@ -89,7 +89,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>824</width>
+          <width>849</width>
           <height>87</height>
          </rect>
         </property>
@@ -184,7 +184,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>914</width>
+     <width>939</width>
      <height>21</height>
     </rect>
    </property>
@@ -226,6 +226,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionTrainTarget"/>
     <addaction name="actionScoreImage"/>
     <addaction name="actionFind_targets"/>
     <addaction name="actionSave_Target_Positions"/>
@@ -316,6 +317,9 @@
    <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="toolbarOpenSave">
+   <property name="toolTip">
+    <string>Open/Save images and XML files</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -333,7 +337,7 @@
     <string>toolBar</string>
    </property>
    <property name="toolTip">
-    <string>drawing tools</string>
+    <string>Settings dialog</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -348,6 +352,9 @@
    <property name="windowTitle">
     <string>toolBar_2</string>
    </property>
+   <property name="toolTip">
+    <string>Controls for drawing on image</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -357,6 +364,8 @@
    <addaction name="actionDraw_Rectangular_Region"/>
    <addaction name="actionDraw_Circle_Region"/>
    <addaction name="actionDraw_Polygon"/>
+   <addaction name="actionAnnotate_Shape"/>
+   <addaction name="actionGrid_Spacing"/>
    <addaction name="separator"/>
    <addaction name="actionClickTarget"/>
    <addaction name="actionReference_fiducial_marks"/>
@@ -364,7 +373,6 @@
    <addaction name="separator"/>
    <addaction name="actionMask_White"/>
    <addaction name="actionMask_Black"/>
-   <addaction name="actionGrid_Spacing"/>
    <addaction name="separator"/>
    <addaction name="actionCreate_Mask_Image"/>
    <addaction name="actionGet_Target_image_region"/>
@@ -372,6 +380,9 @@
   <widget class="QToolBar" name="toolBarZoomPann">
    <property name="windowTitle">
     <string>toolBar_3</string>
+   </property>
+   <property name="toolTip">
+    <string>Zooming/Panning operations on image</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -387,6 +398,9 @@
    <property name="windowTitle">
     <string>toolBar_4</string>
    </property>
+   <property name="toolTip">
+    <string>Image analysis operations</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>RightToolBarArea</enum>
    </attribute>
@@ -397,10 +411,14 @@
    <addaction name="actionEqualise_Image"/>
    <addaction name="actionEntropyFilter"/>
    <addaction name="actionBackground_fit"/>
+   <addaction name="actionLaplacian"/>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="toolBarMicroscope">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="toolTip">
+    <string>Microscope related operations</string>
    </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
@@ -415,9 +433,12 @@
    <addaction name="actionCalibrate_Camera"/>
    <addaction name="actionCorrectImage"/>
   </widget>
-  <widget class="QToolBar" name="toolBar_2">
+  <widget class="QToolBar" name="toolBarCamera">
    <property name="windowTitle">
     <string>toolBar_2</string>
+   </property>
+   <property name="toolTip">
+    <string>Camera related operations</string>
    </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
@@ -429,9 +450,12 @@
    <addaction name="actionGrab_Video_From_Camera"/>
    <addaction name="actionGrab_Image_From_Camera"/>
   </widget>
-  <widget class="QToolBar" name="toolBar_3">
+  <widget class="QToolBar" name="toolBarBinaryOperations">
    <property name="windowTitle">
     <string>toolBar_3</string>
+   </property>
+   <property name="toolTip">
+    <string>Binary image analysis operations</string>
    </property>
    <attribute name="toolBarArea">
     <enum>RightToolBarArea</enum>
@@ -445,9 +469,12 @@
    <addaction name="actionFind_Centers"/>
    <addaction name="actionMergeImages"/>
   </widget>
-  <widget class="QToolBar" name="toolBar_4">
+  <widget class="QToolBar" name="toolBarTargets">
    <property name="windowTitle">
     <string>toolBar_4</string>
+   </property>
+   <property name="toolTip">
+    <string>Target detection operations</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -455,6 +482,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionTrainTarget"/>
    <addaction name="actionSample_White_Binary_Regions"/>
    <addaction name="actionScoreImage"/>
    <addaction name="actionFind_targets"/>
@@ -1078,6 +1106,57 @@
    </property>
    <property name="toolTip">
     <string>Stitch images together to produce an image mosaic</string>
+   </property>
+  </action>
+  <action name="actionDefine_Focus_Plane">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/focusPlane.png</normaloff>:/icons/24/focusPlane.png</iconset>
+   </property>
+   <property name="text">
+    <string>Define Focus Plane</string>
+   </property>
+   <property name="toolTip">
+    <string>Move XY and Z stages until target  in focus, then click once on overview image to define focus Z centre, clicking three times or more in different regions will define focus plane.</string>
+   </property>
+  </action>
+  <action name="actionAnnotate_Shape">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/annotate.png</normaloff>:/icons/24/annotate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Annotate Shape</string>
+   </property>
+   <property name="toolTip">
+    <string>Click to add annotation information to drawn region (eg. what this region represents)</string>
+   </property>
+  </action>
+  <action name="actionTrainTarget">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/traintarget.png</normaloff>:/icons/24/traintarget.png</iconset>
+   </property>
+   <property name="text">
+    <string>Train on Target</string>
+   </property>
+   <property name="toolTip">
+    <string>Train image analysis algorithm on selected example targets.  </string>
+   </property>
+  </action>
+  <action name="actionLaplacian">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/24/laplacian.png</normaloff>:/icons/24/laplacian.png</iconset>
+   </property>
+   <property name="text">
+    <string>laplacian</string>
+   </property>
+   <property name="toolTip">
+    <string>perform laplacian on image</string>
    </property>
   </action>
  </widget>

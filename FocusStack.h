@@ -22,18 +22,18 @@
 */
 class FocusStack {
 public:
-	static double getImageFocusLevel(targeterImage& image);
+	static double getImageFocusLevel(QExplicitlySharedDataPointer<targeterImage> image);
 	static double getImageFocusLevel(cv::Mat& m);
 
 	static int getBestFocusImage(QVector<cv::Mat> imageStack, QVector<double>& focusValues, FOCUSALGO::algo Algorithm = FOCUSALGO::DXDY);
 	static double getFocusImage(cv::Mat& m, FOCUSALGO::algo Algorithm);
 	
-    static cv::Mat* processImageStack(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
-	static cv::Mat* processImageStack2(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
-	static cv::Mat* processImageStack3(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
-	static cv::Mat processImageStack4(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
+    static cv::Mat* processImageStack(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
+	static cv::Mat* processImageStack2(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
+	static cv::Mat* processImageStack3(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
+	static cv::Mat processImageStack4(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow);
 
-	static cv::Mat* mergeImageStack(std::vector<targeterImage>& imageStack, cv::Mat indexImage, int w, int h);
+	static cv::Mat* mergeImageStack(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, cv::Mat indexImage, int w, int h);
 
     // focussing algorithms /////////////////////////////////
 	static void fillErrorRegions(int* im, int w, int h, int fSize, int NoFocusImages);

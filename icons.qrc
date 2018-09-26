@@ -19,7 +19,6 @@
         <file>icons/24/connectedcomponents.png</file>
         <file>icons/24/invert.png</file>
         <file>icons/24/filter.png</file>
-        <file>icons/24/marks.png</file>
         <file>icons/24/checkerboard.png</file>
         <file>icons/24/calibrate.png</file>
         <file>icons/24/movie.png</file>
@@ -43,5 +42,10 @@
         <file>icons/24/histogram_equalization.png</file>
         <file>icons/24/scanareas.png</file>
         <file>icons/24/mosaic.png</file>
+        <file>icons/24/focusPlane.png</file>
+        <file>icons/24/annotate.png</file>
+        <file>icons/24/marks.png</file>
+        <file>icons/24/traintarget.png</file>
+        <file>icons/24/laplacian.png</file>
     </qresource>
 </RCC>

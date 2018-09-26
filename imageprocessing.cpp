@@ -170,6 +170,60 @@ int*  ImageProcessing::fitPolynomial(int* ydata, int size, int max_orders)
 	return newy;
 }
 
+cv::Mat ImageProcessing::subtractBackgroundChannel(cv::Mat inputImagePlane, cv::Mat& backgroundImagePlane)
+{
+	if(inputImagePlane.channels()>1)
+		return cv::Mat();
+
+	cv::Mat bim = fitBackgroundImage(inputImagePlane);
+
+	cv::Mat gray_16S, dst_16S, bim_16S, dst;
+
+	inputImagePlane.convertTo(gray_16S, CV_16SC1);
+	bim.convertTo(bim_16S, CV_16SC1);
+
+	cv::subtract(gray_16S, bim_16S, dst_16S);
+
+	dst_16S = dst_16S + mean(bim_16S);
+
+	dst_16S.convertTo(dst, CV_8UC1);
+	bim_16S.convertTo(bim, CV_8UC1);
+
+	backgroundImagePlane = bim;
+
+	return dst;
+}
+
+cv::Mat ImageProcessing::subtractBackground(cv::Mat inputImage, cv::Mat& backgroundImage)
+{
+	cv::Mat dst;
+
+	if (backgroundImage.empty())
+		backgroundImage = cv::Mat(inputImage.rows, inputImage.cols, inputImage.type());
+
+	if(inputImage.channels()==1)
+	{
+		dst = subtractBackgroundChannel(inputImage, backgroundImage);
+	}
+	else
+	{
+		std::vector<cv::Mat> rgb_planes;
+		std::vector<cv::Mat> rgb_background;
+
+		split(inputImage, rgb_planes);
+		split(backgroundImage, rgb_background);
+
+		rgb_planes[0] = subtractBackgroundChannel(rgb_planes[0], rgb_background[0]);
+		rgb_planes[1] = subtractBackgroundChannel(rgb_planes[1], rgb_background[1]);
+		rgb_planes[2] = subtractBackgroundChannel(rgb_planes[2], rgb_background[2]);
+
+		cv::merge(rgb_planes, dst);
+		cv::merge(rgb_background, backgroundImage);
+	}
+
+	return dst;
+}
+
 cv::Mat ImageProcessing::fitBackgroundImage(cv::Mat im)
 {
 	Mat M = Mat_<double>(im.rows * im.cols, 6);
@@ -570,7 +624,7 @@ QString ImageProcessing::getBarcode(cv::Mat& src, QRect roi)
 * Parameter: SettingsValues s
 */
 
-void ImageProcessing::calibrateCamera(std::vector<targeterImage> imageList, SettingsValues* s)
+void ImageProcessing::calibrateCamera(QVector<QExplicitlySharedDataPointer<targeterImage>> imageList, SettingsValues* s)
 {
 	unsigned char flags = 0;
 
@@ -627,7 +681,7 @@ void ImageProcessing::calibrateCamera(std::vector<targeterImage> imageList, Sett
 	float focalDist = s->activeCamera == cameraType::camera::microscope ? s->focalDistanceMicroscopeCamera : s->focalDistanceOverviewCamera;
 
 	//overview camera has 35mm lens
-	float FocalLengthInPixels = 1000.0*focalDist /s->micronsPerPixel; // = 1000 * 35mm fl / 5.5um pixel size
+	float FocalLengthInPixels = 1000.0*focalDist / s->mmPerPixel; // = 1000 * 35mm fl / 5.5um pixel size
 
 	if (imageList.size() == 0)
 	{
@@ -1211,8 +1265,9 @@ cv::Mat ImageProcessing::HistogramClusteringGray(cv::Mat im, int NoClusters)
 	calcHist(histImage, 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate);
 
 	// here we cluster image based on its hue histogram /////////////////
+	pClusterHist = new int[histSize];
 
-	pClusterHist = histClusterRGBImage(b_hist, histSize, NoClusters);//histClusterEqual(b_hist, histSize, NoClusters); 
+	histClusterRGBImage(b_hist, pClusterHist, histSize, NoClusters);//histClusterEqual(b_hist, histSize, NoClusters); 
 
 	// //////////////////////////////////////////////////////////////////
 
@@ -1253,7 +1308,7 @@ cv::Mat ImageProcessing::HistogramClusteringGray(cv::Mat im, int NoClusters)
 * @return    int*
 * Access     public 
 */
-int* ImageProcessing::histClusterRGBImage(cv::Mat hueHist, int histSize, int NoClusters)
+void ImageProcessing::histClusterRGBImage(cv::Mat hueHist, int* pClusterHist, int histSize, int NoClusters)
 {
 
 #ifdef DEBUGPRINT
@@ -1263,7 +1318,6 @@ int* ImageProcessing::histClusterRGBImage(cv::Mat hueHist, int histSize, int NoC
 	std::vector<histCluster>::iterator clusterToMerge1, clusterToMerge2, iI, jI, kI;
 	float PCK_1, PCK_2, PCK_12, M_CK_1, M_CK_2, M_CK_12, E_CK_1, E_CK_2, SA_CK_12, SL_CK_12, DIST_CK_12;
 	long n;
-	int* pClusterHist = new int[histSize];
 	float f, meanHue, varHue, totHueVar, bestMean, bestVar;
 	std::vector<histogramBar> h1, h2;
 
@@ -1422,8 +1476,6 @@ int* ImageProcessing::histClusterRGBImage(cv::Mat hueHist, int histSize, int NoC
 		}
 		cl++;
 	}
-
-	return pClusterHist;
 }
 
 

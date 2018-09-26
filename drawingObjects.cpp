@@ -9,24 +9,36 @@
 
 using namespace std;
 
-#define _COLOUR_HOVER "#0FF"
-#define _COLOUR_SELECT_HOVER "#F0F"
-#define _COLOUR_SELECT "#00F"
-#define _COLOUR_NORMAL "#0F0"
-#define _COLOUR_SELECT_BOUNDING_BOX "#FF0"
+double sqr(double x) { return x*x; };
 
+double dist2(QPoint v, QPoint w) { return sqr(v.x() - w.x()) + sqr(v.y() - w.y()); };
 
+double distToSegmentSquared(QPoint p, QPoint v, QPoint w)
+{
+	double l2 = dist2(v, w);
+	if (l2 == 0)
+		return dist2(p, v);
+
+	double t = ((p.x() - v.x()) * (w.x() - v.x()) + (p.y() - v.y()) * (w.y() - v.y())) / l2;
+
+	t = MAX(0, MIN(1, t));
+
+	return dist2(p, QPoint(v.x() + t * (w.x() - v.x()), v.y() + t * (w.y() - v.y())));
+};
+
+double distToSegment(QPoint p, QPoint v, QPoint w) { return sqrt(distToSegmentSquared(p, v, w)); }
 
 drawingObject::drawingObject()
 {
 	m_fillColour = drawingColour::none;
 
+	m_bHighLight = false;
 	m_bClickedItem = false;
 	m_bSelected = false;
 	m_bDragging = false;
 	m_type = drawingMode::none;
 
-	m_pRect = nullptr;
+
 	m_pParent = nullptr;
 
 	m_ImageIndex = -1;
@@ -39,8 +51,7 @@ drawingObject::drawingObject(PaintQLabel* parent) : drawingObject()
 
 drawingObject::~drawingObject() 
 {
-	if (m_pRect)
-		delete m_pRect;
+
 }
 
 void rectObject::drawRect(QPainter* painter)
@@ -225,6 +236,7 @@ bool drawingMoveObjective::hitTest(QPoint p, bool bMouseDown)
 
 	return inObject;
 }
+
 /**
 *
 *  checks to see if point is in polygon
@@ -266,6 +278,36 @@ bool drawingPoly::hitTest(QPoint p, bool bMouseDown)
 
 	return inObject;
 }
+
+
+bool drawingSampling::hitTest(QPoint p, bool bMouseDown)
+{
+	int i, j;
+	int minDist = 3;
+	bool inObject = false;
+
+	if (this->m_pPoly != nullptr)
+	{
+		for (i = 0, j = this->m_pPoly->length() - 1; i < this->m_pPoly->length(); j = i++)
+		{
+			QPoint px = this->m_pPoly->at(i);
+			QPoint py = this->m_pPoly->at(j);
+
+			px = PaintQLabel::GetDisplayPosition(px, &m_pParent->m_imageRect, &m_pParent->m_displayRect);
+			py = PaintQLabel::GetDisplayPosition(py, &m_pParent->m_imageRect, &m_pParent->m_displayRect);
+
+			if (distToSegment(px, py, p) < minDist)
+				inObject = true;
+		}
+	}
+
+	if (bMouseDown)
+		m_bClickedItem = inObject;
+	m_bHoveredOver = inObject;
+
+	return inObject;
+}
+
 
 void drawingObject::moveObject(QPoint offset)
 {
@@ -364,6 +406,41 @@ void drawingCross::draw(QPainter* painter)
 	painter->setBrush(Qt::NoBrush);
 }
 
+void drawingSampling::draw(QPainter* painter)
+{
+	if (m_pPoly == nullptr || m_pPoly->length() < 1)
+		return;
+
+	drawingObject::getPenBrush(painter);
+
+	painter->setPen(QPen(Qt::green));
+
+	// first polygon point
+	QPainterPath path;
+
+	QPoint pt = PaintQLabel::GetDisplayPosition(m_pPoly->at(0), &m_pParent->m_imageRect, &m_pParent->m_displayRect);
+
+	path.moveTo(pt.x(), pt.y());
+
+	painter->drawEllipse(pt.x() - 5, pt.y() - 5, 10, 10);
+
+	// lines
+	for (int i = 0; i < m_pPoly->length(); i++)
+	{
+		QPoint pt = PaintQLabel::GetDisplayPosition(m_pPoly->at(i), &m_pParent->m_imageRect, &m_pParent->m_displayRect);
+
+		painter->drawEllipse(pt.x() - 5, pt.y() - 5, 10, 10);
+
+		// line
+		path.lineTo(pt.x(), pt.y());
+	}
+
+	painter->strokePath(path, QPen(Qt::green));
+
+	painter->setPen(QPen(Qt::black));
+	painter->setBrush(Qt::NoBrush);
+}
+
 void drawingPoly::draw(QPainter* painter)
 {
 	if (m_pPoly == nullptr || m_pPoly->length() < 1)
@@ -419,7 +496,6 @@ void drawingPoly::draw(QPainter* painter)
 
 void drawingObject::getPenBrush(QPainter* painter)
 {
-	PaintQLabel::getPenBrush(painter, m_bHoveredOver, m_bSelected, false,
-		(m_fillColour == drawingColour::mask_white || m_fillColour == drawingColour::mask_black),
-		m_fillColour);
+	PaintQLabel::getPenBrush(painter, m_bHoveredOver, m_bSelected, false, (m_fillColour == drawingColour::mask_white || m_fillColour == drawingColour::mask_black), 
+		m_bHighLight, m_fillColour);
 }

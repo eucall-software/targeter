@@ -19,51 +19,50 @@ class ImagesContainer;
 /**
 * class to represent targeter image used to store associated image information and group images together
 */
-class targeterImage {
+class targeterImage : public QSharedData
+{
 
 public:
 	targeterImage(ImagesContainer* pWin);
+	targeterImage(bool dummy) { isNull = true; };
 	targeterImage();
 	~targeterImage();
 
+	bool isNULL() { return isNull; };
+
+	targeterImage(QExplicitlySharedDataPointer<targeterImage> tar);
+
 	void addImageFromFile(std::string filename, imageType::imageType type = imageType::display);
 	void addImageEx(cv::Mat im, QUuid UIDParent, imageType::imageType type, std::string descriptiveName = "", std::string tooltip = "", std::string filename = "");
-	
+
+	void addDrawingObject(QSharedPointer<drawingObject> dObj) {
+		drawingObjects.append(dObj);
+	};
+
 	void addImage(cv::Mat im);
+	void addJSONDATA(QJsonObject obj);
 
 	cv::Mat& getImage();
 
 	void createQTImage(bool bRGBSwap = true);
-	
-	QImage& getQTImage();
+
+	QImage getQTImage();
 
 	void setImageType(imageType::imageType type) { imageFunction = type; };	// name of function which created image
 
 	imageType::imageType getImageFunction() { return imageFunction; };
 
-	std::vector<QUuid>& getFriendImageArray() {return m_FriendIDs;};
-
 	QString toString();
 
-	// derived images - index to other 
-	void addFriendID(QUuid uid) { m_FriendIDs.push_back(uid); };
-	void addFriendID(const std::vector<QUuid>& to_add) { m_FriendIDs.insert(std::end(m_FriendIDs), std::begin(to_add), std::end(to_add)); };
+	std::string getName() { return name; };
 
-	int getFriendArrayIndexOfType(imageType::imageType imageFunction);
-
-	bool removeFriendID(QUuid ID);
-	void removeFriendIDs(const std::vector<QUuid>& to_remove);
-	bool hasFriendID(QUuid ID);
-	std::vector<QUuid>::iterator getFriend(QUuid ID);
-
-	std::string getName() {	return name; };
+	QString getFileName() { return QString::fromStdString(filepathname); }
 	void setName(std::string s) { name = s; };
 	std::string getDefaultName();
 
 	int* get1DImage(imageType::imageType type = imageType::display);
-
 	void set1DImage(int* im, imageType::imageType type = imageType::display);
-	
+
 	void free1DImages();
 
 	int Rows();
@@ -81,27 +80,39 @@ public:
 	// functions for dealing with ccimages
 
 	// getters
-	cv::Mat& getLabelsImage() {	return labels;	};
-	cv::Mat& getStatsImage() {	return stats;	};
-	cv::Mat& getCentroidsImage() {	return centroids; };
+	cv::Mat& getLabelsImage() { return labels; };
+	cv::Mat& getStatsImage() { return stats; };
+	cv::Mat& getCentroidsImage() { return centroids; };
 	cv::Rect& getImagePosition() { return imagePosition; };
 	cameraType::camera getCameraType() { return cameraType; };
 
-	void setImagePosition(QVector3D pos, bool bFiducial = true) { 
-		if (bFiducial)
-			m_positionFiducial = pos;
-		else
-			m_positionStage = pos;
-	}
-	
-	targeterImage& getGlobalImage(int index);
+	QPoint getImageIndex() { return m_imageIndex; };
+	QVector3D getPositionFiducial() { return m_positionFiducial; };
+	QVector3D getPositionStage() { return m_positionStage; };
+
+	void setStagePosition(QVector3D pos) { m_positionStage = pos; };
+	void setFiducialPosition(QVector3D pos) { m_positionFiducial = pos; };
+
+	QExplicitlySharedDataPointer<targeterImage> getGlobalImage(int index);
 
 	//setters
-	void setLabelsImage(cv::Mat im) {labels = im;};
-	void setStatsImage(cv::Mat im) {stats = im;};
-	void setCentroidsImage(cv::Mat im) {centroids = im;};
+	void setLabelsImage(cv::Mat im) { labels = im; };
+	void setStatsImage(cv::Mat im) { stats = im; };
+	void setCentroidsImage(cv::Mat im) { centroids = im; };
 	void setImagePosition(cv::Rect r) { imagePosition = r; };
 	void setCameraType(cameraType::camera cam) { cameraType = cam; };
+
+	QString getFrameID() { return m_FrameID; };
+	QString getSubFrameID() {return m_SubFrameID; };
+	QString getSubRegionID(){return m_subRegionID;};
+	QRect getPatternRegion() { return m_patternRegion; };
+
+	void setFrameID(QString s) { m_FrameID = s; };
+	void setSubFrameID(QString s) { m_SubFrameID = s; };
+	void setSubRegionID(QString s) { m_subRegionID = s; };
+	void setPatternRegion(QRect r) { m_patternRegion = r; };
+
+	QVector<QSharedPointer<drawingObject>> getDrawingObjects() { return drawingObjects; };
 
 	// functions for dealing with mask images	/////////////////////////////////////
 	void setMaskType(drawingMode::drawingMode mode) { maskType = mode; };
@@ -109,6 +120,8 @@ public:
 	drawingMode::drawingMode getMaskType() { return maskType; };
 
 public:		// public properties
+	QVector<QSharedPointer<drawingObject>> drawingObjects;		/// list of drawing objects for this image
+
 	imageType::imageType imageFunction;		/// type of image
 
 	drawingMode::drawingMode maskType;		/// type of mask
@@ -118,22 +131,25 @@ public:		// public properties
 
 	QPoint m_ImageOffset;		/// image X,Y offset in microns
 	int m_ImageFocusPosition;	/// image Z focus position in microns (absolute stage position - relative to a focus on sample frame fiducial mark top left)
-
 private:
 	ImagesContainer* m_ImagesContainer;
 
+	QPoint m_imageIndex;
 	QVector3D m_positionFiducial;
 	QVector3D m_positionStage;
 
-	std::vector<QUuid> m_FriendIDs;	    /// array index of images that are the result of processing this image (eg. mask images, target images, ccimages)
-	
+	QString m_FrameID;		// barcode of frame
+	QString m_SubFrameID;		// subframe identifier
+	QString m_subRegionID;	// Parent region identifier 
+	QRect m_patternRegion;	// Parent region location in image
+
 	QImage qt_im;				/// QT Image (shares data with opencv image)
 	cv::Mat cv_im;				/// OpenCV image
 
 	int* pImage;				/// int* image 1D array (Grayscale intensity or HSV Value)
 	int* pMask;					/// int* mask image 1D array
 	int* pHue;					/// int* image 1D array (Hue image)
-	
+
 	std::string tooltip;		/// tooltip describing image
 	bool isDisplayed;			/// boolean to set if image is displayed
 
@@ -147,6 +163,7 @@ private:
 	cv::Rect imagePosition; /// position of image in relation to other containing image
 
 	QUuid UID;
+	bool isNull;
 };
 /*
 class ccImage : public  targeterImage

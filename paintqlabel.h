@@ -67,6 +67,9 @@ protected:
 	double gOffY;
 	double gSpaceX;
 	double gSpaceY;
+
+	bool bPaddTargetImage;
+	int paddlevels;
 public:
 // variables
 
@@ -75,20 +78,26 @@ public:
 	// image size in display
 	QRect m_displayRect;
 
+
 	// images 
 
 	// pointer to image store
+	int m_currentImage;
 	ImagesContainer* m_pImagesContainer;
 
 	//pointer to index into image store
+
+	GraphicsImage m_currentDisplayImage;
+/*
 	int imageContainerIndex;
 
 	// list of saved drawing objects
 	QVector<drawingObject*> m_drawingObjects;
- 
+ */
 // functions
 
-	QImage& getImage();
+	QImage getImage();
+	QVector<QSharedPointer<drawingObject>> getImageDrawingObjects();
 
     explicit PaintQLabel(QWidget * parent = 0);
     ~PaintQLabel();
@@ -98,13 +107,14 @@ public:
     void displayRect(QRect r);
     void getDisplayRect();
 
-	drawingObject* getObjectInMouseRect(drawingMode::drawingMode mode = drawingMode::any);
-	drawingObject* getObjectAtPoint(QPoint pt, drawingMode::drawingMode mode = drawingMode::any);
+	QSharedPointer<drawingObject> getObjectInMouseRect(drawingMode::drawingMode mode = drawingMode::any);
+	void checkObjectsInMouseRect(drawingMode::drawingMode mode = drawingMode::any);
+	QSharedPointer<drawingObject> getObjectAtPoint(QPoint pt, drawingMode::drawingMode mode = drawingMode::any);
 
 	void setImageIndex(int index);
 	QSize getDisplaySize() { return m_displayRect.size(); };
 
-	void addPolygon();
+	void addPolygon(drawingMode::drawingMode shape = drawingMode::poly);
 	void addPolygonPoint(QPoint mp);
 
 	void addObject(drawingMode::drawingMode mode);
@@ -112,16 +122,13 @@ public:
     void zoomToPoint(QPoint windowClick, int zoomAmount);
 	void getPolygonRect(QRect* boundingPolygon);
 
-	void addShapeMaskToImage(cv::Mat& mask, drawingShape shape);
+	void addShapeMaskToImage(cv::Mat& mask, QSharedPointer<drawingShape> shape);
 	cv::Mat getBinaryImageFromShapes(int imageIndex);
-	cv::Mat sampleImageForTargets(cv::Mat im, int edgeThreshold, int gridSpacing, SAMPLINGTYPE::type type);
-	void drawGrid(cv::Mat& im, int gridSpacing, cv::Scalar s = cv::Scalar(255, 255, 255), bool bPoints = true);
-	void getTargetsFromBinaryImage(cv::Mat binImage, int threshold = 10, SAMPLINGTYPE::type sampling = SAMPLINGTYPE::grid, int gridSpacing = 10, int imageIndex = -1);
+	cv::Mat sampleImageForTargets(cv::Mat im, int edgeThreshold, QPoint gridSpacing, QPoint gridOffset, SAMPLINGTYPE::type type);
+	void drawGrid(cv::Mat& im, QPoint gridSpacing, QPoint gridOffset, cv::Scalar s = cv::Scalar(255, 255, 255), bool bPoints = true);
+	void getTargetsFromBinaryImage(cv::Mat binImage, QPoint gridSpacing, QPoint gridOffset, int threshold = 10, SAMPLINGTYPE::type sampling = SAMPLINGTYPE::grid, int imageIndex = -1);
 
 	void setTargetPosition(QPoint p, int imageIndex = -1);
-
-	void setGrid(bool bChecked, double offX, double offY, double spaceX, double spaceY, QColor colour);
-
     void setDrawingMode(drawingMode::drawingMode mode);
 	void setFillColour(drawingColour::colour colour = drawingColour::none);
 
@@ -131,6 +138,8 @@ public:
     void startDragging(drawingMode::drawingMode mode, QPoint pos);
 	void displayStatusBarPixel(QPoint p);
 
+	void setWaveletPadd(bool padd) { bPaddTargetImage = padd; };
+
 	static QPoint GetImagePosition(QPoint displayPt, QRect* imageRect, QRect* dispRect);
 	static QPoint GetDisplayPosition(QPoint imagePt, QRect* imageRect, QRect* dispRect);
 
@@ -138,30 +147,32 @@ public:
 	static QRect GetImageRectPosition(QRect displayRect, QRect* imageRect, QRect* dispRect);
 
     void deleteSelectedDrawingObject();
-	void deleteDrawingObjects(int index);
+	void deleteDrawingObjects(int imageIndex);
 
-	QVector<drawingShape> getTargetImage(bool bSetAsTarget = true, bool bTargetRegions=false, int imageIndex =-1);
+	QVector<QSharedPointer<drawingShape>> getImageShapes(bool bSetAsTarget = true, bool bTargetRegions=false, int imageIndex =-1);
     void resetDrawingObjects();
+	void highLightShape(QSharedPointer<drawingObject> pObj, bool highlight = true);
 
-	void drawTempPoly(QVector<QPoint>* pVect, QRect* pBoundingRect, QPainter* painter);
+	void drawTempPoly(QVector<QPoint>* pVect, QRect* pBoundingRect, QPainter* painter, drawingMode::drawingMode shape = drawingMode::poly);
 	void drawTempRectCircle(QRect* pBoundingRect, QPainter* painter, bool bCircle);
 	
-	static void getPenBrush(QPainter* painter, bool hover = false, bool selected = false, bool bSelectRect = false, bool drawFilled = false,
+	static void getPenBrush(QPainter* painter, bool hover = false, bool selected = false, bool bSelectRect = false, bool drawFilled = false, bool drawHighLight = false,
 							drawingColour::colour col = drawingColour::none);
 
 	QVector<QPoint> targetPoints();
 signals:
     void disablePanButton();
-    void setTargetArea(drawingShape shape);
+    void setTargetArea(QSharedPointer<drawingShape> shape);
     void unsetDrawingButtons(QAction* pAct);
 	void StatusBarMessage(QString msg);
 	void addFiducialMark(FIDUCIAL::position pos, QPoint p);
 	void moveObjective(QPoint p);
+	void setSamplingDistance(QSharedPointer<QPolygon> poly);
 
 public slots:
-	void setFiducialPosition(FIDUCIAL::position position) { 
-		m_fidPosition = position; 
-	};
+	void setFiducialPosition(FIDUCIAL::position position) { m_fidPosition = position; };
+	void updatePaddTarget(bool padd, int levels) { bPaddTargetImage = padd; paddlevels = levels; };
+	void setGrid(bool bChecked, double offX, double offY, double spaceX, double spaceY, QColor colour);
 protected slots:
     virtual void enterEvent ( QEvent* event );
     virtual void leaveEvent ( QEvent* event );

@@ -112,7 +112,16 @@ cv::Mat Haar::LaplacianPyramid(cv::Mat im, int levels, bool includeScale)
 		cv::Mat lap = currentImg - up;
 
 		int y = imOut.rows >> (l + 1);
-		int x = imOut.cols >> (l + 1);
+		int x=0;
+
+		if (includeScale)
+		{
+			cv::Rect r = cv::Rect(x, y, lap.cols, lap.rows);
+
+			up.copyTo(imOut(r));
+		}
+
+		x = imOut.cols >> (l + 1);
 
 		cv::Rect r = cv::Rect(x, y, lap.cols, lap.rows);
 
@@ -120,7 +129,7 @@ cv::Mat Haar::LaplacianPyramid(cv::Mat im, int levels, bool includeScale)
 
 		currentImg = down;
 	}
-
+	/*
 	if (includeScale)
 	{
 		int y = imOut.rows >> (levels + 1);
@@ -130,11 +139,9 @@ cv::Mat Haar::LaplacianPyramid(cv::Mat im, int levels, bool includeScale)
 
 		currentImg.copyTo(imOut(r));
 	}
+	*/
 	return imOut;
 }
-
-
-	
 
 /**
 *
@@ -212,7 +219,44 @@ cv::Mat Haar::PyramidLevels(cv::Mat data, int width, int height, int iterations,
 	return bestlevels;
 }
 
-	
+float** Haar::getHaarCooc(cv::Mat data, cv::Mat coocImage, int width, int height, int iterations, float maxEnergy)
+{
+	int ii, ij, oi, oj, ind;
+	double divisor, dVal, dNormVal;
+
+	for (int k = 0; k < iterations; k++)
+	{
+		ind = k + 1;
+
+		oi = data.cols >> ind;
+		oj = data.rows >> ind;
+
+		divisor = 1;// pow(4.0, k + 1.0);
+
+		for (int i = 0; i < width; i++)
+		{
+			ii = i >> k;
+
+			for (int j = 0; j < height; j++)
+			{
+				ij = j >> k;
+
+				//DXDY
+				dVal = data.ptr<double>(oj + ij)[oi + ii];
+
+				
+				dVal = data.ptr<double>(oj + ij)[ii];
+
+			
+				dVal = data.ptr<double>(ij)[ii];
+
+				coocImage.ptr<double>(j)[i] = getEnergy(dVal, divisor, true);
+
+			}
+		}
+	}
+	return NULL;
+}
 
 /**
 *

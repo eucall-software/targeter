@@ -4,7 +4,6 @@
 #include <QString>
 #include "globals.h"
 #include "MarzController.h"
-#include "NewportController.h"
 #include "StageControlXY.h"
 /*
 #using <System.dll>

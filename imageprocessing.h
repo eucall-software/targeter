@@ -32,17 +32,18 @@ public:
 	int* thresholdOnMinimum(int* hist, int size, bool bAutoThreshold= false, int thresholdValue=15);
 
 	int* fitPolynomial(int* y, int size, int order);
-
+	cv::Mat subtractBackground(cv::Mat inputImage, cv::Mat& backgroundImage);
+	cv::Mat subtractBackgroundChannel(cv::Mat inputImage, cv::Mat& backgroundImage);
 	cv::Mat fitBackgroundImage(cv::Mat im);
 
-	void calibrateCamera(std::vector<targeterImage> imageList, SettingsValues* s);
+	void calibrateCamera(QVector<QExplicitlySharedDataPointer<targeterImage>> imageList, SettingsValues* s);
 	cv::Mat getLines(cv::Mat& src, QColor colour = QColor("red"));
 // member functions
 	cv::Mat CornerDetection(cv::Mat src, int noCorners = 10);
 	cv::Mat CannyEdgeDetection(cv::Mat& im, bool bConverColor = true);
 
 	cv::Mat Threshold(cv::Mat& im, int min, int max, thresholdType::thresholdType type = thresholdType::Range, bool bConvertToColor = true);
-	int* histClusterRGBImage(cv::Mat hueHist, int histSize, int NoCluster = 2);
+	void histClusterRGBImage(cv::Mat hueHist, int* pClusterHist, int histSize, int NoCluster = 2);
 
 	cv::Mat getConnectedComponentImage(cv::Mat& bin, cv::Mat& labels, cv::Mat& stats, cv::Mat& centroids);
 	cv::Mat HistogramClusteringGray(cv::Mat im, int NoClusters=2);

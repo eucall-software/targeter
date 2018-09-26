@@ -60,6 +60,19 @@ void BaslerCamera::detachCameras()
 #endif
 }
 
+void BaslerCamera::loadSettingsOverview()
+{
+	try
+	{
+		CFeaturePersistence::Load("acA2040-25gc_21799625.pfs", &(pOverviewCamera->GetNodeMap()), true);
+	}
+	catch (Pylon::GenericException &e)
+	{
+		// Error handling
+		emit LOGCONSOLE("An exception occurred reading Basler settings file C:\\acA2040 - 25gc_21799625.pfs " + QString::fromUtf8(e.GetDescription()));
+	}
+}
+
 bool BaslerCamera::openCamera(cameraType::camera cameraType)
 {
 	if (cameraType == cameraType::microscope)
@@ -91,15 +104,7 @@ bool BaslerCamera::openCamera(cameraType::camera cameraType)
 			// set heartbeat to 600 seconds. (Note: Only GigE cameras have a "HeartbeatTimeout" node)
 			if (pHeartbeat != nullptr) pHeartbeat->SetValue(1000);
 			*/
-			try
-			{
-				CFeaturePersistence::Load("acA2040-25gc_21799625.pfs", &(pOverviewCamera->GetNodeMap()), true);
-			}
-			catch (Pylon::GenericException &e)
-			{
-				// Error handling
-				emit LOGCONSOLE("An exception occurred reading Basler settings file C:\\acA2040 - 25gc_21799625.pfs " + QString::fromUtf8(e.GetDescription()));
-			}
+			loadSettingsOverview();
 
 			return true;
 		}
@@ -126,6 +131,8 @@ void BaslerCamera::setCameras(QString overviewSerialNumber, QString microscopeSe
 		{
 			IPylonDevice* device = CTlFactory::GetInstance().CreateDevice(CDeviceInfo().SetDeviceClass(BaslerGigEDeviceClass).SetSerialNumber(overviewSerialNumber.toLocal8Bit().data()));
 			pOverviewCamera = std::unique_ptr<Pylon::CInstantCamera>(new Pylon::CInstantCamera(device));
+			
+			openCamera(cameraType::overview);
 		}
 		catch (GenICam::GenericException &e)
 		{
@@ -140,6 +147,8 @@ void BaslerCamera::setCameras(QString overviewSerialNumber, QString microscopeSe
 		{
 			IPylonDevice* device = CTlFactory::GetInstance().CreateDevice(CDeviceInfo().SetDeviceClass(BaslerGigEDeviceClass).SetSerialNumber(microscopeSerialNumber.toLocal8Bit().data()));
 			pMicroscopeCamera = std::unique_ptr<Pylon::CInstantCamera>(new Pylon::CInstantCamera(device));
+
+			openCamera(cameraType::microscope);
 		}
 		catch (GenICam::GenericException &e)
 		{
@@ -147,6 +156,7 @@ void BaslerCamera::setCameras(QString overviewSerialNumber, QString microscopeSe
 			emit LOGCONSOLE("setCameras: An exception occurred creating microscope camera." + QString::fromUtf8(e.GetDescription()));
 		}
 	}
+		
 }
 	
 Pylon::CInstantCamera* BaslerCamera::getCamera(cameraType::camera cameraType)
@@ -208,16 +218,8 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 
 	// otherwise create camera then get it
 	if (pCamera == nullptr)
-	{
-		if (openCamera(cameraType))
-		{
-			if (cameraType == cameraType::microscope)
-				pCamera = pMicroscopeCamera.get();
-			else
-				pCamera = pOverviewCamera.get();
-		}
-	}
-
+		pCamera = getCamera(cameraType);
+	
 	if (pCamera == nullptr)
 	{
 		QString s = CAMERATYPE(cameraType);
@@ -274,8 +276,13 @@ cv::Mat BaslerCamera::grabImage(cameraType::camera cameraType, bool bCalledInLoo
 		emit LOGCONSOLE("grabImage: Camera not configured properly, is it on? maybe the IP address is wrong");
 	}
 
+	/*
 	if (!bCalledInLoop)
+	{
 		pCamera->Close();
+		pCamera = nullptr;
+	}
+	*/
 
 	return cv::Mat();
 #endif

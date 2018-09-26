@@ -15,14 +15,17 @@
 #include "targeterimage.h"
 #include "BaslerCamera.h"
 #include "MultiWatcher.h"
+#include "drawingObjects.h"
+#include "haar.h"
+
 
 //#include <QThread>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
 #include <QFuture>
+#include <QMessageBox>
 
-// end Qconcurent stuff
-#include <QTimer>
+// end QConcurent stuff
 #include <QFile>
 #include <QFileDialog>
 #include <QStringList>
@@ -85,25 +88,29 @@ Q_DECLARE_METATYPE(ACTIONS::action);
 * @return    
 * Access     public 
 */
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : basCamera(new BaslerCamera()) ,
+											m_settings(new SettingsValues()), 
+										//	m_experimentalData(new ExperimentalData()),
+											QMainWindow(parent),
+											ui(new Ui::MainWindow)
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
     //m_CurrentQImage = nullptr;
-    this->m_scale = 1;
-	m_noFocusStackImages = 0;
-	m_zdistance = 1.0;
+
+	m_pStageXY = nullptr;
+	m_pStageZ = nullptr;
+	//m_pFocusCUDA = nullptr;
 
     ui->setupUi(this);
-
+	
 	// to send these data types over signals slots mechanism
 	qRegisterMetaType<cv::Mat>("cv::Mat");
 	qRegisterMetaType<QVector<QString> >("QVector<QString>");
 	qRegisterMetaType<ACTIONS::action>("ACTIONS::action");
 	qRegisterMetaType<FIDUCIAL::position>("FIDUCIAL::position");
+	qRegisterMetaType<QTextCursor>("QTextCursor");
 	
     ui->action_Open->setIcon(this->style()->standardIcon(QStyle::SP_DialogOpenButton));
     ui->action_Save->setIcon(this->style()->standardIcon(QStyle::SP_DialogSaveButton));
@@ -121,10 +128,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ImageThumbList->setPalette(palette);
 
 	qRegisterMetaType<CONSOLECOLOURS::colour>("CONSOLECOLOURS::colour");
-
-	basCamera = make_unique<BaslerCamera>();
-
-	m_settings = make_unique<SettingsValues>();
 
 	basCamera->setCameras(QString("21799625"), QString("21799596"));
 
@@ -170,11 +173,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	m_bContextMenuAction = false;
 
-	m_settingsDlg.create(m_settings.get());
-
-	//QString XMLfilename = m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml";
-
-	//xmlWriter.openXMLFile(XMLfilename, QIODevice::ReadWrite);
+	m_settingsDlg.create(m_settings.data());
 
 	// get settings from serialised file
 	deSerialiseSettings();
@@ -183,6 +182,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->display_image->setImageContainerPointer(&m_ImagesContainer);
 
 	ui->actionReference_fiducial_marks->setEnabled(!m_settings->bLockFiducial);
+
+	ui->display_image->updatePaddTarget(m_settings->bPaddTargetImage, m_settings->numWaveletLevels);
 
 	setUpSlotsSignals();
 
@@ -221,6 +222,26 @@ MainWindow::~MainWindow()
 
 	m_pWorkerThreadZ->quit();
 	m_pWorkerThreadZ->wait();
+	/*
+	m_pWorkerThreadCUDA->quit();
+	m_pWorkerThreadCUDA->wait();
+	*/
+	if (m_pWorkerThreadXY != nullptr)
+		delete m_pWorkerThreadXY;
+	if (m_pWorkerThreadZ != nullptr)
+		delete m_pWorkerThreadZ;
+	/*
+	if (m_pWorkerThreadCUDA != nullptr)
+		delete m_pWorkerThreadCUDA;
+	
+	if (m_pStageXY != nullptr)
+		delete m_pStageXY;
+	if (m_pStageZ != nullptr)
+		delete m_pStageZ;*/
+	/*
+	if (m_pFocusCUDA != nullptr)
+		delete m_pFocusCUDA;
+		*/
 }
 
 void MainWindow::serialiseSettings(bool fromBackup)
@@ -241,15 +262,19 @@ void MainWindow::serialiseSettings(bool fromBackup)
 
 		settingsFile.close();
 	}
-
+	/*
 	if (fromBackup)
 		XMLfilename = "targeter_project_BACKUP.xml";
 	else
 		XMLfilename = m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml";
 
-	XMLWriter projectWriter;
+	XMLWriter projectWriter(this);
 
-	projectWriter.writeProjectInformation(XMLfilename, m_settings->getProjectInfoMap());
+	projectWriter.OpenFile(m_settings->s_project_Directory, XMLfilename);
+
+	// only add to settings node
+	projectWriter.writeProjectSettings(m_settings.data());
+	*/
 }
 
 void MainWindow::saveBackup(bool bLoad)
@@ -282,7 +307,8 @@ void MainWindow::deSerialiseSettings(bool fromBackup)
 	else
 		m_settings->initialize();
 
-	if (fromBackup || m_settings->s_project_FilenamePrefix == "" || m_settings->s_project_Barcode == "")
+	/*
+	if (fromBackup || m_settings->s_project_FilenamePrefix == "" && m_settings->s_project_Barcode == "")
 		XMLfilename = "targeter_project_BACKUP.xml";
 	else
 		XMLfilename = m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml";
@@ -290,37 +316,56 @@ void MainWindow::deSerialiseSettings(bool fromBackup)
 	// now get project properties
 	QMap<QString, QVariant> map;
 
-	XMLWriter projectWriter;
+	XMLWriter projectWriter(this);
 
-	projectWriter.readProjectInformation(XMLfilename, map);
+	projectWriter.OpenFile(m_settings->s_project_Directory, XMLfilename);
 
-	// don't read from storage if settings locked
-	
-	m_settings->setProjectInfoMap(map);
-
+	projectWriter.readProjectInformation(XMLfilename, m_settings.data());
+*/
 	// update dialog
 	m_settingsDlg.initControls();
+	
 }
 
+/*
+emit createTransformationMatrix(QVector3D(3,3,3), QVector3D(6,3,3), QVector3D(3, 6,6));	// test matrix
+*/
 void MainWindow::registerFiducialMarks()
 {
 	if (m_settingsDlg.checkFiducialsOrder(m_settings->fiducial_marks_stage, m_settings->fiducial_marks_image, false))
 	{
 		// create QRect of fiducial positions in image
+
+		QVector3D stageTL = m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope];
+		QVector3D stageTR = m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope];
+		QVector3D stageBL = m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope];
+		QVector3D stageBR = m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomright_microscope];
+		
+		QPointF stageImageTL = m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_microscope];
+		QPointF stageImageTR = m_settings->fiducial_marks_image[FIDUCIAL::position::topright_microscope];
+		QPointF stageImageBL = m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_microscope];
+		QPointF stageImageBR = m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_microscope];
+
+		// adjust stage position by offsetting fiducial position in image in microns
+		m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::topleft_microscope] = HelperFunctions::addPointToVector3D(stageTL, stageImageTL*m_settings->mmPerPixel);
+		m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::topright_microscope] = HelperFunctions::addPointToVector3D(stageTR, stageImageTR*m_settings->mmPerPixel);
+		m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::bottomleft_microscope] = HelperFunctions::addPointToVector3D(stageBL, stageImageBL*m_settings->mmPerPixel);
+		m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::bottomright_microscope] = HelperFunctions::addPointToVector3D(stageBR, stageImageBR*m_settings->mmPerPixel);
+
+		QTransform trans;
 		QPolygonF imageFiducials;
-		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_overview].y()));
-		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::topright_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::topright_overview].y()));
-		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_overview].y()));
-		imageFiducials.append(QPointF(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_overview].x(), m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_overview].y()));
+
+		imageFiducials.append(m_settings->fiducial_marks_image[FIDUCIAL::position::topleft_overview]);
+		imageFiducials.append(m_settings->fiducial_marks_image[FIDUCIAL::position::topright_overview]);
+		imageFiducials.append(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomleft_overview]);
+		imageFiducials.append(m_settings->fiducial_marks_image[FIDUCIAL::position::bottomright_overview]);
 
 		QPolygonF stageFiducials;
 
-		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope].y()));
-		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope].y()));
-		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope].y()));
-		stageFiducials.append(QPointF(m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomright_microscope].x(), m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomright_microscope].y()));
-
-		QTransform trans;
+		stageFiducials.append(stageTL.toPointF());
+		stageFiducials.append(stageTR.toPointF());
+		stageFiducials.append(stageBL.toPointF());
+		stageFiducials.append(stageBR.toPointF());
 
 		// if possible to get transformation matrix
 		if (QTransform::quadToQuad(imageFiducials, stageFiducials, m_settings->m_coordinateTransform))
@@ -329,13 +374,12 @@ void MainWindow::registerFiducialMarks()
 			LOGCONSOLE("unable to calculate coordinate transform", CONSOLECOLOURS::Information);
 
 		// now create Fiducials to Stage transformation matrix
-		/*
-		emit createTransformationMatrix(QVector3D(3,3,3), QVector3D(6,3,3), QVector3D(3, 6,6));	// test matrix
-		*/
-
-		createTransformationMatrix(m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope],
-			m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope],
-			m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope]);
+		
+		// position of fiducial mark in stage coordinates relative to microscope image
+		// create transformation matrix that maps the position of objects in stage/image pixel space to fiducial marks (unit axes) space
+		createTransformationMatrix(m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::topleft_microscope],
+									m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::topright_microscope],
+									m_settings->fiducial_marks_stageAndImage[FIDUCIAL::position::bottomleft_microscope]);
 	}
 	else
 		LOGCONSOLE("please ensure that fiducial marks correctly registered", CONSOLECOLOURS::Information);
@@ -343,9 +387,7 @@ void MainWindow::registerFiducialMarks()
 
 void MainWindow::logFeedback(int score, QString name, QString email, QString institute, QString desc)
 {
-	XMLWriter logWriter;
-
-	connect(&logWriter, SIGNAL(LOGCONSOLE(QString, CONSOLECOLOURS::colour)), this, SLOT(LOGCONSOLE(QString, CONSOLECOLOURS::colour)));
+	XMLWriter logWriter(this);
 
 	logWriter.openXMLFile("feedback.xml", QIODevice::ReadWrite);
 
@@ -354,8 +396,8 @@ void MainWindow::logFeedback(int score, QString name, QString email, QString ins
 
 void MainWindow::setUpSlotsSignals()
 {
-	connect(basCamera.get(), &BaslerCamera::processedImage, this, &MainWindow::updateVideoImage);
-	connect(basCamera.get(), &BaslerCamera::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
+	connect(basCamera.data(), &BaslerCamera::processedImage, this, &MainWindow::updateVideoImage);
+	connect(basCamera.data(), &BaslerCamera::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 
 	connect(ui->ImageThumbList, &QListWidget::customContextMenuRequested, this, &MainWindow::ProvideContextMenu);
 	connect(ui->ImageThumbList, &QListWidget::itemClicked, this, &MainWindow::onThumbImageClick);
@@ -368,6 +410,8 @@ void MainWindow::setUpSlotsSignals()
 	connect(ui->display_image, &PaintQLabel::addFiducialMark, this, &MainWindow::addFiducialMark);
 	connect(ui->display_image, &PaintQLabel::moveObjective, this, &MainWindow::moveObjective);
 
+	connect(ui->display_image, &PaintQLabel::setSamplingDistance, this, &MainWindow::setSamplingDistance);
+
 	// slot to get values back from modeless dialog
 	connect(&m_settingsDlg, &SettingsDialog::sendSettings, this, &MainWindow::receiveSettings);
 	connect(&m_settingsDlg, &SettingsDialog::logFeedback, this, &MainWindow::logFeedback);
@@ -377,8 +421,6 @@ void MainWindow::setUpSlotsSignals()
 
 	// logging from Image Processing functions run in separate thread
 	connect(&m_ImageProcessing, &ImageProcessing::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
-
-	connect(&xmlWriter, &XMLWriter::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 
 	// XY STAGE SLOTS ///////////////////////////////
 	m_pStageXY = new StageControlXY;
@@ -406,6 +448,10 @@ void MainWindow::setUpSlotsSignals()
 	connect(&m_settingsDlg, &SettingsDialog::moveToFiducialFromOverview, this, &MainWindow::moveObjective);
 	connect(&m_settingsDlg, &SettingsDialog::createTransformationMatrix, this, &MainWindow::createTransformationMatrix);
 
+	connect(&m_settingsDlg, &SettingsDialog::setGrid, ui->display_image, &PaintQLabel::setGrid);
+	connect(&m_settingsDlg, &SettingsDialog::updatePaddTarget, ui->display_image, &PaintQLabel::updatePaddTarget);
+	
+	
 	// Marzhauser stage commands called from main program
 	connect(this, &MainWindow::MoveAbsoluteXY, m_pStageXY, &StageControlXY::MoveAbsolute);
 	connect(this, &MainWindow::MoveRelativeXY, m_pStageXY, &StageControlXY::MoveRelative);
@@ -423,6 +469,7 @@ void MainWindow::setUpSlotsSignals()
 #ifdef _HAVE_IMAGEMAGICK
 	connect(&m_imageReadWrite, &ImageReadWrite::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 #endif
+	connect(&m_Timer, &QTimer::timeout, this, &MainWindow::logDot);
 
 	connect(m_pStageXY, &StageControlXY::LOGCONSOLE, this, CONNECTCAST(MainWindow, LOGCONSOLE, (QString, CONSOLECOLOURS::colour)));
 	connect(m_pStageXY, &StageControlXY::ACTIONCOMPLETED, this, &MainWindow::StageMovementCompleted);
@@ -462,6 +509,19 @@ void MainWindow::setUpSlotsSignals()
 	connect(m_pWorkerThreadZ, &QThread::finished, m_pStageZ, &StageControlZ::deleteLater);
 
 	m_pWorkerThreadZ->start();
+
+	// XY STAGE SLOTS ///////////////////////////////
+	/*
+	m_pFocusCUDA = new focusingCUDA;
+	m_pWorkerThreadCUDA = new QThread;
+
+	// make stage control object a worker thread object
+	m_pFocusCUDA->moveToThread(m_pWorkerThreadCUDA);
+	*/
+	//connect(this, &MainWindow::getFocusCUDA, &m_FocusCUDA, &focusingCUDA::getFocusScore);
+	//connect(&m_FocusCUDA, &focusingCUDA::setFOCUS, this, &MainWindow::addFocusValue);
+
+	//m_pWorkerThreadCUDA->start();
 
 	// detect com ports
 	getAvailablePorts();
@@ -603,9 +663,11 @@ void MainWindow::shutDownInstruments()
 	basCamera->detachCameras();
 }
 
-void MainWindow::addTargeterImage(targeterImage tim, QAction* pAction)
+void MainWindow::addTargeterImage(QExplicitlySharedDataPointer<targeterImage> tim, QAction* pAction)
 {
 	addCVImage(tim, nullptr, true);
+
+	LogProcessing(false);	// stop timer from showing dots in console
 
 	if (pAction != nullptr)
 		pAction->setChecked(false);
@@ -613,7 +675,9 @@ void MainWindow::addTargeterImage(targeterImage tim, QAction* pAction)
 
 void MainWindow::addMatImage(cv::Mat img, QString imagename, imageType::imageType type, QAction* pAction)
 {
-	addCVImage(img, QUuid::QUuid(), imagename, true, type, true);
+	addCVImage(img, imagename, true, type, true);
+
+	LogProcessing(false);	// stop timer from showing dots in console
 
 	if (pAction != nullptr)
 		pAction->setChecked(false);
@@ -622,7 +686,7 @@ void MainWindow::addMatImage(cv::Mat img, QString imagename, imageType::imageTyp
 bool MainWindow::updateQTImage(cv::Mat img, QString imagename, QAction* pAction)
 {
 	// update last cv image trigger show image on paint control
-	targeterImage* pTar = m_ImagesContainer.getLastImagePtr();
+	QExplicitlySharedDataPointer<targeterImage> pTar = m_ImagesContainer.getLastImagePtr();
 	
 	if (pTar == nullptr)
 	{
@@ -641,7 +705,6 @@ bool MainWindow::updateQTImage(cv::Mat img, QString imagename, QAction* pAction)
 	else
 		return false;
 }
-
 
 
 /**
@@ -701,7 +764,19 @@ void MainWindow::consoleLog(QString strText, bool newline, bool moveToEnd, CONSO
 	ui->consoleDisplay->setTextCursor(c);
 	*/
 }
+void MainWindow::logDot() {
+	/*
+	//QString msg = "<font color=\"green\"><span>. </span></font>";
+	QTextCursor c = ui->consoleDisplay->textCursor();
+	c.movePosition(QTextCursor::End);
+	ui->consoleDisplay->appendPlainText(". ");
 
+	//QMetaObject::invokeMethod(ui->consoleDisplay, "appendHtml", Qt::QueuedConnection, Q_ARG(QString, msg));
+	*/
+	ui->consoleDisplay->moveCursor(QTextCursor::End);
+	ui->consoleDisplay->textCursor().insertHtml(". ");
+	ui->consoleDisplay->moveCursor(QTextCursor::End);
+};
 
 /**
 *
@@ -904,23 +979,13 @@ void MainWindow::paintEvent(QPaintEvent* event)
 #endif
 }
 
-/*
-void MainWindow::wheelEvent ( QWheelEvent * event )
+QString MainWindow::getSaveFilename(QExplicitlySharedDataPointer<targeterImage> im, int& number, bool bIsCompleteImage)
 {
-    this->m_scale += (event->delta()/120); //or use any other step for zooming
-    std::cout << "exception caught: " << this->m_scale << std::endl;
-
-
-}
-*/
-
-QString MainWindow::getSaveFilename(targeterImage im, int& number, bool bIsCompleteImage)
-{
-	if (im.filepathname == "")									// create filename
-		return m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + QString::number(number++) + "_" + im.getUID().toString() + ".png";
+	if (im->filepathname == "")									// create filename
+		return m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + QString::number(number++) + "_" + im->getUID().toString() + ".png";
 	else
 	{
-		QString filename = QString::fromStdString(im.filepathname);
+		QString filename = QString::fromStdString(im->filepathname);
 
 		QFileInfo check_file(filename);
 
@@ -934,8 +999,6 @@ QString MainWindow::getSaveFilename(targeterImage im, int& number, bool bIsCompl
 
 cv::Mat MainWindow::getDrawnImage(int index)
 {
-
-
 	return cv::Mat();
 }
 
@@ -951,7 +1014,7 @@ cv::Mat MainWindow::getDrawnImage(int index)
 * @return    void
 * Access     public 
 */
-void MainWindow::SaveImage()
+void MainWindow::SaveImageOrXML()
 {
 #ifdef DEBUGPRINT
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
@@ -959,28 +1022,31 @@ void MainWindow::SaveImage()
 
 	std::vector<int> checked = getCheckedImages();
 
+	QFileDialog dialog;
+	QString filename, filepath = "";
+	int ct = 0;
+
 	if (ui->ImageThumbList->count() > 0 && checked.size() > 0)
 	{
-		QFileDialog dialog;
-		QString filename, filepath = "";
+		
 		int fileNumber = 0;	
-		int ct = 0;
-		QVector<drawingShape> shapes;
+		
+		QVector<QSharedPointer<drawingShape>> shapes;
 
 		// get current active image check if it is checked to save then check for sub-images
 		foreach(int i, checked)
 		{
-			targeterImage tim = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(i);
 
 			// does image already have a filename
 			if (i == m_currentImageDisplayedIndex)	// current image
-				shapes = ui->display_image->getTargetImage(false, true, i);
+				shapes = ui->display_image->getImageShapes(false, true, i);
 
 			// if first image
 			
 			filename = getSaveFilename(tim, fileNumber, shapes.length() == 0);
 
-			cv::Mat im = tim.getImage();
+			cv::Mat im = tim->getImage();
 
 			// first file ask user if they want to modify file name (or path)
 			if (ct == 0)
@@ -1010,7 +1076,7 @@ void MainWindow::SaveImage()
 				for (int j = 0; j < shapes.length(); j++)
 				{
 					// or save sub-image
-					QRect r = shapes[j].boundingBox;
+					QRect r = shapes[j]->boundingBox;
 					cv::Rect cvr = cv::Rect(r.x(), r.y(), r.width(), r.height());
 					
 					cv::Mat rectImage = im(cvr);
@@ -1027,8 +1093,8 @@ void MainWindow::SaveImage()
 					else
 					{
 						QString file = filename;
-						QString sRect = "_(" + QString::number(shapes[j].boundingBox.left()) + "," + QString::number(shapes[j].boundingBox.top()) + ":" +
-							QString::number(shapes[j].boundingBox.right()) + "," + QString::number(shapes[j].boundingBox.bottom()) + ")";
+						QString sRect = "_(" + QString::number(shapes[j]->boundingBox.left()) + "," + QString::number(shapes[j]->boundingBox.top()) + ":" +
+							QString::number(shapes[j]->boundingBox.right()) + "," + QString::number(shapes[j]->boundingBox.bottom()) + ")";
 
 						file.insert(file.lastIndexOf('.'), sRect);
 
@@ -1056,13 +1122,125 @@ void MainWindow::SaveImage()
 
 			ct++;
 		}
-
-		if(ct == 0)
-			consoleLog("You must select the image(s) you wish to be written to file", CONSOLECOLOURS::Warning);
-		
 		//cv::imwrite(fileName.toLocal8Bit().data(), *m_pCurrentImage );
 	}
+
+	if (ct == 0)
+	{
+		QString XMLfilename = m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml";
+
+		filename = dialog.getSaveFileName(this, "Save XML project File", XMLfilename, tr("XML project Files [*.xml]"),
+										  0, QFileDialog::DontUseNativeDialog);
+
+		saveXMLProject(filename);
+
+	}
 }
+
+void MainWindow::openXMLProject(QString filename)
+{
+	consoleLog("Saving XML file: " + filename, CONSOLECOLOURS::Information);
+
+	QFile file(filename);
+
+	if (!file.open(QIODevice::ReadOnly) || !m_projectXMLDOM.setContent(&file))
+		consoleLog("Failed to parse XML file: " + filename, CONSOLECOLOURS::Information);
+	else
+		readProjectDataFromDOM();
+}
+
+void MainWindow::saveXMLProject(QString filename)
+{
+	consoleLog("Saving XML file: " + filename, CONSOLECOLOURS::Information);
+
+	writeProjectDataToDOM();	// ensure DOM is up to date
+
+	QFile XMLFile(filename);
+
+	XMLFile.open(QIODevice::WriteOnly);
+
+	QTextStream stream(&XMLFile);
+	stream.seek(0);
+	stream.setCodec("UTF-8");
+	stream.setDevice(&XMLFile);
+	stream << m_projectXMLDOM.toString();
+	stream.flush();
+
+	XMLFile.close();
+}
+
+void MainWindow::readProjectDataFromDOM()
+{
+	// read settings from m_projectXMLDOM
+}
+
+void MainWindow::writeProjectDataToDOM()
+{
+	// write settings to m_projectXMLDOM
+
+	m_projectXMLDOM.clear();
+
+	XMLWriter writer;
+
+	QDomElement containerTag = m_projectXMLDOM.createElement("targeter");
+
+	// now add all settings
+	writer.writeProjectInfoToDOM(m_projectXMLDOM, containerTag, m_settings.data());
+
+	// now add all the targets
+	writer.writeTargetsToDOM(m_projectXMLDOM, containerTag, m_processedImages);
+
+}
+
+/*
+void MainWindow::writeImageTargetstoDOM(QString parentFilename, int imageIndex)
+{
+	QVector<QSharedPointer<drawingShape>> shapes = ui->display_image->getImageShapes(false, true, imageIndex);
+
+	XMLWriter writer(this);
+	writer.OpenFile(m_settings->s_project_Directory, m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml");
+
+	writer.appendImageInformationXML(parentFilename, "auto detection image", shapes, QSharedPointer<StageMovement>(new StageMovement()));
+
+	// write to xml file
+	writer.writePositions(m_processedImages);
+}
+
+
+void MainWindow::writeTargetPositionsToDOM()
+{
+		if(m_experimentalData->m_detected_targets.size()>0)
+		{
+			int ind = getValidImageIndex();
+
+
+			//// no bounding box for clicked points
+			//QVector<QRect> r;
+
+			//XMLWriter targetWriter(this);
+
+			//QString XMLfilename = m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml";
+
+			//targetWriter.openXMLFile(XMLfilename, QIODevice::ReadWrite);
+
+		
+			// check to see if there is any region annotation
+
+			// get targets - should be added to global list of targets in experimental data
+			QVector<QSharedPointer<drawingShape>> shapes = ui->display_image->getImageShapes(false, true, ind);
+
+			XMLWriter writer(this);
+
+			writer.OpenFile(m_settings->s_project_Directory, m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml");
+
+			writer.appendImageInformationXML(tim->getFileName(), "single image", shapes, QSharedPointer<StageMovement>(new StageMovement()));
+
+			// write to xml file
+			writer.writePositions(m_experimentalData->m_detected_targets);
+		}
+}
+*/
+
 
 /**
 *
@@ -1202,7 +1380,6 @@ void MainWindow::showMessage(QString message, QMessageBox::Icon icn)
 */
 void MainWindow::setHistogramImage()
 {
-	
 	// get histogram image
 	cv::Mat hIm = getHistogram();
 
@@ -1242,7 +1419,7 @@ cv::Mat MainWindow::getHistogram()
 
 	if (m_ImagesContainer.getNumImages() > 0)
 	{
-		cv::Mat& im = m_ImagesContainer.getImageAt(getValidImageIndex()).getImage();
+		cv::Mat& im = m_ImagesContainer.getImageAt(getValidImageIndex())->getImage();
 
 		if (!im.empty())
 		{
@@ -1264,6 +1441,44 @@ cv::Mat MainWindow::getHistogram()
 	return hIm;
 }
 
+/**
+*
+*  Given a file name loads and reads image
+*
+* @author    David Watts
+* @since     2017/03/07
+*
+* FullName   MainWindow::addImage
+* Qualifier
+* @param     const QString & fileName
+* @param     imageType type
+* @return    void
+* Access     public
+*/
+void MainWindow::addImage(const QString &fileName, imageType::imageType type)
+{
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+	QString qs = fileName;
+	QString jsonData = "";
+	fh_setCurrentFile(qs);
+
+#ifdef _HAVE_IMAGEMAGICK
+	cv::Mat im = m_imageReadWrite.readImage(qs, jsonData);
+
+	// add json data to targeter image 
+#else
+	cv::Mat im = imread(qs.toLocal8Bit().data());
+#endif
+	if (im.rows <= 0 || im.cols <= 0)
+	{
+		consoleLog("Invalid image - " + qs, CONSOLECOLOURS::colour::Warning);
+		return;
+	}
+
+	addCVImage(im, qs, true, imageType::display, false, fileName, jsonData);
+}
 
 /**
 *
@@ -1281,38 +1496,72 @@ cv::Mat MainWindow::getHistogram()
 * @return    void
 * Access     public 
 */
-void MainWindow::addCVImage(cv::Mat im, QUuid UID, QString imageName, bool bRGBSwap, imageType::imageType type, bool bDisplay, QString fileName)
+QUuid MainWindow::addCVImage(cv::Mat im, QString imageName, bool bRGBSwap, imageType::imageType type, bool bDisplay, QString fileName, QString jsonData)
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	targeterImage tim(&m_ImagesContainer);
+	QVector3D ptFid = getMosaicPositionFromName(imageName, true);
+	QVector3D ptStage = getMosaicPositionFromName(imageName, false);
+
+	QExplicitlySharedDataPointer<targeterImage> tim =  createTargeterImage(im, ptFid, ptStage, imageName, bRGBSwap, type, bDisplay, fileName, jsonData);
+
+	addCVImage(tim, imageName, bRGBSwap);
+
+	return tim->getUID();
+}
+
+void MainWindow::updateVideoImage(cv::Mat im) 
+{
+	// if no targeter image existing, create one to hold the video image
+	if(m_ImagesContainer.getNumImages() > 0 && m_ImagesContainer.getLastImagePtr()->getImageFunction() == imageType::imageType::video)
+		updateQTImage(im);
+	else
+		addCVImage(im, "captured image", true, imageType::video);
+}
+
+QExplicitlySharedDataPointer<targeterImage> MainWindow::createTargeterImage(cv::Mat im, QVector3D fiducials, QVector3D stage, QString imageName,
+																			bool bRGBSwap, imageType::imageType type, bool bDisplay, QString fileName, QString jsonData)
+{
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+	QExplicitlySharedDataPointer<targeterImage> tim = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
 
 	std::string name = imageName.toStdString();
 	std::string fname = fileName.toStdString();
 
-	if(fname == "")
-		fname = (m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + tim.getUID().toString() + ".png").toStdString();
+	QUuid uid = QUuid::createUuid();
+
+	if (fname == "")
+		fname = (m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + uid.toString() + ".png").toStdString();
 
 	if (imageName == "overview camera image")
-		tim.setCameraType(cameraType::overview);
+		tim->setCameraType(cameraType::overview);
 	else if (imageName == "microscope camera image")
-		tim.setCameraType(cameraType::microscope);
+		tim->setCameraType(cameraType::microscope);
 	else
-		tim.setCameraType(cameraType::none);
+		tim->setCameraType(cameraType::none);
 
-	tim.addImageEx(im, UID, type, name, name, fname);
+	if (jsonData != "")
+	{
+		QJsonObject jsonObj = HelperFunctions::ObjectFromString(jsonData);
 
-	QVector3D pt = getMosaicPositionFromName(imageName, true);
-	tim.setImagePosition(pt, true);
+		if (!jsonObj.isEmpty())
+		{
+			// add json settings to targeter Image
+			tim->addJSONDATA(jsonObj);
+		}
+	}
 
-	pt = getMosaicPositionFromName(imageName, false);
-	tim.setImagePosition(pt, false);
+	tim->addImageEx(im, uid, type, name, name, fname);
 
-	addCVImage(tim, imageName, bRGBSwap);
+	tim->setFiducialPosition(fiducials);
+	tim->setStagePosition(stage);
+
+	return tim;
 }
-
 
 /**
 *
@@ -1323,20 +1572,20 @@ void MainWindow::addCVImage(cv::Mat im, QUuid UID, QString imageName, bool bRGBS
 * 
 * FullName   MainWindow::addCVImage
 * Qualifier 
-* @param     targeterImage & tim 
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim 
 * @param     QString imageName 
 * @param     bool bRGBSwap 
 * @return    void
 * Access     public 
 */
-void MainWindow::addCVImage(targeterImage& tim, QString imageName, bool bRGBSwap)
+void MainWindow::addCVImage(QExplicitlySharedDataPointer<targeterImage> tim, QString imageName, bool bRGBSwap)
 {
 #ifdef DEBUGPRINT
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	if (imageName == nullptr)
-		addQImageThumbnail(tim, QString::fromStdString(tim.name));
+	if (imageName == "")
+		addQImageThumbnail(tim, QString::fromStdString(tim->name));
 	else
 		addQImageThumbnail(tim, imageName);
 
@@ -1345,64 +1594,6 @@ void MainWindow::addCVImage(targeterImage& tim, QString imageName, bool bRGBSwap
 	//m_currentImageDisplayedIndex = m_ImagesContainer.getNumImages() - 1;
 
 	DisplayImage();
-}
-
-QJsonObject ObjectFromString(const QString& in)
-{
-	QJsonObject obj;
-
-	QJsonDocument doc = QJsonDocument::fromJson(in.toUtf8());
-
-	// check validity of the document
-	if (!doc.isNull())
-	{
-		if (doc.isObject())
-		{
-			obj = doc.object();
-		}
-	}
-
-	return obj;
-}
-
-/**
-*
-*  Given a file name loads and reads image
-*
-* @author    David Watts
-* @since     2017/03/07
-* 
-* FullName   MainWindow::addImage
-* Qualifier 
-* @param     const QString & fileName 
-* @param     imageType type 
-* @return    void
-* Access     public 
-*/
-void MainWindow::addImage(const QString &fileName, imageType::imageType type)
-{
-#ifdef DEBUGPRINT
-    qDebug() << "Function Name: " << Q_FUNC_INFO;
-#endif
-    QString qs = fileName;
- 
-	fh_setCurrentFile(qs);
-#ifdef _HAVE_IMAGEMAGICK
-	QString jsonData;
-	cv::Mat im =  m_imageReadWrite.readImage(qs, jsonData); 
-
-	// add json data to targeter image 
-	QJsonObject obj = ObjectFromString(jsonData);
-
-	if(!obj.isEmpty())
-	{
-
-	}
-
-#else
-	cv::Mat im = imread(qs.toLocal8Bit().data());
-#endif
-	addCVImage(im, QUuid::QUuid(), qs, true, imageType::display, false, fileName);
 }
 
 /**
@@ -1486,11 +1677,11 @@ void MainWindow::updateThumbs()
 
 	for (int row = 0; row < ui->ImageThumbList->count(); row++)
 	{
-		targeterImage& t = m_ImagesContainer.getImageAt(row);
+		QExplicitlySharedDataPointer<targeterImage> t = m_ImagesContainer.getImageAt(row);
 
-		imageType::imageType type = t.getImageFunction();
+		imageType::imageType type = t->getImageFunction();
 
-		s = QString::fromStdString(t.getName());
+		s = QString::fromStdString(t->getName());
 
 		if (type == imageType::target)
 			s = "target image";
@@ -1518,14 +1709,14 @@ void MainWindow::updateThumbs()
 * @return    void
 * Access     public
 */
-void MainWindow::addQImageThumbnail(targeterImage& tim, QString imageName)
+void MainWindow::addQImageThumbnail(QExplicitlySharedDataPointer<targeterImage> tim, QString imageName)
 {
 #ifdef DEBUGPRINT
 	qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	QImage& qim = tim.getQTImage();
-	imageType::imageType type = tim.getImageFunction();
+	QImage& qim = tim->getQTImage();
+	imageType::imageType type = tim->getImageFunction();
 
 	QImage iconImage = copyImageToSquareRegion(qim, ui->display_image->palette().color(QWidget::backgroundRole()));
 
@@ -1533,7 +1724,7 @@ void MainWindow::addQImageThumbnail(targeterImage& tim, QString imageName)
 
 	pItem->setData(Qt::UserRole, "thumb" + QString::number(ui->ImageThumbList->count()));
 
-	QString strTooltip = tim.toString();
+	QString strTooltip = tim->toString();
 
 	pItem->setToolTip(strTooltip);
 
@@ -1590,7 +1781,7 @@ ui->ImageThumbList->addItem(pItem);
 * @return    void
 * Access     public 
 */
-void MainWindow::OpenImage()
+void MainWindow::OpenImageOrXML()
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
@@ -1625,7 +1816,12 @@ void MainWindow::OpenImage()
         QString qs = i.next();
 
 		if (qs.contains(".xml"))
-			xmlWriter.readXMLFile(qs, m_settings.get(), m_experimentalData.get());
+		{
+			openXMLProject(qs);
+
+			// read target information from file
+			//xmlWriter.readXMLFile(qs, m_settings.data(), m_experimentalData.get());
+		}
 		else
 			addImage(qs);	
     }
@@ -1808,7 +2004,7 @@ int MainWindow::getValidImageIndex()
 {
 	if (m_currentImageDisplayedIndex >= 0 && m_ImagesContainer.getNumImages() > 0)
 	{
-		if (m_currentImageDisplayedIndex <m_ImagesContainer.getNumImages() && !m_ImagesContainer.getImageAt(m_currentImageDisplayedIndex).getQTImage().isNull())
+		if (m_currentImageDisplayedIndex <m_ImagesContainer.getNumImages() && !m_ImagesContainer.getImageAt(m_currentImageDisplayedIndex)->getQTImage().isNull())
 		{
 			return m_currentImageDisplayedIndex;
 		}
@@ -1816,7 +2012,7 @@ int MainWindow::getValidImageIndex()
 		{
 			for (int i = m_ImagesContainer.getNumImages() - 1; i >= 0; i--)
 			{
-				if (!m_ImagesContainer.getImageAt(i).getQTImage().isNull())
+				if (!m_ImagesContainer.getImageAt(i)->getQTImage().isNull())
 				{
 					m_currentImageDisplayedIndex = i;
 					return m_currentImageDisplayedIndex;
@@ -1886,7 +2082,7 @@ void MainWindow::refreshDisplayImages()
 */
 void MainWindow::on_action_Open_triggered()
 {
-    OpenImage();
+    OpenImageOrXML();
 }
 
 
@@ -1917,7 +2113,9 @@ void MainWindow::on_actionProcessFocusStack_triggered()
 
 		// get all checked images
 
-        cv::Mat pMat = FocusStack::processImageStack4(m_ImagesContainer.getImages(check), check, this);
+		QVector<QExplicitlySharedDataPointer<targeterImage>> images = m_ImagesContainer.getImages(check);
+
+        cv::Mat pMat = FocusStack::processImageStack4(images, check, this);
 
 		addCVImage(pMat, "focus image");
 		
@@ -1935,11 +2133,11 @@ void MainWindow::on_actionEnergy_image_triggered()
 		std::vector<int> check = getCheckedImages();
 
 		// get all checked images
-		std::vector<targeterImage> images = m_ImagesContainer.getImages(check);
+		QVector<QExplicitlySharedDataPointer<targeterImage>> images = m_ImagesContainer.getImages(check);
 
 		foreach(int item, check)
 		{
-			cv::Mat m = images[item].getImage();
+			cv::Mat m = images[item]->getImage();
 
 			cv::Mat pMat = FocusStack::createLaplacianEnergyImage(m, 3, true, false);
 
@@ -1966,7 +2164,7 @@ void MainWindow::on_actionEnergy_image_triggered()
 */
 void MainWindow::on_action_Save_triggered()
 {
-    SaveImage();
+   SaveImageOrXML();
 }
 
 /**
@@ -2022,7 +2220,7 @@ void MainWindow::on_actionDeselect_All_triggered()
 * @return    void
 * Access     private 
 */
-void MainWindow::setTargetArea(drawingShape shape)
+void MainWindow::setTargetArea(QSharedPointer<drawingShape> shape)
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
@@ -2032,7 +2230,7 @@ void MainWindow::setTargetArea(drawingShape shape)
 
 	if(m_currentImageDisplayedIndex >= 0)
 	{
-		createMaskImage(m_ImagesContainer.getImageAtPtr(m_currentImageDisplayedIndex), shape);
+		createMaskImage(m_ImagesContainer.getImageAt(m_currentImageDisplayedIndex), shape);
 	}
 	else
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
@@ -2043,7 +2241,39 @@ void MainWindow::StatusBarMessage(QString msg)
 	this->statusBar()->showMessage(msg);
 }
 
+void MainWindow::getHistograms(cv::Mat orginal_image, cv::Mat& intensityHist, cv::Mat& hueHist, bool bProcessGrayscale, bool accumulate)
+{
+	cv::Mat hsvImage, image1_gray;
+	int histSize = 256;
+	float range[] = { 0, histSize };
+	const float* histRange = { range };
+	bool uniform = true;
+	
+	int i, w1 = orginal_image.cols, h1 = orginal_image.rows;
 
+	if (orginal_image.channels()==1)
+	{
+		cv::calcHist(&orginal_image, 1, 0, Mat(), intensityHist, 1, &histSize, &histRange, uniform, accumulate);
+	}
+	else if (HelperFunctions::isGrayImage(orginal_image) || bProcessGrayscale)
+	{
+		cv::cvtColor(orginal_image, image1_gray, CV_BGR2GRAY);
+		cv::calcHist(&image1_gray, 1, 0, Mat(), intensityHist, 1, &histSize, &histRange, uniform, accumulate);
+	}
+	else
+	{
+		cv::cvtColor(orginal_image, hsvImage, CV_BGR2HLS);
+
+		std::vector<cv::Mat> hsv_planes;
+		split(hsvImage, hsv_planes);
+
+		cv::calcHist(&hsv_planes[1], 1, 0, Mat(), intensityHist, 1, &histSize, &histRange, uniform, accumulate);
+		histSize = 180;
+		range[1] = histSize;
+		const float* histRangeHue = { range };
+		cv::calcHist(&hsv_planes[0], 1, 0, Mat(), hueHist, 1, &histSize, &histRangeHue, uniform, accumulate);
+	}
+}
 
 /**
 *
@@ -2056,37 +2286,59 @@ void MainWindow::StatusBarMessage(QString msg)
 * Qualifier 
 * @param     Mat im 
 * @param     drawingShape shape 
-* @param     targeterImage & tim 
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim 
 * @return    void
 * Access     public 
 */
-void MainWindow::createMaskImage(targeterImage* orginal_image, drawingShape shape)
+void MainWindow::createMaskImage(QExplicitlySharedDataPointer<targeterImage> orginal_image, QSharedPointer<drawingShape> shape)
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
-   
 	cv::Mat mask, dst;
 	cv::Mat& im = orginal_image->getImage();
 
 	orginal_image->setImageType(imageType::test);
 	orginal_image->setName(orginal_image->getDefaultName());
+
+	QRect intersected = shape->boundingBox.intersected(QRect(QPoint(0, 0), QSize(im.rows, im.cols)));
 	
-	int x = MAX(0, MIN(shape.boundingBox.left(), im.cols));
-	int y = MAX(0, MIN(shape.boundingBox.top(), im.rows));
-	int maxx = MAX(0, MIN(shape.boundingBox.right(), im.cols));
-	int maxy = MAX(0, MIN(shape.boundingBox.bottom(), im.rows));
+	int w = shape->boundingBox.width();
+	int h = shape->boundingBox.height();
 
-	int w = maxx - x;
-	int h = maxy - y;
+	cv::Rect roi(shape->boundingBox.left(), shape->boundingBox.top(), w, h);
 
-	cv::Rect roi(x, y, w, h);
-	dst = im(roi);
+	// check for valid shape
+	if(roi.x<0 || roi.y<0 || roi.width==0 || roi.height ==0 || roi.width > im.cols || roi.height > im.rows)
+		return;
+
+	if(m_settings->bCorrectBackGround)
+	{
+		cv::Mat out, im2;
+		im2 = m_ImageProcessing.subtractBackground(im, out);
+
+		// get HLS histograms of parent image save them in target object
+		// get histogram from parent image	
+		// save to settings for finding targets
+		getHistograms(im2, m_settings->coocMatrix->intensityHist, m_settings->coocMatrix->hueHist, false);
+	}
+	else
+	{	
+		// get HLS histograms of parent image save them in target object
+		// get histogram from parent image	
+		// save to settings for finding targets
+		getHistograms(im, m_settings->coocMatrix->intensityHist, m_settings->coocMatrix->hueHist, false);
+
+	}
+
+
+	// copy data to new image - deep copy!
+	im(roi).copyTo(dst);
 
     cv::Mat out = cv::Mat(roi.height, roi.width, im.type(), Scalar(0,0,0));
 
     // get mask image
-    if(shape.type == drawingMode::poly)
+    if(shape->type == drawingMode::poly)
     {
         // convert polygon to opencv polygon
         mask = cv::Mat(roi.height, roi.width, im.type(), Scalar(0, 0, 0));
@@ -2094,12 +2346,12 @@ void MainWindow::createMaskImage(targeterImage* orginal_image, drawingShape shap
         vector <cv::Point> triOut;
 
         // since poly must be in mask image
-        foreach(QPoint p, shape.polygon)    
-            triOut.push_back(cv::Point(p.x() - shape.boundingBox.left(), p.y() - shape.boundingBox.top()));
+        foreach(QPoint p, shape->polygon)    
+            triOut.push_back(cv::Point(p.x() - shape->boundingBox.left(), p.y() - shape->boundingBox.top()));
 
         cv::fillConvexPoly(mask, triOut, Scalar( 255, 255, 255));
     }
-    else if(shape.type == drawingMode::circle)
+    else if(shape->type == drawingMode::circle)
     {
         mask = cv::Mat(roi.height, roi.width, im.type(), Scalar(0, 0, 0));
         cv::ellipse(mask, cv::Point(mask.cols>>1, mask.rows>>1), cv::Size(mask.cols>>1, mask.rows>>1), 0, 0, 360, Scalar( 255, 255, 255 ), -1);
@@ -2112,23 +2364,19 @@ void MainWindow::createMaskImage(targeterImage* orginal_image, drawingShape shap
 
     //dst.copyTo(out, mask);
 
-	targeterImage target_image(&m_ImagesContainer);
+	QExplicitlySharedDataPointer<targeterImage> target_image = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
 
-	target_image.setImageType(imageType::target);
+	/// end get histogram
 
-	target_image.addImage(dst);
+	target_image->setImageType(imageType::target);
 
-	target_image.setImagePosition(roi);
+	target_image->addImage(dst);
 
-	target_image.addFriendID(orginal_image->getUID());
+	target_image->setImagePosition(roi);
 
-	QUuid target_image_ID = target_image.getUID();
+	QExplicitlySharedDataPointer<targeterImage> mask_image = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
 
-	orginal_image->addFriendID(target_image_ID);
-	
-	targeterImage mask_image(&m_ImagesContainer);
-
-	if (shape.type == drawingMode::circle || shape.type == drawingMode::poly)
+	if (shape->type == drawingMode::circle || shape->type == drawingMode::poly)
 	{
 		int* pImage = new int[w*h];
 
@@ -2136,31 +2384,22 @@ void MainWindow::createMaskImage(targeterImage* orginal_image, drawingShape shap
 			for (int j = 0; j < h; j++)
 				pImage[i + j*w] = (int)(mask.at<Vec3b>(j, i)[0] > 0 ? 1 : 0);
 
-		target_image.set1DImage(pImage, imageType::mask);
-		target_image.setMaskType(shape.type);
+		target_image->set1DImage(pImage, imageType::mask);
+		target_image->setMaskType(shape->type);
 
 		// set 1D image for mask image as well
 		int* pImageMask = new int[w*h];
 		memcpy(pImageMask, pImage, w*h*sizeof(int));
 
-		mask_image.set1DImage(pImageMask, imageType::mask);
-		mask_image.setMaskType(shape.type);
+		mask_image->set1DImage(pImageMask, imageType::mask);
+		mask_image->setMaskType(shape->type);
 	}
 
-	orginal_image->addFriendID(mask_image.getUID());
+	mask_image->setImageType(imageType::mask);
 
-	QUuid mask_image_ID = mask_image.getUID();
-	orginal_image->addFriendID(mask_image_ID);		
-
-	mask_image.setImageType(imageType::mask);
-
-	mask_image.addFriendID(orginal_image->getUID());
-
-	mask_image.addImage(mask);
-	mask_image.setName("target mask image");
-	mask_image.setImagePosition(roi);
-
-	target_image.addFriendID(mask_image.getUID());
+	mask_image->addImage(mask);
+	mask_image->setName("target mask image");
+	mask_image->setImagePosition(roi);
 
 	addCVImage(mask_image, "target mask image", true);
 	addCVImage(target_image, "target image", true);
@@ -2277,13 +2516,13 @@ void MainWindow::on_actionCreate_Mask_Image_triggered()
 	{
 		foreach(int i, checked)
 		{
-			targeterImage tim = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(i);
 
-			if (tim.imageFunction != imageType::mask)
+			if (tim->imageFunction != imageType::mask)
 			{
 				cv::Mat binImage = ui->display_image->getBinaryImageFromShapes(i);
 
-				addCVImage(binImage, tim.getUID(), "binary mask image", true, imageType::mask);
+				addCVImage(binImage, "binary mask image", true, imageType::mask);
 			}
 		}
 	}
@@ -2355,6 +2594,54 @@ void MainWindow::on_actionDraw_Rectangular_Region_triggered()
 	unsetDrawingButtons(ui->actionDraw_Rectangular_Region);
 }
 
+void MainWindow::on_actionAnnotate_Shape_triggered()
+{
+	int ind = getValidImageIndex();
+	bool showImage = true;
+	bool bFoundRect = false;
+
+	if (ind >= 0)
+	{
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
+
+		// only used temp cannot store anything
+	//	QVector<drawingShape> shapes = ui->display_image->getTargetImage(false, true, ind);
+
+		bool bSelectedOnly = false;
+
+		QVector<QSharedPointer<drawingObject>> drawingObjectList = tim->getDrawingObjects();
+
+		// if any of the shapes are selected only process those
+		for (int i = 0; i < drawingObjectList.length(); i++)
+		{
+			QSharedPointer<drawingObject> pObj = drawingObjectList.at(i);
+
+			if (pObj->m_bSelected)
+				bSelectedOnly = true;
+		}
+
+		for (int i = 0; i < drawingObjectList.length(); i++)
+		{
+			QSharedPointer<drawingObject> pObj = drawingObjectList.at(i);
+		
+			// if no shapes are selected then process all otherwise just the selected ones
+			if (pObj->m_type == drawingMode::rect && (!bSelectedOnly || (bSelectedOnly && pObj->m_bSelected)))
+			{
+				// 
+				ui->display_image->highLightShape(pObj, true);
+
+				m_shapeAnnotationDlg.setValues(pObj->ID, pObj->name, pObj->desc, pObj->regionType);
+
+				if (m_shapeAnnotationDlg.exec())
+					m_shapeAnnotationDlg.GetValues(pObj->ID, pObj->name, pObj->desc, pObj->regionType);
+				
+				ui->display_image->highLightShape(pObj, false);
+			}
+		}
+	}
+}
+
 /**
 *
 *  slot for handling panning image
@@ -2385,7 +2672,6 @@ void MainWindow::receiveSettings()
 	if (m_settings->activeCamera != cameraType::none)
 		basCamera->setCameras(QString::number(m_settings->overviewCameraSN), QString::number(m_settings->microscopeCameraSN));
 
-	ui->display_image->setGrid(m_settings->displayGrid, m_settings->gridOffsetX, m_settings->gridOffsetY, m_settings->gridSpacingX, m_settings->gridSpacingY, m_settings->objectColours[drawingItems::grid]);
 }
 
 /**
@@ -2464,10 +2750,10 @@ void MainWindow::on_actionGet_Target_image_region_triggered()
 
 	if (ind >= 0)
 	{
-		if (ui->display_image->m_drawingObjects.size() == 0)
+		if (m_ImagesContainer.getImageAt(ind)->drawingObjects.size() == 0)
 			consoleLog("You have to draw on the image (rectangle, circle, polygon) before producing a region of interest image", CONSOLECOLOURS::colour::Warning);
 		else
-			ui->display_image->getTargetImage();
+			ui->display_image->getImageShapes(true);
 	}
 	else
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
@@ -2489,10 +2775,10 @@ void MainWindow::on_actionGet_Target_image_region_triggered()
 */
 void MainWindow::updateImageType(int ind, imageType::imageType type)
 {
-	if (m_ImagesContainer.getImageAt(ind).getImageFunction() == type)
-		m_ImagesContainer.getImageAt(ind).setImageType(imageType::display);
+	if (m_ImagesContainer.getImageAt(ind)->getImageFunction() == type)
+		m_ImagesContainer.getImageAt(ind)->setImageType(imageType::display);
 	else
-		m_ImagesContainer.getImageAt(ind).setImageType(type);
+		m_ImagesContainer.getImageAt(ind)->setImageType(type);
 }
 
 
@@ -2561,13 +2847,10 @@ void MainWindow::deleteImage(int index, bool bDisplay)
 		delete ui->ImageThumbList->item(index);
 
 		// but now drawing objects point to wrong image
+	}
 
-	}
-	else
-	{
-		if (getValidImageIndex() < 0)
-			ui->display_image->setImageIndex(m_ImagesContainer.getNumImages() - 1);
-	}
+	if (getValidImageIndex() < 0)
+		ui->display_image->setImageIndex(m_ImagesContainer.getNumImages() - 1);
 	
 	if (bDisplay)
 		DisplayImage();
@@ -2655,12 +2938,11 @@ void MainWindow::on_actionClickTarget_triggered(bool checked)
 	unsetDrawingButtons(ui->actionClickTarget);
 }
 
-
 void MainWindow::on_actionGrid_Spacing_triggered(bool checked)
 {
 	// change state to click target state
 	if (ui->actionGrid_Spacing->isChecked())
-		ui->display_image->setDrawingMode(drawingMode::cross);
+		ui->display_image->setDrawingMode(drawingMode::sampleSpacing);
 	else
 		ui->display_image->setDrawingMode(drawingMode::none);
 
@@ -2690,7 +2972,6 @@ void MainWindow::on_actionClick_Center_Objective_triggered(bool checked)
 }
 
 
-
 /**
 *
 *  slot to grab image using Basler pylon supported camera
@@ -2718,7 +2999,7 @@ void MainWindow::on_actionGrab_Image_From_Camera_triggered()
 
 			if (!image.empty())
 			{
-				addCVImage(image, id, "overview camera image");
+				addCVImage(image, "overview camera image");
 
 				QString filename = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_" + id.toString() + ".png";
 #ifdef _HAVE_IMAGEMAGICK
@@ -2740,7 +3021,7 @@ void MainWindow::on_actionGrab_Image_From_Camera_triggered()
 			cv::Mat image = basCamera->grabImage(cameraType::microscope);
 
 			if(!image.empty())
-				addCVImage(image, QUuid::createUuid(), "microscope camera image");
+				addCVImage(image, "microscope camera image");
 		}
 		else
 			DBOUT("problem connecting to microscope camera");
@@ -2816,7 +3097,7 @@ void MainWindow::on_actionMergeImages_triggered()
 	// find which of the images is mask image
 	for (int i = 0; i < checked.size(); i++)
 	{
-		if (m_ImagesContainer.getImageAt(checked[i]).getImageFunction() == imageType::mask)
+		if (m_ImagesContainer.getImageAt(checked[i])->getImageFunction() == imageType::mask)
 		{
 			maskIndex = checked[i];
 			break;
@@ -2825,7 +3106,7 @@ void MainWindow::on_actionMergeImages_triggered()
 
 	if (maskIndex >= 0)
 	{
-		cv::Mat& mask = m_ImagesContainer.getImageAt(maskIndex).getImage();
+		cv::Mat& mask = m_ImagesContainer.getImageAt(maskIndex)->getImage();
 
 		if (ui->ImageThumbList->count() > 0 && checked.size() > 1)
 		{
@@ -2835,20 +3116,20 @@ void MainWindow::on_actionMergeImages_triggered()
 				if (checked[i] == maskIndex)
 					continue;
 
-				int c = m_ImagesContainer.getImageAt(checked[i]).Cols();
-				int r = m_ImagesContainer.getImageAt(checked[i]).Rows();
+				int c = m_ImagesContainer.getImageAt(checked[i])->Cols();
+				int r = m_ImagesContainer.getImageAt(checked[i])->Rows();
 
 				if (mask.rows != r || mask.cols != c)
 				{
 					// enlarge mask image by copying to larger image
 					cv::Mat newMask;
 
-					cv::resize(mask, newMask, m_ImagesContainer.getImageAt(checked[i]).Size());
+					cv::resize(mask, newMask, m_ImagesContainer.getImageAt(checked[i])->Size());
 
-					m_ImagesContainer.getImageAt(checked[i]).getImage().copyTo(dst, newMask);
+					m_ImagesContainer.getImageAt(checked[i])->getImage().copyTo(dst, newMask);
 				}
 				else
-					m_ImagesContainer.getImageAt(checked[i]).getImage().copyTo(dst, mask);
+					m_ImagesContainer.getImageAt(checked[i])->getImage().copyTo(dst, mask);
 
 				bOK = true;
 			}
@@ -2876,7 +3157,7 @@ void MainWindow::on_actionMergeImages_triggered()
 */
 void MainWindow::on_actionSettings_triggered()
 {
-	m_settingsDlg.create(m_settings.get());
+	m_settingsDlg.create(m_settings.data());
 
 	setHistogramImage();
 
@@ -2885,7 +3166,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_action_New_triggered()
 {
-	m_settingsDlg.create(m_settings.get());
+	m_settingsDlg.create(m_settings.data());
 
 	setHistogramImage();
 
@@ -2911,7 +3192,7 @@ void MainWindow::on_actionThresholdImage_triggered()
 
 	if (ind >= 0)
 	{
-		cv::Mat& im = m_ImagesContainer.getImageAt(ind).getImage();
+		cv::Mat& im = m_ImagesContainer.getImageAt(ind)->getImage();
 		cv::Mat out;
 
 		if (m_settings->ThresholdType == thresholdType::cluster2 || m_settings->ThresholdType == thresholdType::posterize)
@@ -2919,7 +3200,7 @@ void MainWindow::on_actionThresholdImage_triggered()
 		else
 			out = m_ImageProcessing.Threshold(im, m_settings->threshold_min, m_settings->threshold_max, m_settings->ThresholdType);
 
-		addCVImage(out, m_ImagesContainer.getImageAt(ind).getUID(), "threshold image", true, imageType::mask, true);
+		addCVImage(out, "threshold image", true, imageType::mask, true);
 	}
 	else
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
@@ -2931,7 +3212,7 @@ void MainWindow::on_actionRemoveBlackPixels_triggered()
 
 	if (ind >= 0)
 	{
-		cv::Mat& im = m_ImagesContainer.getImageAt(ind).getImage();
+		cv::Mat& im = m_ImagesContainer.getImageAt(ind)->getImage();
 
 		Mat bin, pbin = cv::Mat(im.rows, im.cols, CV_8UC1);
 	
@@ -2939,7 +3220,7 @@ void MainWindow::on_actionRemoveBlackPixels_triggered()
 
 		FocusStack::FillMissingPixels<uchar>(bin, pbin, false);
 
-		addCVImage(pbin, m_ImagesContainer.getImageAt(ind).getUID(), "remove black pixels image", true, imageType::display, true);
+		addCVImage(pbin, "remove black pixels image", true, imageType::display, true);
 	}
 	else
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
@@ -2951,21 +3232,13 @@ void MainWindow::on_actionBackground_fit_triggered()
 
 	if (ind >= 0)
 	{
-		cv::Mat im = m_ImagesContainer.getImageAt(ind).getImage();
+		cv::Mat im = m_ImagesContainer.getImageAt(ind)->getImage();
 
-		cv::Mat gray;
+		cv::Mat bim, dst;
+		dst = m_ImageProcessing.subtractBackground(im, bim);
 
-		if (im.channels() != 1)
-			cvtColor(im, gray, CV_BGR2GRAY);
-		else
-			gray = im;
-
-		cv::Mat bim = m_ImageProcessing.fitBackgroundImage(gray);
-
-		cv::Mat corr = gray - bim;
-
-		addCVImage(bim, m_ImagesContainer.getImageAt(ind).getUID(), "background image", true, imageType::background, true);
-		addCVImage(corr, m_ImagesContainer.getImageAt(ind).getUID(), "corrected image", true, imageType::display, true);
+		addCVImage(bim, "background image", true, imageType::background, true);
+		addCVImage(dst, "corrected image", true, imageType::display, true);
 	}
 	else
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
@@ -2982,7 +3255,7 @@ void MainWindow::entropyFilterImage()
 
 	if (ind >= 0)
 	{
-		cv::Mat& im = m_ImagesContainer.getImageAt(ind).getImage();
+		cv::Mat& im = m_ImagesContainer.getImageAt(ind)->getImage();
 		Mat bin, pbin;
 		cv::cvtColor(im, bin, cv::COLOR_BGR2GRAY, 1);
 
@@ -3024,13 +3297,11 @@ void MainWindow::on_actionConnected_Components_triggered()
 
 	if (ind >= 0)
 	{
-		targeterImage& tim = m_ImagesContainer.getImageAt(ind);
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
 
-		if (tim.getImageFunction() == imageType::mask)
+		if (tim->getImageFunction() == imageType::mask)
 		{
-			targeterImage ccim = getConnectedComponents(tim.getImage());
-
-			ccim.addFriendID(tim.getUID());
+			QExplicitlySharedDataPointer<targeterImage> ccim = getConnectedComponents(tim->getImage());
 
 			addCVImage(ccim, "connected components image", true);
 		}
@@ -3053,10 +3324,10 @@ void MainWindow::on_actionConnected_Components_triggered()
 * FullName   MainWindow::getConnectedComponents
 * Qualifier 
 * @param     cv::Mat & im 
-* @return    targeterImage&
+* @return    targeterImage
 * Access     public 
 */
-targeterImage MainWindow::getConnectedComponents(cv::Mat& im)
+QExplicitlySharedDataPointer<targeterImage> MainWindow::getConnectedComponents(cv::Mat& im)
 {
 	cv::Mat bin, out, stats, centroids;
 	cv::Mat labels;
@@ -3067,22 +3338,22 @@ targeterImage MainWindow::getConnectedComponents(cv::Mat& im)
 		bin = im;
 
 	// create new ccimage
-	targeterImage ccim(&m_ImagesContainer);
+	QExplicitlySharedDataPointer<targeterImage> ccim = QExplicitlySharedDataPointer<targeterImage> (new targeterImage(&m_ImagesContainer));
 
 	out = m_ImageProcessing.getConnectedComponentImage(bin, labels, stats, centroids);
 
-	ccim.setLabelsImage(labels);
+	ccim->setLabelsImage(labels);
 
-	ccim.setCentroidsImage(centroids);
-	ccim.setStatsImage(stats);
-	ccim.setLabelsImage(labels);
+	ccim->setCentroidsImage(centroids);
+	ccim->setStatsImage(stats);
+	ccim->setLabelsImage(labels);
 
-	ccim.setImageType(imageType::cclabels);
-	ccim.setName("labeled image");
+	ccim->setImageType(imageType::cclabels);
+	ccim->setName("labeled image");
 
 	//cv::cvtColor(labels, bin, cv::COLOR_GRAY2BGR, 3);
 
-	ccim.addImage(out);
+	ccim->addImage(out);
 
 	return ccim;
 }
@@ -3135,6 +3406,7 @@ void MainWindow::on_actionSet_as_Target_triggered()
 */
 void MainWindow::on_actionScoreImage_triggered()
 {
+	LogProcessing(true);
 	QFuture<void> t1 = QtConcurrent::run(this, &MainWindow::getScoreImage);
 }
 
@@ -3142,9 +3414,9 @@ void MainWindow::getScoreImage()
 {
 	int imageIndex = -1;
 
-	targeterImage tim = createScoreImage(imageIndex);
+	QExplicitlySharedDataPointer<targeterImage> tim = createScoreImage(imageIndex);
 
-	if (tim.Rows() > 0 && tim.Cols()>0)
+	if (tim->Rows() > 0 && tim->Cols()>0)
 	{
 		QString s("score image ");
 
@@ -3153,14 +3425,117 @@ void MainWindow::getScoreImage()
 		QMetaObject::invokeMethod(this, // obj
 			"addTargeterImage", // member
 			Qt::BlockingQueuedConnection,
-			Q_ARG(targeterImage, tim),
+			Q_ARG(QExplicitlySharedDataPointer<targeterImage>, tim),
 			Q_ARG(QAction*, ui->actionDetect_lines)); // val1
 	}
 	else
 	{
 		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
 	}
+}
 
+void MainWindow::LogProcessing(bool bStart)
+{
+	if (bStart)
+	{
+		ui->consoleDisplay->textCursor().insertHtml("<br>");
+		m_Timer.start(1000);
+	}
+	else
+	{
+		m_Timer.stop();
+		ui->consoleDisplay->textCursor().insertHtml("<br>");
+	}
+}
+
+QVector<QExplicitlySharedDataPointer<targeterImage>> MainWindow::findTargetImages(int& imageIndex)
+{
+	QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages;
+	bool bFoundTest = false;
+
+	// get vector list of training images from targeterImages
+	for (int i = m_ImagesContainer.getNumImages() - 1; i >= 0; i--)
+	{
+		QExplicitlySharedDataPointer<targeterImage> m = m_ImagesContainer.getImageAt(i);
+
+		if (m->getImageFunction() == imageType::target)
+		{
+			targetImages.push_back(m);
+		}
+		else if (!bFoundTest && m->getImageFunction() == imageType::test)
+		{
+			bFoundTest = true;
+			imageIndex = i;
+		}
+	}
+
+	return targetImages;
+}
+
+QExplicitlySharedDataPointer<targeterImage> MainWindow::createScoreImage(QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages, 
+																		 QExplicitlySharedDataPointer<targeterImage> testImage)
+{
+	QExplicitlySharedDataPointer<targeterImage> tim = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
+	cv::Mat scoreImage;
+
+	if (targetImages.size() > 0 && (testImage != nullptr && !testImage->isNULL()))
+	{
+		tim->setImageType(imageType::score);
+
+		if (m_settings->algorithmType<0 || m_settings->algorithmType>algoType::LASTALGO)
+			m_settings->algorithmType = algoType::COOC;
+
+		// get score image
+		if (m_settings->algorithmType == algoType::COOC || m_settings->algorithmType == algoType::FASTCOOC)
+		{
+			scoreImage = m_FindTargets.ColourOccuranceHistogram(targetImages, testImage, (m_settings->coocMatrix).data(), 
+											m_settings->distance, m_settings->distanceBins, m_settings->cluster, false, 
+											m_settings->bProcessGrayscale, m_settings->algorithmType == algoType::FASTCOOC, 
+											m_settings->bCorrectBackGround);
+		}
+		else if (m_settings->algorithmType == algoType::LAPLACIAN)
+		{
+			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "function not yet implemented"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Information));
+			scoreImage = m_FindTargets.LaplacianFindObject(targetImages, testImage, m_settings->distance, m_settings->cluster);
+		}
+		else if (m_settings->algorithmType == algoType::HAAR)
+		{
+			scoreImage = m_FindTargets.FindTargetsHaar(targetImages, testImage, m_settings->numWaveletLevels);
+		}
+		else if (m_settings->algorithmType == algoType::LAWS)
+		{
+			scoreImage = m_FindTargets.lawsTextureFeatures(targetImages, testImage, m_settings->bCorrectBackGround);
+		}
+		else if(CV_TM_SQDIFF <= m_settings->algorithmType && m_settings->algorithmType <= CV_TM_CCOEFF_NORMED)
+		{
+			scoreImage = m_FindTargets.CVMatching(targetImages, testImage, m_settings->algorithmType, m_settings->bCorrectBackGround);
+		}
+		else
+		{
+			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "incorrect algorithm specified"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
+		}
+
+		if (scoreImage.rows > 0)
+			tim->addImage(scoreImage);
+		else
+			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "something went wrong - score image not created"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
+	}
+	else
+	{
+		QString msg;
+		if (targetImages.size() == 0)
+			msg = "You need to set a target ";
+		if (testImage == nullptr || testImage->isNULL())
+			msg += "and a test ";
+
+		msg += "image first";
+
+		QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, msg), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
+	}
+
+	QMetaObject::invokeMethod(this, "LogProcessing", Qt::BlockingQueuedConnection, Q_ARG(bool, false));
+
+	return tim;
 }
 
 /**
@@ -3175,83 +3550,90 @@ void MainWindow::getScoreImage()
 * @return    cv::Mat
 * Access     public 
 */
-targeterImage MainWindow::createScoreImage(int& imageIndex)
+QExplicitlySharedDataPointer<targeterImage> MainWindow::createScoreImage(int& imageIndex)
 {
-	std::vector<targeterImage> targetImages;
-	targeterImage testImage(&m_ImagesContainer);
-	targeterImage tim(&m_ImagesContainer);
+	QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages;
+
+	QExplicitlySharedDataPointer<targeterImage> testImage = QExplicitlySharedDataPointer<targeterImage> (new targeterImage(&m_ImagesContainer));
+
+	imageIndex = -1;
+
+	// get test/target images from image list
+	targetImages = findTargetImages(imageIndex);
+
+	testImage = m_ImagesContainer.getImageAt(imageIndex);
+
+	return createScoreImage(targetImages, testImage);
+}
+
+void MainWindow::on_actionTrainTarget_triggered()
+{
+	QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages;
+
+	int imageIndex = -1;
+
+	// get test/target images from image list
+	targetImages = findTargetImages(imageIndex);
+
+	QExplicitlySharedDataPointer<targeterImage> testImage = m_ImagesContainer.getImageAt(imageIndex);
+
+	if(targetImages.length()>0)
+		trainTargetImage(targetImages, testImage);	// when target extracted from image image needs to be clustered
+	else
+		consoleLog("no target images found");
+}
+
+void MainWindow::trainTargetImage(QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages, QExplicitlySharedDataPointer<targeterImage> parentImage)
+{
+	QExplicitlySharedDataPointer<targeterImage> tim = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
 	cv::Mat scoreImage;
-	
-	bool bFoundTest = false;
 
-	// get vector list of training images from targeterImages
-	for (int i = m_ImagesContainer.getNumImages()-1; i >=0; i--)
+	if (targetImages.size() > 0)
 	{
-		targeterImage& m = m_ImagesContainer.getImageAt(i);
+		tim->setImageType(imageType::score);
 
-		if (m.getImageFunction() == imageType::target)
-		{
-			targetImages.push_back(m);
-			tim.addFriendID(m.getUID());
-		}
-		else if (!bFoundTest && m.getImageFunction() == imageType::test)
-		{
-			bFoundTest = true;
-			imageIndex = i;
-			testImage = m;
-		}
-	}
-
-	if (targetImages.size() > 0 && bFoundTest)
-	{
-		tim.addFriendID(testImage.getUID());
-
-		foreach(targeterImage t, targetImages)
-			tim.addFriendID(t.getUID());
-
-		tim.setImageType(imageType::score);
-		
 		if (m_settings->algorithmType<0 || m_settings->algorithmType>algoType::LASTALGO)
 			m_settings->algorithmType = algoType::COOC;
 
 		// get score image
-		if (m_settings->algorithmType == algoType::COOC)
+		if (m_settings->algorithmType == algoType::COOC || m_settings->algorithmType == algoType::FASTCOOC)
 		{
-			scoreImage = m_FindTargets.ColourOccuranceHistogram(targetImages, testImage, m_settings->distance, m_settings->cluster, false);
+			m_FindTargets.trainColourOccuranceHistogram(targetImages, parentImage, (m_settings->coocMatrix).data(), 
+														m_settings->distance, m_settings->distanceBins, m_settings->cluster, false,
+														m_settings->bProcessGrayscale, m_settings->algorithmType == algoType::FASTCOOC);
+			
+			for (int j = 0; j < MIN(5, m_settings->coocMatrix->coDIMY); j++){
+				QString s="";
+				for (int i = 0; i < MIN(5, m_settings->coocMatrix->coDIMZ); i++){
+					QString t;
+					t.sprintf("%.3e", m_settings->coocMatrix->coMatrixIntensity[i + j*m_settings->coocMatrix->coDIMX + m_settings->coocMatrix->coDIMX*m_settings->coocMatrix->coDIMY]);
+					s+=t + "\t";
+				}
+				LOGCONSOLE(s + " ... ");
+			}
+			LOGCONSOLE(" ... ");
 		}
-		else if (m_settings->algorithmType == algoType::LAPLACIAN)
+		else if (m_settings->algorithmType == algoType::LAWS)
 		{
-			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "function not yet implemented"),	Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Information));
-			scoreImage = m_FindTargets.LaplacianFindObject(targetImages, testImage, m_settings->distance, m_settings->cluster);
-		}
-		else if (m_settings->algorithmType == algoType::CROSSENTROPY)
-		{
-			scoreImage = m_FindTargets.ColourOccuranceHistogram(targetImages, testImage, m_settings->distance, m_settings->cluster, true);
+			m_FindTargets.trainLawsTextureFeatures(targetImages, m_settings->lawsHistTarget, m_settings->lawsHistBiases);
+			for (int j = 0; j < m_settings->lawsHistTarget.length(); j++) {
+				QString s = "";
+				for (int i = 0; i < MIN(5, m_settings->lawsHistTarget[j].rows); i++) {
+					QString t;
+					t.sprintf("%.3e", m_settings->lawsHistTarget[j].at<float>(i));
+					s += t + "\t";
+				}
+				LOGCONSOLE(s + " ... ");
+			}
+			LOGCONSOLE(" ... ");
+
 		}
 		else
 		{
-			scoreImage = m_FindTargets.CVMatching(targetImages, testImage, m_settings->algorithmType);
+			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "incorrect algorithm specified"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
 		}
 
-		if (scoreImage.rows > 0)
-			tim.addImage(scoreImage);
-		else
-			QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, "something went wrong - score image not created"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
 	}
-	else
-	{
-		QString msg;
-		if (targetImages.size() == 0)
-			msg = "You need to set a target ";
-		if (testImage.getImage().empty())
-			msg += "and a test ";
-
-		msg += "image first";
-
-		QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::BlockingQueuedConnection, Q_ARG(QString, msg), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
-	}
-
-	return tim;
 }
 
 /**
@@ -3268,19 +3650,30 @@ targeterImage MainWindow::createScoreImage(int& imageIndex)
 */
 void MainWindow::on_actionFind_targets_triggered()
 {
+	LogProcessing(true);
 	QFuture<void> t1 = QtConcurrent::run(this, &MainWindow::getTargetImage);
 }
 
 void MainWindow::getTargetImage()
 {
-	int imageIndex=-1;
+	int imageIndex = -1;
 
-	// get score image
-	targeterImage tim = createScoreImage(imageIndex);
+	QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages;
 
-	if (tim.Rows() > 0 && tim.Cols() > 0)
+	QExplicitlySharedDataPointer<targeterImage> testImage = QExplicitlySharedDataPointer<targeterImage>(new targeterImage(&m_ImagesContainer));
+
+	// get test/target images from image list
+	targetImages = findTargetImages(imageIndex);
+
+	testImage = m_ImagesContainer.getImageAt(imageIndex);
+
+	QExplicitlySharedDataPointer<targeterImage> tim = createScoreImage(targetImages, testImage);
+
+	if (tim->Rows() > 0 && tim->Cols() > 0)
 	{
-		cv::Mat im = getTargetPositions(tim, nullptr, imageIndex);
+		cv::Mat im = getTargetPositions(tim->getImage(), testImage, imageIndex);
+
+		//writeImageTargetstoXML(tim->getFileName(), imageIndex);
 
 		QMetaObject::invokeMethod(this, // obj
 			"addMatImage", // member
@@ -3296,14 +3689,247 @@ void MainWindow::getTargetImage()
 	}
 }
 
+
+void MainWindow::getTargetLocations(QVector<QExplicitlySharedDataPointer<targeterImage>> targetImages, 
+									QExplicitlySharedDataPointer<targeterImage> detectImage)
+{
+	int imageIndex = -1;
+	/*
+	XMLWriter writer(this);
+
+	writer.OpenFile(m_settings->s_project_Directory, m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml");
+	*/
+	// get score image
+	QExplicitlySharedDataPointer<targeterImage> tim = createScoreImage(targetImages, detectImage);
+
+	if (tim->Rows() > 0 && tim->Cols() > 0)
+	{
+		cv::Mat im = getTargetPositions(tim->getImage(), detectImage, imageIndex);
+
+		// write to xml file
+		//writer.writePositions(m_experimentalData->m_detected_targets);
+	}
+	else
+	{
+		consoleLog(imageType::any, CONSOLECOLOURS::colour::Warning);
+	}
+}
+
+/*
+double x = targetPoints[i].x();
+double y = targetPoints[i].y();
+
+x *= micronsToPixels;
+y *= micronsToPixels;
+
+x += imageOffsetToFiducials.x();
+y += imageOffsetToFiducials.y();
+
+double z = imageOffsetToFiducials.z()>=0?imageOffsetToFiducials.z():0;
+
+output += "x:" + QString::number(x) + " y:" + QString::number(y) + " z:" + QString::number(imageOffsetToFiducials.z()) + "\n";
+*/
+
+void MainWindow::getTargetPositionsFromImage(cv::Mat& centroidsImage, cv::Mat& stats, QVector<QPoint>& pts, QVector<QRect>& rects)
+{
+	// empty lists
+	pts.clear();
+	rects.clear();
+
+	for (int i = 1; i < centroidsImage.rows; i++)
+	{
+		double x = centroidsImage.at<double>(i, 0);
+		double y = centroidsImage.at<double>(i, 1);
+
+		int *row = &stats.at<int>(i, 0);
+
+		// convert to fiducial coordinates
+		pts.append(QPoint(x, y));
+		
+		rects.append(QRect(row[cv::CC_STAT_LEFT], row[cv::CC_STAT_TOP], row[cv::CC_STAT_WIDTH], row[cv::CC_STAT_HEIGHT]));
+	}
+}
+
+//************************************
+//
+//	Gets all target positions from images writes to experimental data structure
+//
+// Method:    on_actionSave_Target_Positions_triggered
+// FullName:  MainWindow::on_actionSave_Target_Positions_triggered
+// Access:    private 
+// Returns:   void
+// Qualifier:
+//************************************
 void  MainWindow::on_actionSave_Target_Positions_triggered()
 {
-	// get all target positions from image
-	QVector<QPoint> targets = ui->display_image->targetPoints();
-	QVector<QRect> r;
+	QVector3D vect = QVector3D(0, 0, 0);
 
-	// write to xml file
-	xmlWriter.writeCentroids(targets, r);
+	for(int ind=0; ind<m_ImagesContainer.getNumImages(); ind++)
+	{
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
+
+		vect = tim->getPositionStage();
+
+		if (vect.x() < 0 || vect.y() < 0)
+		{
+			vect = QVector3D();
+			consoleLog("image offset not found, positions relative to image not fiducials origin", CONSOLECOLOURS::Warning);
+		}
+
+		// get all target positions from image
+		QVector<QPoint> targetPoints = ui->display_image->targetPoints();
+		QVector<Target> targetList;
+		
+		for (int i = 0; i < targetPoints.size(); i++)
+		{
+			if (!targetPoints[i].isNull())
+			{
+				QPoint ptTarget = targetPoints[i];
+
+				double x = targetPoints[i].x();
+				double y = targetPoints[i].y();
+
+				// convert from pixels to mm's
+				x *= m_settings->mmPerPixel;
+				y *= m_settings->mmPerPixel;
+
+				// add image offset in mm
+				x += vect.x();
+				y += vect.y();
+
+				double z = vect.z() >= 0 ? vect.z() : 0;
+
+				// relative to fiducials
+				Target target;
+				target.position = getRelativePosition(QVector3D(x, y, z));
+				target.ID = i;
+				target.image = tim->getFileName();
+				target.imagePosition = QPoint(x, y);
+				target.region = QRect(x,y, 1, 1);
+
+				targetList.append(target);
+			}
+		}
+
+		ImageData imdata;
+
+		imdata.filename = tim->getFileName();
+		imdata.FrameID = tim->getFrameID();
+		imdata.patternRegion = tim->getPatternRegion();
+		imdata.shapeType = drawingMode::cross;	
+		imdata.scanRegionIndex = 0;
+		imdata.SubFrameID = tim->getSubFrameID();
+		imdata.subRegionID = tim->getSubRegionID();
+
+		imdata.targetList.append(targetList);
+
+		m_processedImages.append(imdata);
+
+		//writeTargetPositionsToXML();
+	}
+}
+
+
+
+QVector<QPoint> MainWindow::makeIndexes(QVector<QPointF> positions)
+{
+	QVector<QPoint> indexes;
+
+	// need to tell the orientation of area before organizing
+	if (positions.length() > 0)
+	{
+		// sort images based on positions
+		rasterSortVectors(positions);
+
+		int x = 0, y = 0;
+
+		indexes.append(QPoint(x, y));
+
+		for (int i = 1; i < positions.length(); i++)
+		{
+			if (positions[i].y() > positions[i - 1].y())
+				y++;
+			else if (positions[i].y() < positions[i - 1].y())
+				y = 0;
+
+			if (positions[i].x() > positions[i - 1].x())
+				x++;
+			else if (positions[i].x() < positions[i - 1].x())
+				x = 0;
+
+			indexes.append(QPoint(x, y));
+		}
+	}
+
+	return indexes;
+}
+
+void MainWindow::on_actionCreate_Image_Mosaic_triggered()
+{
+	QVector<cv::Mat> images;
+	QVector<QPointF> positions;
+	QVector<QPoint> indexPositions;
+
+	std::vector<int> checked = getCheckedImages();
+	cv::Mat dst, pIm;
+	bool bOK = false;
+	int maskIndex = -1;
+	int len = checked.size();
+	int width = sqrt(len);
+
+	// get selected images
+	for (int i = 0; i < len; i++)
+	{
+		QExplicitlySharedDataPointer<targeterImage>tar = m_ImagesContainer.getImageAt(checked[i]);
+
+		QString filename = QString::fromStdString(tar->filepathname);
+
+		QVector3D pt = getMosaicPositionFromName(filename);
+
+		if(tar->getImageIndex().x() >= 0 && tar->getImageIndex().y())
+		{
+			indexPositions.append(tar->getImageIndex());
+		}
+		else
+		{
+			// if no position in file exif then check name
+			if (pt.x() < 0 && pt.y() < 0)
+				pt = getMosaicPositionFromName(QString::fromStdString(tar->getName()));
+
+			if (pt.x() >= 0 && pt.y() >= 0)
+				positions.append(pt.toPointF());
+			else
+				positions.append(QPoint(i%width, i / width));	// no info in filename then use count;
+		}
+	
+		images.append(tar->getImage());
+	}
+
+	if(images.size()>0)
+	{
+		// default number of images in row
+		int noOfImagesInRow = m_settings->mosaicImageCols;
+
+		cv::Mat mosaicImage;
+
+		if (indexPositions.size() >= images.size())
+		{
+			mosaicImage = createMosaicImage(images, indexPositions);
+		}
+		else if(positions.size() >= images.size())
+		{
+			QVector<QPoint> indexes = makeIndexes(positions);
+			mosaicImage = createMosaicImage(images, indexes);
+		}
+		else
+			consoleLog("Some or all of selected images have no indexing information, mosaic will be square and may be unordered!", CONSOLECOLOURS::colour::Warning);
+
+		if (mosaicImage.rows>0 && mosaicImage.cols>0)
+		{
+			// pass in positions here? except sizes are different from image
+			addCVImage(mosaicImage, "mosaic image", true, imageType::mosaic, true);
+		}
+	}
 }
 
 // extract out image position from file name
@@ -3355,75 +3981,6 @@ QVector3D MainWindow::getMosaicPositionFromName(QString str, bool relative)
 
 
 
-void MainWindow::on_actionCreate_Image_Mosaic_triggered()
-{
-	QVector<cv::Mat> images;
-	QVector<QPointF> positions;
-
-	std::vector<int> checked = getCheckedImages();
-	cv::Mat dst, pIm;
-	bool bOK = false;
-	int maskIndex = -1;
-
-	// get selected images
-	for (int i = 0; i < checked.size(); i++)
-	{
-		targeterImage& tar = m_ImagesContainer.getImageAt(checked[i]);
-
-		QString filename = QString::fromStdString(tar.filepathname);
-
-		QVector3D pt = getMosaicPositionFromName(filename);
-
-		// if no position in filename check name
-		if (pt.x() < 0 && pt.y() < 0)
-			pt = getMosaicPositionFromName(QString::fromStdString(tar.getName()));
-
-		if (pt.x() >= 0 && pt.y() >= 0)
-			positions.append(pt.toPointF());
-		
-		images.append(tar.getImage());
-	}
-
-	// default number of images in row
-	int noOfImagesInRow = m_settings->mosaicImageCols;
-
-	QVector<QPoint> indexes;
-
-	// need to tell the orientation of area before organizing
-	if(positions.length() > 0)
-	{
-		// sort images based on positions
-		rasterSortVectors(positions);
-
-		int x = 0, y = 0;
-
-		indexes.append(QPoint(x, y));
-
-		for (int i = 1; i < positions.length(); i++)
-		{
-			if (positions[i].y() > positions[i - 1].y())
-				y++;
-			else if (positions[i].y() < positions[i - 1].y())
-				y = 0;
-
-			if (positions[i].x() > positions[i - 1].x())
-				x++;
-			else if(positions[i].x() < positions[i - 1].x())
-				x = 0;
-
-			indexes.append(QPoint(x, y));
-		}
-	}
-
-	if (images.length() > 1)
-	{
-		// pass in positions here? except sizes are different from image
-		cv::Mat mosaicImage = createMosaicImage(images, indexes);
-
-		addCVImage(mosaicImage, QUuid::QUuid(), "mosaic image", true, imageType::mosaic, true);
-	}
-}
-
 bool MainWindow::compareQPointF(const QPointF& first, const QPointF& second)
 {
 	if (first.x() < second.x())
@@ -3445,6 +4002,16 @@ void MainWindow::rasterSortVectors(QVector<QPointF>& positions)
 	qSort(positions.begin(), positions.end(), compareQPointF);
 }
 
+void MainWindow::setSamplingDistance(QSharedPointer<QPolygon> poly)
+{
+	m_settings->samplingOffset = poly->at(1) - poly->at(0);
+	m_settings->samplingSpacing = poly->at(2) - poly->at(1);
+
+	m_settings->samplingOffset = QPoint(abs(m_settings->samplingOffset.x()), abs(m_settings->samplingOffset.y()));
+	m_settings->samplingSpacing = QPoint(abs(m_settings->samplingSpacing.x()), abs(m_settings->samplingSpacing.y()));
+
+	m_settingsDlg.updateSamplingSpacing();
+}
 
 // look at imags positions and organise 
 cv::Mat MainWindow::createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> indexes)
@@ -3519,40 +4086,42 @@ cv::Mat MainWindow::createMosaicImage(QVector<cv::Mat> images, QVector<QPoint> i
 	return mosaicImage;
 }
 
-cv::Mat MainWindow::getTargetPositions(targeterImage scoreImage, targeterImage* targetImage, int imageIndex)
+cv::Mat MainWindow::getTargetPositions(cv::Mat scoreImage, QExplicitlySharedDataPointer<targeterImage> detectImage, int imageIndex)
 {
 	int index = -1;
 
-	if (scoreImage.Rows() > 0)
+	if (!scoreImage.empty())
 	{
 		cv::Mat binImage, targets;
 
 		// use standard threshold method
 		if (m_settings->ThresholdType == thresholdType::cluster2 || m_settings->ThresholdType == thresholdType::posterize)
-			binImage = m_ImageProcessing.HistogramClusteringGray(scoreImage.getImage(), m_settings->NoClustersThreshold);
+			binImage = m_ImageProcessing.HistogramClusteringGray(scoreImage, m_settings->NoClustersThreshold);
 		else
-			binImage = m_ImageProcessing.Threshold(scoreImage.getImage(), m_settings->threshold_min, m_settings->threshold_max, m_settings->ThresholdType);
+			binImage = m_ImageProcessing.Threshold(scoreImage, m_settings->threshold_min, m_settings->threshold_max, m_settings->ThresholdType);
 
 		cv::Mat labels, stats, centroids;
 		int connectivity_8 = 8;
 
-		targeterImage tarCC = getConnectedComponents(binImage);
+		QExplicitlySharedDataPointer<targeterImage> tarCC = getConnectedComponents(binImage);
 
-		return getTargetsFromLabelledImage(tarCC, binImage, targetImage, &scoreImage, imageIndex);
+		return getTargetsFromLabelledImage(tarCC, binImage, detectImage, detectImage->getImage(), imageIndex);
 	}
 	else
 		return cv::Mat();
 }
 
-cv::Mat MainWindow::getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& binImage, targeterImage* targetImage, targeterImage* displayImage, int imageIndex, bool bFilter)
+cv::Mat MainWindow::getTargetsFromLabelledImage(QExplicitlySharedDataPointer<targeterImage> tarCC, cv::Mat& binImage, 
+												QExplicitlySharedDataPointer<targeterImage> detectImage, 
+												cv::Mat displayImage, int imageIndex, bool bFilter)
 {
 	cv::Mat targets;
 
-	targeterImage *tarBin = nullptr, *tar = nullptr;
+	QExplicitlySharedDataPointer<targeterImage> tarBin, tar;
 
-	if(bFilter && targetImage != nullptr && binImage.rows > 0)
+	if(bFilter && detectImage != nullptr && binImage.rows > 0)
 	{
-		cv::Rect r = targetImage->getImagePosition();
+		cv::Rect r = detectImage->getImagePosition();
 
 		if(r.width>0 && r.height>0)
 		{
@@ -3561,17 +4130,69 @@ cv::Mat MainWindow::getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& b
 		}
 	}
 
-	if (displayImage != nullptr)
+	if (!displayImage.empty())
 	{
-		cv::Mat& originalImage = displayImage->getImage();
+		targets = displayImage.clone();
 
-		targets = originalImage.clone();
+		drawCentroids(tarCC, targets, imageIndex, true);
 
-		drawCentroids(tarCC, targets, imageIndex);
-
-		if (tarCC.getImageFunction() == imageType::cclabels)
+		if (tarCC->getImageFunction() == imageType::cclabels)
 		{
-			xmlWriter.writeCentroids(tarCC.getCentroidsImage(), tarCC.getStatsImage());
+			QVector<QPoint> targetPoints;
+			QVector<QRect> rects;
+			QVector<Target> targetList;
+
+			getTargetPositionsFromImage(tarCC->getCentroidsImage(), tarCC->getStatsImage(), targetPoints, rects);
+			QVector3D vect = detectImage->getPositionStage();
+
+			if (vect.x() < 0 || vect.y() < 0)
+			{
+				vect = QVector3D();
+				consoleLog("image offset not found, positions relative to image not fiducials origin", CONSOLECOLOURS::Warning);
+			}
+
+			for (int i = 0; i < targetPoints.size(); i++)
+			{
+				if (!targetPoints[i].isNull())
+				{
+					QPoint ptTarget = targetPoints[i];
+
+					double x = targetPoints[i].x();
+					double y = targetPoints[i].y();
+
+					x *= m_settings->mmPerPixel;
+					y *= m_settings->mmPerPixel;
+
+					x += vect.x();
+					y += vect.y();
+
+					double z = vect.z() >= 0 ? vect.z() : 0;
+
+					// now translate relative to fiducial marks
+
+					QVector3D rel = getRelativePosition(QVector3D(x, y, z));
+
+					Target target;
+					target.position = rel;
+					target.imagePosition = targetPoints[i];
+					target.region = rects[i];
+					target.image = detectImage->getFileName();
+					target.ID = i;
+
+					targetList.append(target);
+				}
+			}
+
+			ImageData imdata;
+
+			imdata.FrameID = detectImage->getFrameID();
+			imdata.patternRegion = detectImage->getPatternRegion();
+			imdata.SubFrameID = detectImage->getSubFrameID();
+			imdata.subRegionID = detectImage->getSubRegionID();
+
+			imdata.targetList.append(targetList);
+
+			m_processedImages.append(imdata);
 		}
 	}
 	else
@@ -3591,23 +4212,23 @@ cv::Mat MainWindow::getTargetsFromLabelledImage(targeterImage& tarCC, cv::Mat& b
 * 
 * FullName   MainWindow::drawCentroids
 * Qualifier 
-* @param     targeterImage & tim 
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim 
 * @param     cv::Mat & drawimage 
 * @return    void
 * Access     public 
 */
-void MainWindow::drawCentroids(targeterImage& tim, cv::Mat& drawimage, int imageIndex)
+void MainWindow::drawCentroids(QExplicitlySharedDataPointer<targeterImage> tim, cv::Mat& drawimage, int imageIndex, bool bDrawOnImage)
 {
-	if (tim.getImageFunction() == imageType::cclabels)
+	if (tim->getImageFunction() == imageType::cclabels)
 	{
-		cv::Mat& centroidsImage = tim.getCentroidsImage();
-		cv::Mat& stats = tim.getStatsImage();
-		cv::Mat& display = tim.getImage();
+		cv::Mat& centroidsImage = tim->getCentroidsImage();
+		cv::Mat& stats = tim->getStatsImage();
+		cv::Mat& display = tim->getImage();
 		cv::Mat sub_image;
 		cv::Rect rect;
 		bool bWriteSubImages = true;
 		QString filename = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix;
-		QString imagename = QString::fromStdString(tim.filepathname);
+		QString imagename = QString::fromStdString(tim->filepathname);
 
 		filename += imagename.mid(imagename.lastIndexOf('/'), imagename.lastIndexOf('.'));
 		QString file;
@@ -3648,13 +4269,15 @@ void MainWindow::drawCentroids(targeterImage& tim, cv::Mat& drawimage, int image
 			if (row[CC_STAT_WIDTH] > 1 && row[CC_STAT_HEIGHT] > 1)
 			{
 				rect = cv::Rect(row[CC_STAT_LEFT], row[CC_STAT_TOP], row[CC_STAT_WIDTH], row[CC_STAT_HEIGHT]);
-				cv::rectangle(drawimage, rect, cv::Scalar(0, 255, 0));
+				if(bDrawOnImage)
+					cv::rectangle(drawimage, rect, cv::Scalar(0, 255, 0));
 			}
-			cv::drawMarker(drawimage, cv::Point(x, y), cv::Scalar(0, 0, 255), MARKER_CROSS, 3, 1);
+			if(bDrawOnImage)
+				cv::drawMarker(drawimage, cv::Point(x, y), cv::Scalar(0, 0, 255), MARKER_CROSS, 3, 1);
 
 			ui->display_image->setTargetPosition(QPoint(x, y), imageIndex);
 		}
-
+		
 		if(bWriteSubImages)
 			consoleLog("some sub images not written to file as too small", CONSOLECOLOURS::colour::Warning);
 	}
@@ -3674,23 +4297,23 @@ void MainWindow::drawCentroids(targeterImage& tim, cv::Mat& drawimage, int image
 *
 * FullName   MainWindow::drawCentroids
 * Qualifier
-* @param     targeterImage & tim
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim
 * @param     cv::Mat & drawimage
 * @return    void
 * Access     public
 */
-cv::Mat MainWindow::drawCentroids(targeterImage& tim, cv::Mat& display, bool bWriteSubImages)
+cv::Mat MainWindow::drawCentroids(QExplicitlySharedDataPointer<targeterImage> tim, cv::Mat& display, bool bWriteSubImages)
 {
-	if (tim.getImageFunction() == imageType::cclabels)
+	if (tim->getImageFunction() == imageType::cclabels)
 	{
-		cv::Mat& centroidsImage = tim.getCentroidsImage();
-		cv::Mat& stats = tim.getStatsImage();
+		cv::Mat& centroidsImage = tim->getCentroidsImage();
+		cv::Mat& stats = tim->getStatsImage();
 
 		cv::Mat sub_image;
 		cv::Rect rect;
 
 		QString filename = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix;
-		QString imagename = QString::fromStdString(tim.filepathname);
+		QString imagename = QString::fromStdString(tim->filepathname);
 
 		filename += imagename.mid(imagename.lastIndexOf('/'), imagename.lastIndexOf('.'));
 		QString file;
@@ -3722,7 +4345,7 @@ cv::Mat MainWindow::drawCentroids(targeterImage& tim, cv::Mat& display, bool bWr
 		if (display.empty())
 		{
 			// create new image
-			cv::Mat displayImage(tim.Size(), tim.Type(), cv::Scalar(0, 0, 0));
+			cv::Mat displayImage(tim->Size(), tim->Type(), cv::Scalar(0, 0, 0));
 
 			// overwrite display image
 			for (int i = 1; i < centroidsImage.rows; i++)	// first region is invalid
@@ -3738,7 +4361,7 @@ cv::Mat MainWindow::drawCentroids(targeterImage& tim, cv::Mat& display, bool bWr
 		}
 		else
 		{
-			cv::Mat displayImage = tim.getImage().clone();
+			cv::Mat displayImage = tim->getImage().clone();
 
 			// overwrite display image
 			for (int i = 1; i < centroidsImage.rows; i++)	// first region is invalid
@@ -3764,15 +4387,15 @@ cv::Mat MainWindow::drawCentroids(targeterImage& tim, cv::Mat& display, bool bWr
 	return cv::Mat();
 }
 
-void MainWindow::FilterRegionsOnSize(targeterImage& ccim, cv::Mat& binImage, double stdevMaxFactor, double stdevMinFactor, double aspectFactor)
+void MainWindow::FilterRegionsOnSize(QExplicitlySharedDataPointer<targeterImage> ccim, cv::Mat& binImage, double stdevMaxFactor, double stdevMinFactor, double aspectFactor)
 {
 	cv::Mat newCentroidsImage, newStats;
 	double aspect, objectsLength, area, sum = 0.0, sumsq = 0.0;
 
 	// get the ccimage image
-	cv::Mat& centroidsImage = ccim.getCentroidsImage();
+	cv::Mat& centroidsImage = ccim->getCentroidsImage();
 
-	cv::Mat& stats = ccim.getStatsImage();
+	cv::Mat& stats = ccim->getStatsImage();
 
 	if (centroidsImage.rows > 0 && stats.rows >= centroidsImage.rows)
 	{
@@ -3845,8 +4468,8 @@ void MainWindow::FilterRegionsOnSize(targeterImage& ccim, cv::Mat& binImage, dou
 				consoleLog("target rejected because out of size range, size = " + QString::number(area) + " (size range= " + QString::number(mean_val - sample_std_deviation*stdevMinFactor) + " to " + QString::number(mean_val + sample_std_deviation*stdevMaxFactor) + ")");
 		}
 
-		ccim.setCentroidsImage(newCentroidsImage);
-		ccim.setStatsImage(newStats);
+		ccim->setCentroidsImage(newCentroidsImage);
+		ccim->setStatsImage(newStats);
 	}
 }
 
@@ -3860,14 +4483,14 @@ void MainWindow::FilterRegionsOnSize(targeterImage& ccim, cv::Mat& binImage, dou
 *
 * FullName   MainWindow::FilterRegions
 * Qualifier
-* @param     targeterImage & tim
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim
 * @param     double stdevMaxFactor
 * @param     double stdevMinFactor
 * @param     double aspectFactor
 * @return    void
 * Access     public
 */
-void MainWindow::FilterRegionsOnShape(targeterImage& ccim, cv::Mat& binImage, cv::Rect targetROI)
+void MainWindow::FilterRegionsOnShape(QExplicitlySharedDataPointer<targeterImage> ccim, cv::Mat& binImage, cv::Rect targetROI)
 {
 	cv::Mat newCentroidsImage, newStats;
 	vector<Point> tcontour;
@@ -3875,9 +4498,9 @@ void MainWindow::FilterRegionsOnShape(targeterImage& ccim, cv::Mat& binImage, cv
 	double aspect, objectsLength, area, sum = 0.0, sumsq = 0.0;
 
 	// get the ccimage image
-	cv::Mat& centroidsImage = ccim.getCentroidsImage();
+	cv::Mat& centroidsImage = ccim->getCentroidsImage();
 
-	cv::Mat& stats = ccim.getStatsImage();
+	cv::Mat& stats = ccim->getStatsImage();
 
 	if (centroidsImage.rows > 0 && stats.rows >= centroidsImage.rows)
 	{
@@ -3949,8 +4572,8 @@ void MainWindow::FilterRegionsOnShape(targeterImage& ccim, cv::Mat& binImage, cv
 		}
 	}
 
-	ccim.setCentroidsImage(newCentroidsImage);
-	ccim.setStatsImage(newStats);
+	ccim->setCentroidsImage(newCentroidsImage);
+	ccim->setStatsImage(newStats);
 }
 
 /**
@@ -3962,14 +4585,14 @@ void MainWindow::FilterRegionsOnShape(targeterImage& ccim, cv::Mat& binImage, cv
 * 
 * FullName   MainWindow::FilterRegions
 * Qualifier 
-* @param     targeterImage & tim 
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim 
 * @param     double stdevMaxFactor 
 * @param     double stdevMinFactor 
 * @param     double aspectFactor 
 * @return    void
 * Access     public 
 */
-void MainWindow::FilterRegions(targeterImage& ccim, cv::Mat& binImage, cv::Rect targetROI, double stdevMaxFactor, double stdevMinFactor, double aspectFactor)
+void MainWindow::FilterRegions(QExplicitlySharedDataPointer<targeterImage> ccim, cv::Mat& binImage, cv::Rect targetROI, double stdevMaxFactor, double stdevMinFactor, double aspectFactor)
 {
 	cv::Mat newCentroidsImage, newStats;
 	vector<Point> tcontour;
@@ -3977,9 +4600,9 @@ void MainWindow::FilterRegions(targeterImage& ccim, cv::Mat& binImage, cv::Rect 
 	double aspect, objectsLength, area, sum = 0.0, sumsq = 0.0;
 
 	// get the ccimage image
-	cv::Mat& centroidsImage = ccim.getCentroidsImage();
+	cv::Mat& centroidsImage = ccim->getCentroidsImage();
 
-	cv::Mat& stats = ccim.getStatsImage();
+	cv::Mat& stats = ccim->getStatsImage();
 	
 	if (centroidsImage.rows > 0 && stats.rows >= centroidsImage.rows)
 	{
@@ -4085,8 +4708,8 @@ void MainWindow::FilterRegions(targeterImage& ccim, cv::Mat& binImage, cv::Rect 
 				consoleLog("target rejected because out of size range, size = " + QString::number(area) + " (size range= " + QString::number(mean_val - sample_std_deviation*stdevMinFactor) + " to " + QString::number(mean_val + sample_std_deviation*stdevMaxFactor) + ")");
 		}
 
-		ccim.setCentroidsImage(newCentroidsImage);
-		ccim.setStatsImage(newStats);
+		ccim->setCentroidsImage(newCentroidsImage);
+		ccim->setStatsImage(newStats);
 	}
 }
 
@@ -4133,13 +4756,13 @@ void MainWindow::drawShape(cv::Mat& im, drawingShape shape, cv::Scalar col)
 * 
 * FullName   MainWindow::writeCentroids
 * Qualifier 
-* @param     targeterImage & tim 
+* @param     QExplicitlySharedDataPointer<targeterImage> & tim 
 * @param     QFile & xmlFile 
 * @return    void
 * Access     public 
 */
 /*
-void MainWindow::writeCentroids(targeterImage& tim, QFile& xmlFile)
+void MainWindow::writeCentroids(QExplicitlySharedDataPointer<targeterImage> tim, QFile& xmlFile)
 {
 	if (tim.getImageFunction() == imageType::cclabels)
 	{
@@ -4227,22 +4850,20 @@ void MainWindow::on_actionFind_Centers_triggered()
 
 	if (ind >= 0)
 	{
-		targeterImage& tim = m_ImagesContainer.getImageAt(ind);
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
 
 		pIm = drawCentroids(tim, cv::Mat(), false);
 
 		if(pIm.rows>0)
 		{
-			addCVImage(pIm, tim.getUID(), "detected targets mask image", true, imageType::mask, true);
+			addCVImage(pIm,  "detected targets mask image", true, imageType::mask, true);
 
 			consoleLog("Now you can use the mask function to combine mask with detection image", CONSOLECOLOURS::colour::Information);
 		}
 		else
 			consoleLog("Unable to detect targets", CONSOLECOLOURS::colour::Information);
-
 	}
 }
-
 
 void MainWindow::on_actionFilter_Binary_Objects_triggered()
 {
@@ -4252,35 +4873,40 @@ void MainWindow::on_actionFilter_Binary_Objects_triggered()
 	std::vector<int> checked = getCheckedImages();
 	cv::Mat dst, pIm;
 
+	int ccindex = -1, mindex = -1, tindex = -1;
+
+	foreach(int i, checked)
+	{
+		if (m_ImagesContainer.getImageAt(i).data()->Type() == imageType::cclabels)
+			ccindex = i;
+		else if (m_ImagesContainer.getImageAt(i).data()->Type() == imageType::mask)
+			mindex = i;
+		else if (m_ImagesContainer.getImageAt(i).data()->Type() == imageType::target)
+			tindex = i;
+	}
+
 	int ind = getValidImageIndex();
 
 	if (ind >= 0)
 	{
-		targeterImage& tim = m_ImagesContainer.getImageAt(ind);
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
 
-		targeterImage *tarBin = nullptr, *tar = nullptr;
+		QExplicitlySharedDataPointer<targeterImage> tarBin, tar;
 
-		int index = tim.getFriendArrayIndexOfType(imageType::cclabels);
-
-		if(index >= 0)
+		if(ccindex >= 0)
 		{
-			targeterImage& ccim = m_ImagesContainer.getImageAt(index);
+			QExplicitlySharedDataPointer<targeterImage> ccim = m_ImagesContainer.getImageAt(ccindex);
 
-			index = tim.getFriendArrayIndexOfType(imageType::mask);
-
-			if(index >= 0)
-				tarBin = m_ImagesContainer.getImageAtPtr(index);
+			if(mindex >= 0)
+				tarBin = m_ImagesContainer.getImageAt(mindex);
 			else
 				consoleLog(imageType::mask, CONSOLECOLOURS::colour::Warning);
 			
-			index = tim.getFriendArrayIndexOfType(imageType::target);
-			
-			if(index >= 0)
-				tar = m_ImagesContainer.getImageAtPtr(index);
+			if(tindex >= 0)
+				tar = m_ImagesContainer.getImageAt(tindex);
 			else
 				consoleLog(imageType::target, CONSOLECOLOURS::colour::Warning);
 
-			
 			if(tarBin != nullptr)
 			{
 				cv::Rect r;
@@ -4317,13 +4943,13 @@ void MainWindow::on_actionInvert_triggered()
 
 	if (ind >= 0)
 	{
-		targeterImage tim = m_ImagesContainer.getImageAt(ind);
-		cv::Mat& im = tim.getImage();
+		QExplicitlySharedDataPointer<targeterImage> tim= m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
 		cv::Mat out;
 
 		bitwise_not(im, out);
 
-		addCVImage(out, tim.getUID(), "inverted image", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+		addCVImage(out, "inverted image", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
 	}
 	else
 	{
@@ -4339,16 +4965,16 @@ void MainWindow::on_actionRead_Barcode_triggered()
 
 	if (ind >= 0)
 	{
-		targeterImage tim = m_ImagesContainer.getImageAt(ind);
-		cv::Mat& im = tim.getImage();
+		QExplicitlySharedDataPointer<targeterImage> tim= m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
 		
-		QVector<drawingShape> shapes = ui->display_image->getTargetImage(false, true, ind);
+		QVector<QSharedPointer<drawingShape>> shapes = ui->display_image->getImageShapes(false, true, ind);
 		
-		foreach(drawingShape s, shapes)
+		foreach(QSharedPointer<drawingShape> s, shapes)
 		{
-			if (s.type == drawingMode::rect)
+			if (s->type == drawingMode::rect)
 			{
-				m_settings->s_BarCodeImageRect = s.boundingBox;
+				m_settings->s_BarCodeImageRect = s->boundingBox;
 			}
 		}
 
@@ -4392,13 +5018,13 @@ void MainWindow::on_actionRead_Barcode_triggered()
 
 			cv::Mat plot_image = HelperFunctions::linePlotImage<int>(plotlines, size, 1, 1024, 512);
 
-			addCVImage(plot_image, tim.getUID(), "run length histogram (threshold line in blue)", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+			addCVImage(plot_image, "run length histogram (threshold line in blue)", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
 
 	/*
 			int* newaverage = m_ImageProcessing.fitPolynomial(average, size, 2);
 
 			cv::Mat out2 = HelperFunctions::linePlotImage<int>(size, 1, 512, 512, newaverage);
-			addCVImage(out2, tim.getUID(), "moving average fit", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+			addCVImage(out2, tim->getUID(), "moving average fit", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
 	*/				
 
 			// threshold histogram
@@ -4408,7 +5034,7 @@ void MainWindow::on_actionRead_Barcode_triggered()
 
 			corr = HelperFunctions::expandRunLengthImage<int>(run_length_hist, size, corr.cols, corr.rows, gray.type(), gray.channels(), true, true);
 
-			addCVImage(corr, tim.getUID(), "Cleaned bar code image", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+			addCVImage(corr, "Cleaned bar code image", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
 
 			delete[] run_length_hist;
 		}
@@ -4436,7 +5062,7 @@ void MainWindow::on_actionRead_Barcode_triggered()
 		if (tag != "")
 		{
 			if(!bFoundRect)
-				addCVImage(detect_image, tim.getUID(), "is barcode detected", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+				addCVImage(detect_image, "is barcode detected", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
 
 			consoleLog("Detected barcode = " + tag, CONSOLECOLOURS::colour::Information);
 			m_settings->s_project_ID = tag;
@@ -4457,26 +5083,43 @@ void MainWindow::on_actionEqualise_Image_triggered()
 
 	if (ind >= 0)
 	{
-		targeterImage tim = m_ImagesContainer.getImageAt(ind);
-		cv::Mat& im = tim.getImage();
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
 
 		cv::Mat out, gray;
 
 		if (im.channels() != 1)
 			cvtColor(im, gray, CV_BGR2GRAY);
 
-		//cv::normalize(gray, out, 255, 0, NORM_MINMAX);
-		//cv::equalizeHist(gray, out);
+		cv::normalize(gray, out, 255, 0, NORM_MINMAX);
+		cv::equalizeHist(gray, out);
 
-		cv::Ptr<cv::CLAHE> clahe = createCLAHE();
-		clahe->setClipLimit(4);
+	//	cv::Ptr<cv::CLAHE> clahe = createCLAHE();
+	//	clahe->setClipLimit(4);
 
-		clahe->apply(gray, out);
+	//	clahe->apply(gray, out);
 
-		addCVImage(out, tim.getUID(), "histogram equalized image", true, m_ImagesContainer.getImageAt(ind).getImageFunction());
+		addCVImage(out, "histogram equalized image", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
 	}
 }
 
+void MainWindow::on_actionLaplacian_triggered()
+{
+	int ind = getValidImageIndex();
+
+	if (ind >= 0)
+	{
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
+
+		cv::Mat out, gray;
+
+		Haar harr;
+		cv::Mat lapla = harr.LaplacianPyramid(im, m_settings->numWaveletLevels, true);
+
+		addCVImage(lapla, "laplacian image", true, m_ImagesContainer.getImageAt(ind)->getImageFunction());
+	}
+}
 // in white regions of binary image sample for targets
 void MainWindow::on_actionSample_White_Binary_Regions_triggered()
 {
@@ -4491,18 +5134,18 @@ void MainWindow::on_actionSample_White_Binary_Regions_triggered()
 
 		foreach(int i, checked)
 		{
-			targeterImage tim = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> tim= m_ImagesContainer.getImageAt(i);
 			
-			if (tim.imageFunction != imageType::mask)
+			if (tim->imageFunction != imageType::mask)
 			{
 				cv::Mat binImage = ui->display_image->getBinaryImageFromShapes(i);
 
 				//addCVImage(binImage, tim.getUID(), "binary image", true, tim.getImageFunction());
 
-				ui->display_image->getTargetsFromBinaryImage(binImage, threshold, m_settings->samplingType, m_settings->samplingSpacing, i);
+				ui->display_image->getTargetsFromBinaryImage(binImage, m_settings->samplingSpacing, m_settings->samplingOffset, threshold, m_settings->samplingType,  i);
 			}
 			else
-				ui->display_image->getTargetsFromBinaryImage(tim.getImage(), threshold, m_settings->samplingType, m_settings->samplingSpacing, i);
+				ui->display_image->getTargetsFromBinaryImage(tim->getImage(), m_settings->samplingSpacing, m_settings->samplingOffset, threshold, m_settings->samplingType, i);
 		}
 	}
 }
@@ -4515,13 +5158,13 @@ void MainWindow::on_actionDetect_lines_triggered()
 	{
 		foreach(int i, checked)
 		{
-			targeterImage tim = m_ImagesContainer.getImageAt(i);
-			cv::Mat& im = tim.getImage();
+			QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(i);
+			cv::Mat& im = tim->getImage();
 				
 			cv::Mat out = m_ImageProcessing.getLines(im, m_settings->objectColours[drawingItems::hough]);
 
 			if(out.rows>0 && out.cols>0)
-				addCVImage(out, tim.getUID(), "hough lines image", true, tim.getImageFunction());
+				addCVImage(out, "hough lines image", true, tim->getImageFunction());
 		}
 
 		ui->actionDetect_lines->setChecked(false);
@@ -4587,7 +5230,7 @@ void MainWindow::on_actionCalibrate_Camera_triggered()
 		if (ui->ImageThumbList->count() > 0 && checked.size() > 0)
 		{
 			// get all checked images .get
-			QFuture<void> t1 = QtConcurrent::run(&m_ImageProcessing, &ImageProcessing::calibrateCamera, m_ImagesContainer.getImages(checked), m_settings.get());
+			QFuture<void> t1 = QtConcurrent::run(&m_ImageProcessing, &ImageProcessing::calibrateCamera, m_ImagesContainer.getImages(checked), m_settings.data());
 		}
 	}
 }
@@ -4600,13 +5243,13 @@ void MainWindow::on_actionEdge_Detection_triggered()
 	{
 		foreach(int i, checked)
 		{
-			targeterImage t = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> t = m_ImagesContainer.getImageAt(i);
 
-			cv::Mat& im = t.getImage();
+			cv::Mat& im = t->getImage();
 
 			cv::Mat m = m_ImageProcessing.CannyEdgeDetection(im);
 
-			addCVImage(m, t.getUID(), "canny edge image", true, t.getImageFunction());
+			addCVImage(m, "canny edge image", true, t->getImageFunction());
 		}
 	}
 }
@@ -4619,13 +5262,13 @@ void MainWindow::on_actionCorner_Detection_triggered()
 	{
 		foreach(int i, checked)
 		{
-			targeterImage t = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> t = m_ImagesContainer.getImageAt(i);
 
-			cv::Mat& im = t.getImage();
+			cv::Mat& im = t->getImage();
 
 			cv::Mat im2 = m_ImageProcessing.CornerDetection(im, m_settings->calibrateNoCols*m_settings->calibrateNoRows);
 
-			addCVImage(im2, t.getUID(), "corrected image", true, t.getImageFunction());
+			addCVImage(im2, "corrected image", true, t->getImageFunction());
 		}
 	}
 }
@@ -4638,9 +5281,9 @@ void MainWindow::on_actionCorrectImage_triggered()
 	{
 		foreach(int i, checked)
 		{
-			targeterImage t = m_ImagesContainer.getImageAt(i);
+			QExplicitlySharedDataPointer<targeterImage> t = m_ImagesContainer.getImageAt(i);
 
-			cv::Mat& im = t.getImage();
+			cv::Mat& im = t->getImage();
 			cv::Mat im2;
 
 			cv::Mat map1, map2;
@@ -4653,7 +5296,7 @@ void MainWindow::on_actionCorrectImage_triggered()
 			// must be new and empty image
 			cv::remap(im, im2, map1, map2, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar());
 
-			std::string pathname = t.name;
+			std::string pathname = t->name;
 
 			int pos = -1;
 
@@ -4668,13 +5311,16 @@ void MainWindow::on_actionCorrectImage_triggered()
 #else
 			cv::imwrite(pathname, im2);
 #endif
-			addCVImage(im2, t.getUID(), "corrected image", true, t.getImageFunction());
+			addCVImage(im2, "corrected image", true, t->getImageFunction());
 		}
 	}
 }
 
 void MainWindow::moveObjective(QPoint pt)
 {
+	#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
 	// transform image coordinates to stage coordinates
 	// if not explicitly set then QT initializes to identity matrix (ie no transform)
 
@@ -4686,11 +5332,11 @@ void MainWindow::moveObjective(QPoint pt)
 
 void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D topright, QVector3D bottomleft)
 {
-	float M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M44;
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
 
-	//QVector3D topleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::topleft_microscope];
-	//QVector3D topright = m_settings->fiducial_marks_stage[FIDUCIAL::position::topright_microscope];
-	//QVector3D bottomleft = m_settings->fiducial_marks_stage[FIDUCIAL::position::bottomleft_microscope];
+	float M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M44;
 
 	// this is the translation offset from the stage to the fiducial marks
 	M14 = topleft.x();
@@ -4709,6 +5355,8 @@ void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D toprigh
 
 	// normalise vectors to unit length, stage scale space will be the same as fiducial scale space
 	// only the rotation angles will differ between the vector frames.
+
+	// what we are doing here is finding unit vectors all microns information lost!
 	XAxisFiducial.normalize();
 	YAxisFiducial.normalize();
 	ZAxisFiducial.normalize();
@@ -4717,6 +5365,9 @@ void MainWindow::createTransformationMatrix(QVector3D topleft, QVector3D toprigh
 	// direction same & scale same as fiducial frame of reference
 	// as fiducial vectors have been normalised to length of 1
 
+	// would be better in microns, so subtract topright.x from topleft.x and bottomleft.y from topleft.y 
+	// or create a vector from fiducial marks, making relative to top left
+	
 	QVector3D XAxisStage = QVector3D(1, 0, 0);
 	QVector3D YAxisStage = QVector3D(0, 1, 0);
 	QVector3D ZAxisStage = QVector3D(0, 0, 1);
@@ -4761,10 +5412,19 @@ QVector3D MainWindow::getAbsolutePosition(QVector3D relativePosition)
 
 void MainWindow::on_action_scan_regions_triggered()
 {
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+
 	// get masked regions
 	int ind = getValidImageIndex();
 	bool showImage = true;
 	bool bFoundRect = false;
+
+	// reset all values, the first focus scan will be full range
+	m_focusSettings.BestFocusRange = 999;
+	m_focusSettings.BestFocusPosition = 999;
+	m_focusSettings.bestFocusValue = -1;
 
 	if (ind >= 0)
 	{
@@ -4772,118 +5432,233 @@ void MainWindow::on_action_scan_regions_triggered()
 		if (m_settings->activeCamera != cameraType::microscope)
 			m_settings->activeCamera = cameraType::microscope;
 
-		targeterImage tim = m_ImagesContainer.getImageAt(ind);
-		cv::Mat& im = tim.getImage();
+		QExplicitlySharedDataPointer<targeterImage> tim = m_ImagesContainer.getImageAt(ind);
+		cv::Mat& im = tim->getImage();
 
 		m_MosiacImageList.clear();
 
-		QVector<drawingShape> shapes = ui->display_image->getTargetImage(false, true, ind);
+		QVector<QSharedPointer<drawingShape>> shapes = ui->display_image->getImageShapes(false, false, ind);
+		XMLWriter writer(this);
+		writer.OpenFile(m_settings->s_project_Directory, m_settings->s_project_FilenamePrefix + m_settings->s_project_Barcode + ".xml");
+		writer.appendImageInformationXML(tim->getFileName(), "Overview image", shapes);
 
-		m_stageStateXY.removeAll();
+		StagePosition<double> stagePositionsZ;
+	
+		ImageData imdata;
 
-		foreach(drawingShape s, shapes)
+		int shapeCount = 0;
+		
+		// transform coordinates
+		foreach(QSharedPointer<drawingShape> s, shapes)
 		{
+			shapeCount++;
+			s->ID = shapeCount;
+
 			// rectangles used for masking stage ROI's
-			if (s.type == drawingMode::rect)
+			if (s->type == drawingMode::rect || s->type == drawingMode::circle || s->type == drawingMode::poly)
 			{
-				QPointF tl = m_settings->m_coordinateTransform.map(QPointF(s.boundingBox.topLeft()));
-				QPointF br = m_settings->m_coordinateTransform.map(QPointF(s.boundingBox.bottomRight()));
+				QPointF tl = m_settings->m_coordinateTransform.map(QPointF(s->boundingBox.topLeft()));
+				QPointF br = m_settings->m_coordinateTransform.map(QPointF(s->boundingBox.bottomRight()));
+
+				QPolygonF imagePoly;
+				imagePoly.clear();
+
+				if (s->type == drawingMode::poly)
+				{
+					foreach(QPoint pt, s->polygon)
+						imagePoly.append(m_settings->m_coordinateTransform.map(pt));
+				}
 
 				// transform image rect to stage position
 				QRectF frect = QRectF(fmin(tl.x(), br.x()), fmin(tl.y(), br.y()), fabs(tl.x() - br.x()), fabs(tl.y() - br.y()));
 
-				double imageWidthInMM = m_settings->micronsPerPixel*double(m_settings->imageWidth);
-				double imageHeightInMM = m_settings->micronsPerPixel*double(m_settings->imageHeight);
+				double imageWidthInMM = m_settings->mmPerPixel*double(m_settings->imageWidth);
+				double imageHeightInMM = m_settings->mmPerPixel*double(m_settings->imageHeight);
 
 				double x1 = frect.left();
 				double x2 = frect.right();
 				double y1 = frect.top();
 				double y2 = frect.bottom();
 
+				int x = 0, y = 0;
+
+				ScanRegion scanRegion;
+
+				scanRegion.regionShape = s->type;
+				scanRegion.scanRegion = frect;
+				scanRegion.scanRegionIndex = shapeCount;
+
 				// have to save state of movements in QPoint array and iterate array using global counter, maybe in a stage movement class 
-				for(double i=x1; i< x2; i+= imageWidthInMM)
-					for (double j = y1; j< y2; j += imageHeightInMM)
+				for (double i = x1; i < x2; i += imageWidthInMM, x++)
+					for (double j = y1; j < y2; j += imageHeightInMM, y++)
 					{
-						// move to stage position
-						m_stageStateXY.addValue(QPointF(i, j));
+						QRectF tile = QRect(i, j, imageWidthInMM, imageWidthInMM);
+
+						// check if point in polygon or ellipse if these shapes used
+						if(s->type == drawingMode::rect || 
+							(s->type == drawingMode::circle &&
+							HelperFunctions::pointInEllipse(frect, tile.topLeft()) ||
+							HelperFunctions::pointInEllipse(frect, tile.topRight()) ||
+							HelperFunctions::pointInEllipse(frect, tile.bottomLeft()) ||
+							HelperFunctions::pointInEllipse(frect, tile.bottomRight())) ||
+							(s->type == drawingMode::poly &&
+							HelperFunctions::pointInPoly(s->polygon, tile.topLeft()) ||
+							HelperFunctions::pointInPoly(s->polygon, tile.topRight()) ||
+							HelperFunctions::pointInPoly(s->polygon, tile.bottomLeft()) ||
+							HelperFunctions::pointInPoly(s->polygon, tile.bottomRight())) )
+						{
+							// also store i,j index position, necessary for recreating the image.
+							QPoint posIndex(x, y);
+
+							// move to stage position
+							StageCoordinates sc;
+							sc.stagePosition3D.setX(tile.left());
+							sc.stagePosition3D.setY(tile.top());
+							sc.index = posIndex;
+							sc.tileSize = QSize(imageWidthInMM, imageHeightInMM);
+							
+							scanRegion.stagePositions.append(sc);
+						}
 					}
+
+				m_currentScanImageData.scanRegion.append(scanRegion);
+
+				bFoundRect = true;
 			}
 		}
 
+		if(!bFoundRect)
+			consoleLog("No rect, ellipse or poly drawing shapes found for defining scanning area", CONSOLECOLOURS::colour::Warning);
+
 		// will call a lot of events but should wait for process to complete before next stage movement.
-		if(!m_stageStateXY.isEmpty())
+		if(!m_currentScanImageData.scanRegion.first().stagePositions.isEmpty())
 		{
-			m_stageStateXY.resetPosition();
-
-			QPointF pt = m_stageStateXY.getValue();
-
-			m_stageStateXY.moveNext();
-
+			const QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+			
+			m_focusSettings.BestFocusPosition = m_settings->m_DefaultFocusPosition;
+			
 			emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::coarseFocus);
 		}
 	}
 }
 
+// called when stage moved to new XY position - focusing starts
 void MainWindow::stageMovedXY(double x, double y, ACTIONS::action act)
 {
-	// stage moved now start coarse focusing
-	if (act == ACTIONS::coarseFocus)
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+	double focusRange = m_settings->m_FocusRange;
+	double bestFocusPosition = m_settings->m_DefaultFocusPosition;
+
+	// use best range as range
+	if (m_settings->m_bOptimiseFocusRange && m_focusSettings.BestFocusRange != 999)
+		focusRange = m_focusSettings.BestFocusRange;
+	
+	// use last found best focus position to center next focus range
+	if ((m_settings->m_bCenterFocus || m_settings->m_bInterpolateFocusPosition) && m_focusSettings.BestFocusPosition != 999)	// don't do on first iteration
 	{
-		double fromPos = m_settings->m_MinFocus;
-		double toPos = m_settings->m_MaxFocus;
+		bestFocusPosition = m_focusSettings.BestFocusPosition;
 
-		m_FOCUS_STATE = ACTIONS::coarseFocus;
+		if (m_settings->m_bInterpolateFocusPosition)
+			bestFocusPosition = m_focusSettings.BestFocusPosition + m_focusSettings.dBestFocusPosition;			// interpolate
+	}
 
-		// from 5mm to 8 mm do a coarse focusing
-		createFocusStackAndMove(fromPos, toPos, m_settings->m_CoarseFocusStep, act);
+	// if only fine focusing selected do only a fine focusing
+	if(m_settings->m_bUseFineFocusRange && !m_settings->m_bUseCoarseFocusRange)		
+	{
+		// stage moved now start fine focusing
+		m_focusSettings.FOCUS_STATE = ACTIONS::fineFocus;
+
+		// do a fine focusing
+		createFocusStackAndMove(bestFocusPosition, focusRange, m_settings->m_FineFocusStep, act);
+	}
+	else  // normal case: start with coarse focusing
+	{	
+		// stage moved now start coarse focusing
+		m_focusSettings.FOCUS_STATE = ACTIONS::coarseFocus;
+
+		// do a coarse focusing
+		createFocusStackAndMove(bestFocusPosition, focusRange, m_settings->m_CoarseFocusStep, act);
 	}
 }
 
-void MainWindow::createFocusStackAndMove(double minPos, double maxPos, double step, ACTIONS::action act)
+void MainWindow::createFocusStackAndMove(double bestFocus, double focusRange, double step, ACTIONS::action act, bool bUpFirst)
 {
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+	m_focusSettings.noFocusStackImages = 0;
 	// clear position array and image array
-	m_stageStateZ.removeAll();
-	m_noFocusStackImages = 0;
 
-	// add focus positions to array
-	for (double z = minPos; z <= maxPos; z += step)
+	m_focus_position_Z.removeAll();
+	
+	if(bUpFirst)
 	{
-		m_noFocusStackImages++;
-		m_stageStateZ.addValue(z);
+		// add focus positions to array
+		// go upwards from center
+		for (double z = bestFocus; z <= bestFocus + focusRange; z += step)
+			m_focus_position_Z.append(z);
+
+		// then downwards from center
+		for (double z = bestFocus-step; z >= bestFocus - focusRange; z -= step)
+			m_focus_position_Z.append(z);
+	}
+	else
+	{
+		// add focus positions to array
+		// go downwards from center
+		for (double z = bestFocus; z >= bestFocus - focusRange; z -= step)
+			m_focus_position_Z.append(z);
+	
+		// then upwards from center
+		for (double z = bestFocus+step; z <= bestFocus + focusRange; z += step)
+			m_focus_position_Z.append(z);
 	}
 
 	// move to first position
-	if (!m_stageStateZ.isEmpty())
+	if(m_focus_position_Z.checkIfValid())
 	{
-		m_stageStateZ.resetPosition();
+		m_focus_position_Z.setPosition(0);
 
-		// get position to move to 
-		double z = m_stageStateZ.getValue();
-		
-		// increment iterator to next position
-		m_stageStateZ.moveNext();
+		m_focusSettings.noFocusStackImages = m_focus_position_Z.getSize();
 
 		// calls Z axis stage move
-		emit MoveAbsoluteZ(z, act);
+		emit MoveAbsoluteZ(m_focus_position_Z.getCurentPosition(), act);
 	}
 }
 
+// fullRange, centered, bestRange, centeredBestRange, coarse, fine, bestRangeCoarse, bestRangeFine, interpolate
 // called after Z axis stage has moved
 void MainWindow::stageMovedZ(double stageZ, ACTIONS::action act)
 {
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
 	if (!(act == ACTIONS::addToMosaic))
 	{
 		cv::Mat image = basCamera->grabImage(cameraType::microscope);
 
 		if (!image.empty())
 		{
+			updateVideoImage(image);// add image to gallery
+
 			if (act == ACTIONS::coarseFocus || act == ACTIONS::fineFocus)
 			{
 				// get focus position
-				double z = m_stageStateZ.getValue();
+				if(m_focus_position_Z.checkIfValidPosition())
+				{
+					double z = m_focus_position_Z.getCurentPosition();
 
-				// get focus value from image
-				startFocusThreads(image, z, act);
+					// increment to next position
+					m_focus_position_Z.moveIterator();
+
+					// get focus value from image
+					startFocusThreads(image, z, act);		
+					
+					// move stage to next focus position
+					emit MoveAbsoluteZ(z, act);
+				}
 			}
 		}
 		else
@@ -4891,14 +5666,11 @@ void MainWindow::stageMovedZ(double stageZ, ACTIONS::action act)
 			consoleLog("stageMovedZ - no image grabbed - aborting!", CONSOLECOLOURS::colour::Warning);
 			return;
 		}
-
-		double z = m_stageStateZ.moveGetValue();
-
-		// move stage to next focus position
-		emit MoveAbsoluteZ(z, act);
 	}
 	else if (act == ACTIONS::MosaicFinished)
 	{
+		// write all other scan information here.
+
 		// process mosaic etc
 		QMessageBox::information(this, tr("Targeter"),
 			tr("Finished obtaining images from frame"),
@@ -4911,37 +5683,68 @@ void MainWindow::stageMovedZ(double stageZ, ACTIONS::action act)
 	}
 }
 
+
 void MainWindow::startFocusThreads(cv::Mat image, double z, ACTIONS::action act)
 {
-	MultiWatcher* mWatcher = new MultiWatcher;
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
 
+#ifdef _CUDA_CODE_COMPILE_not_implemented_
+	FocusResult res;
+
+	res.z = z;
+	res.act = act;
+	res.focusImage = image;
+
+	m_FocusCUDA.getFocusScore(res);
+
+	addFocusValue(res);
+
+#else
 	QFutureWatcher<FocusResult>* watcher = new QFutureWatcher<FocusResult>();
 
 	connect(watcher, &QFutureWatcher<FocusResult>::finished, this, &MainWindow::addFocusValueCompleted);
 
 	QFuture<FocusResult> future = QtConcurrent::run(this, &MainWindow::getFocusValue, image, z, act);
+
 	watcher->setFuture(future);
+#endif
 
-	mWatcher->_sync.addFuture(future);
+	// future watcher stuff
+	//MultiWatcher* mWatcher = new MultiWatcher;
 
-	connect(mWatcher, &MultiWatcher::MultiWatchDone, this, &MainWindow::allFocusValuesCompleted);
+	//mWatcher->_sync.addFuture(future);
+
+	//connect(mWatcher, &MultiWatcher::MultiWatchDone, this, &MainWindow::allFocusValuesCompleted);
+
+	//mWatcher->start();
 }
 
 // called in separate thread, gets focus value for image
-FocusResult MainWindow::getFocusValue(cv::Mat im, double z, ACTIONS::action act)
+FocusResult MainWindow::getFocusValue(cv::Mat& im, double z, ACTIONS::action act)
 {
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+
 	FocusResult res;
 
 	res.z = z;
-	res.focusValue = FocusStack::getFocusImage(im, m_settings->FocusAlgorithm);
 	res.act = act;
 	res.focusImage = im;
+
+	res.focusValue = FocusStack::getFocusImage(im, m_settings->FocusAlgorithm);
 
 	return res;
 }
 
 void MainWindow::addFocusValueCompleted()
 {
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+
 	QFutureWatcher<FocusResult>* pWatcher = dynamic_cast<QFutureWatcher<FocusResult>*>(sender());
 
 	if (pWatcher)
@@ -4950,71 +5753,196 @@ void MainWindow::addFocusValueCompleted()
 
 		FocusResult result = pWatcher->future().result();
 
-		addFocusValue(result.focusImage, result.z, result.focusValue, result.act);
+		addFocusValue(result);
 
 		delete pWatcher;
 	}
 }
 
+/*
 void MainWindow::allFocusValuesCompleted()
 {
 	sender()->deleteLater();
 
-	// process focus images
-	if (m_focusStackData.size() >= m_noFocusStackImages)
+}
+
+
+bool m_bOptimiseFocusRange;
+bool m_bInterpolateFocusPosition;
+bool m_bUseFocusThreshold;
+bool m_bUseCoarseFocusRange;
+bool m_bUseFineFocusRange;
+bool m_bCenterFocus;
+bool m_bUseRegisteredFocusPoints;
+*/
+//fullRange, centered, bestRange, centeredBestRange, coarse, fine, bestRangeCoarse, bestRangeFine, interpolate
+void MainWindow::addFocusValue(FocusResult result)
+{
+
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+
+	FocusImage fi;
+	fi.focusValue = result.focusValue;
+	fi.focusImage = result.focusImage;
+
+	QString actstr = ACTION_STRINGS(result.act);
+
+	consoleLog("action:" + actstr + " z:" + QString::number(result.z) + " focus value:" + QString::number(result.focusValue));
+
+	// if good enough focus value then quit coarse focus & do next step
+	if(	m_settings->m_bUseFocusThreshold && 
+		m_focusSettings.bestFocusValue>0 &&
+		fi.focusValue > m_focusSettings.bestFocusValue*(1.0 - m_settings->m_FocusThresholdFraction))
 	{
-		// get focus position and best focused image
-		double bestPosition = getBestFocusValue(m_focusStackData);
-		cv::Mat bestImage = m_focusStackData[bestPosition].focusImage;
+		// use this position as best focus and move on
+		double bestFocusValue = fi.focusValue;
 
-		// clear the data array now we have the best focus position and image
-		m_focusStackData.clear();
+		// get focus position and best focused image as this image & position
+		double bestPosition = result.z;
 
-		// do next operation
-		if (m_FOCUS_STATE == ACTIONS::coarseFocus)
+		// just do fine focus range at this position
+		if (m_settings->m_bUseFineFocusRange)		
 		{
-			// get best focus position
-			double fromPos = bestPosition - m_settings->m_CoarseFocusStep;
-			double toPos = bestPosition + m_settings->m_CoarseFocusStep;
+			// do fine search at this position
 
 			// change focus state
-			m_FOCUS_STATE = ACTIONS::fineFocus;
+			m_focusSettings.FOCUS_STATE = ACTIONS::fineFocus;
 
 			// 	now do fine focusing
-			createFocusStackAndMove(fromPos, toPos, m_settings->m_FineFocusStep, ACTIONS::fineFocus);
+			createFocusStackAndMove(result.z, m_settings->m_CoarseFocusStep, m_settings->m_FineFocusStep, ACTIONS::fineFocus);
 		}
-		else if (m_FOCUS_STATE == ACTIONS::fineFocus)
+		else	// quit and use best focus value
 		{
-			// add best focused image from fine image stack & save image
+			// save for later comparisons
+			m_focusSettings.bestFocusValue = bestFocusValue;
+
+			m_focusSettings.dBestFocusPosition = bestPosition - m_focusSettings.BestFocusPosition;
+			m_focusSettings.BestFocusPosition = bestPosition;
+
+			cv::Mat bestImage = result.focusImage;
+
+			// add image and do next XY position
 			addImageMosaic(bestImage, bestPosition);
 		}
 	}
+	else		// for all other types of focusing complete focus stack
+	{
+		// add focus information to array
+		m_focusSettings.focusStackData.insert(result.z, fi);
 
+		// if focus stack completed
+		if (m_focusSettings.focusStackData.size() >= m_focusSettings.noFocusStackImages)
+		{
+			double bestFocusValue = 0;
+
+			// get focus position and best focused image
+			double bestPosition = getBestFocusPosition(bestFocusValue);
+			m_focusSettings.dBestFocusPosition = bestPosition - m_focusSettings.BestFocusPosition;
+
+			m_focusSettings.BestFocusPosition = bestPosition;
+
+			cv::Mat bestImage = m_focusSettings.focusStackData[bestPosition].focusImage;
+
+			// save for later comparisons
+			m_focusSettings.bestFocusValue = bestFocusValue;
+
+			// calculate optimised focus range
+			if (m_settings->m_bOptimiseFocusRange)
+			{
+				// range calculated from min max position of focus values that were greater then focus threshold min(x:f(x)>T)
+				if (m_focusSettings.FOCUS_STATE == ACTIONS::coarseFocus)
+				{
+					double range = getBestFocusRange(bestFocusValue);
+
+					if (range > 0)
+						m_focusSettings.BestFocusRange = range;
+				}
+			}
+
+			// clear the data array now we have the best focus position and image
+			m_focusSettings.focusStackData.clear();
+
+			// if just coarse selected then focusing finished, move on to next position
+			if (m_settings->m_bUseCoarseFocusRange && !m_settings->m_bUseFineFocusRange)
+			{
+				// add best focused image from fine image stack & save image
+				addImageMosaic(bestImage, bestPosition);
+			}
+			else
+			{
+				// do next operation
+				if (m_focusSettings.FOCUS_STATE == ACTIONS::coarseFocus)
+				{
+					// get best focus position - fine increments about +/- one coarse step
+					// should be improved, it could be that the coarse step is not big enough
+
+					// change focus state
+					m_focusSettings.FOCUS_STATE = ACTIONS::fineFocus;
+
+					// 	now do fine focusing
+					createFocusStackAndMove(bestPosition, m_settings->m_CoarseFocusStep, m_settings->m_FineFocusStep, ACTIONS::fineFocus);
+				}
+				else if (m_focusSettings.FOCUS_STATE == ACTIONS::fineFocus)
+				{
+					// add best focused image from fine image stack & save image, in separate thread
+					QFuture<void> t1 = QtConcurrent::run(this, &MainWindow::addImageMosaic, bestImage, bestPosition);
+				}
+			}
+		}
+	}
 }
 
-void MainWindow::addFocusValue(cv::Mat im, double z, double focusStrength, ACTIONS::action act)
+double MainWindow::getBestFocusRange(double bestFocus)
 {
-	FocusImage fi;
-	fi.focusValue = focusStrength;
-	fi.focusImage = im;
+	QMapIterator<double, FocusImage> i = QMapIterator<double, FocusImage>(m_focusSettings.focusStackData);
 
-	// add focus information to array
-	m_focusStackData.insert(z, fi);
+	double start = 0, end = 0, mult = 1.0;
 
-	
+	// get best focus value
+	while (i.hasNext())
+	{
+		i.next();
+
+		if (i.value().focusValue >= bestFocus*m_settings->m_FocusThresholdFraction)
+		{
+			start = i.key();
+			break;
+		}
+	}
+
+	i.toBack();
+
+	while (i.hasPrevious())
+	{
+		i.previous();
+
+		if (i.value().focusValue >= bestFocus*m_settings->m_FocusThresholdFraction || i.key() == start)
+		{
+			end = i.key();
+			break;
+		}
+	}
+
+	// if value lies at ends of range then double range
+	if (start == m_focusSettings.focusStackData.first().focusValue || end == m_focusSettings.focusStackData.last().focusValue)
+		mult = 2.0;
+
+	return mult*(end - start);
 }
 
-double MainWindow::getBestFocusValue(QMap<double, FocusImage> focusValues)
+double MainWindow::getBestFocusPosition(double& bestFocusValue)
 {
-	QMapIterator<double, FocusImage> i = QMapIterator<double, FocusImage>(focusValues);
+	QMapIterator<double, FocusImage> i = QMapIterator<double, FocusImage>(m_focusSettings.focusStackData);
 
-	double bestPosition = 0, minVal = 0;
+	double bestPosition = 0, maxVal = 0;
 
 	// get first element
 	if(i.hasNext())
 	{
 		i.next();
-		minVal = i.value().focusValue;
+		maxVal = i.value().focusValue;
 		bestPosition = i.key();
 	}
 
@@ -5023,12 +5951,14 @@ double MainWindow::getBestFocusValue(QMap<double, FocusImage> focusValues)
 	{
 		i.next();
 
-		if (i.value().focusValue >= minVal)
+		if (i.value().focusValue >= maxVal)
 		{
-			minVal = i.value().focusValue;
+			maxVal = i.value().focusValue;
 			bestPosition = i.key();
 		}
 	}
+
+	bestFocusValue = maxVal;
 
 	return bestPosition;
 }
@@ -5036,52 +5966,138 @@ double MainWindow::getBestFocusValue(QMap<double, FocusImage> focusValues)
 void MainWindow::addImageMosaic(cv::Mat& image, double focusDistance)
 {
 	// check here if position valid 
-	
-
 	if (focusDistance > -990)
 	{
 		QString pathname = m_settings->s_project_Directory + m_settings->s_project_FilenamePrefix + "_";
 
-		QPointF pt = m_stageStateXY.getValue();	
+		bool bFound;
 
-		QVector3D absolutePosition = QVector3D(pt);
-		absolutePosition.setZ(focusDistance);
+		ScanRegion sr = m_currentScanImageData.getScanRegion(bFound);
 
-		QVector3D relativePosition = getRelativePosition(absolutePosition);
+		if(bFound)
+		{
+			StageCoordinates sc = sr.getStagePosition(bFound);
 
-		// add image to mosaic and save to file.
-		QString filename = pathname + "_stage[" + QString::number(absolutePosition.x()) + "," + QString::number(absolutePosition.y()) + "," + QString::number(absolutePosition.z()) + "]" +
-			+"_fid[" + QString::number(relativePosition.x()) + "," + QString::number(relativePosition.y()) + "," + QString::number(relativePosition.z()) + "]" +
-			".png";
+			if(bFound)
+			{
+				QSharedPointer<ImageData> id = sc.childImage;
 
-		// save file name in list
-		m_MosiacImageList[filename] = image;
+				QPoint ind = sc.index;
+
+				QVector3D absolutePosition = sc.stagePosition3D;
+				absolutePosition.setZ(focusDistance);
+
+				QVector3D relativePosition = getRelativePosition(sc.stagePosition3D);
+
+				// add image to mosaic and save to file.
+				QString filename = pathname + "_ind[" + QString::number((int)ind.x()) + "," + QString::number((int)ind.y()) + "]" +
+					+"_stage[" + QString::number(absolutePosition.x()) + "," + QString::number(absolutePosition.y()) + "," + QString::number(absolutePosition.z()) + "]" +
+					+"_fid[" + QString::number(relativePosition.x()) + "," + QString::number(relativePosition.y()) + "," + QString::number(relativePosition.z()) + "]" +
+					".png";
+
+				id->filename = filename;
+
+				// save file name in list
+				m_MosiacImageList[filename] = image;
+
+				QString jsonData = "{name: " + filename + ", pattern:" + QString::number(id->scanRegionIndex) +
+					", shapeType:" + DRAWINGMODESTRINGS(sr.regionShape) +
+					", frameBarcode:" + m_settings->s_project_Barcode + "}," +
+					", tileSize:{width:" + QString::number(sc.tileSize.width()) + ", height:" + QString::number(sc.tileSize.height()) + "}," +
+					", index:{x:" + QString::number((int)ind.x()) + ", y:" + QString::number((int)ind.y()) + "}," +
+					", stage:{x:" + QString::number(absolutePosition.x()) + ", y:" + QString::number(absolutePosition.y()) + ", z:" + QString::number(absolutePosition.z()) + "}," +
+					" fiducial:[x:" + QString::number(relativePosition.x()) + ",y:" + QString::number(relativePosition.y()) + ", z:" + QString::number(relativePosition.z()) + "}}";
+
+				if (m_settings->m_bShowBestFocusImage)
+					updateVideoImage(image);// add image to gallery
+
+				// add to list of processed images
+				m_processedImages.append(m_currentScanImageData);
+
+				if (m_settings->m_bDetectTargetsWhileScanning)
+				{
+					// get score image
+					LogProcessing(true);
+
+					cv::Mat scoreImage;
+
+					if (m_settings->algorithmType == algoType::COOC || m_settings->algorithmType == algoType::FASTCOOC)
+					{
+						scoreImage = m_FindTargets.detectCOOCHistogram(image, (m_settings->coocMatrix).data(), false, m_settings->bProcessGrayscale,
+																	   m_settings->algorithmType == algoType::FASTCOOC, m_settings->bCorrectBackGround);
+					}
+					else if (m_settings->algorithmType == algoType::LAWS)
+					{
+						scoreImage = m_FindTargets.detectLawsTextureFeatures(image, m_settings->lawsHistTarget, m_settings->lawsHistBiases, m_settings->bCorrectBackGround);
+					}
+
+					if (!scoreImage.empty())
+					{
+						cv::Mat im = getTargetPositions(scoreImage, QExplicitlySharedDataPointer<targeterImage>(false), m_ImagesContainer.getNumImages() - 1);
+					}
+					else
+					{
+						QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::QueuedConnection, Q_ARG(QString, "error - score image not created - did you forget to train?"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
+					}
+				}
 
 #ifdef _HAVE_IMAGEMAGICK
-		m_imageReadWrite.writeImage(filename, image);
+				// write image file including exif information
+				m_imageReadWrite.writeImage(filename, image, jsonData);
 #else
-		imwrite(filename.toLocal8Bit().data(), image);
+				imwrite(filename.toLocal8Bit().data(), image);
 #endif
+				// increment to next position
+				StageCoordinates nsc = sr.incrementStagePosition(bFound);
+
+				if(!bFound)
+				{
+					// move to next scan region
+					m_currentScanImageData.incrementScanRegion(bFound);
+
+					if(bFound)
+					{
+						nsc = sr.getStagePosition(bFound);
+
+						// no more places to move to
+						if(!bFound)
+						{
+							// move to beginning position
+							QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+							emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
+						}
+					}
+					else
+					{
+						// move to beginning position
+						QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+						emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
+					}
+				}
+				else
+				{
+					// move to beginning position
+					QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+					emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
+				}
+			}
+			else
+			{
+				// move to beginning position
+				QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+				emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
+			}
+		}
+		else
+		{
+			// move to beginning position
+			QPointF pt = m_currentScanImageData.scanRegion.first().stagePositions.first().stagePosition3D.toPointF();
+			emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
+		}
 	}
 	else
-		consoleLog("error - addImageMosaic - bad focus image!", CONSOLECOLOURS::Critical);
-
-
-
-	// move with action end
-	if(m_stageStateXY.okToMove())
-	{
-		// get next position
-		QPointF pt = m_stageStateXY.moveGetValue();
-
-		emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::coarseFocus);
-	}
-	else
-	{
-		QPointF pt = m_stageStateXY.getValue();
-
-		emit MoveAbsoluteXY(pt.x(), pt.y(), ACTIONS::action::MosaicFinished);
-	}
+		QMetaObject::invokeMethod(this, "LOGCONSOLE", Qt::QueuedConnection, Q_ARG(QString, "error - addImageMosaic - bad focus image!"), Q_ARG(CONSOLECOLOURS::colour, CONSOLECOLOURS::colour::Warning));
+	
 }
 
 /*

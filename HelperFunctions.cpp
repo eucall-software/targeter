@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <vector>
 #include <QImage>
+#include <QJsonDocument>
 
 #include "opencv2/opencv.hpp"
 #include "opencv/highgui.h"
@@ -31,6 +32,36 @@ QColor HelperFunctions::S2QC(cv::Scalar color)
 	return QColor(color[2], color[1], color[0]); // swap RGB-->BGR
 }
 
+cv::Mat HelperFunctions::convertFloatToGreyscaleMat(cv::Mat im)
+{
+	cv::Mat sim, img;
+
+	vector<cv::Mat> channels;
+
+	cv::Mat g(cv::Size(im.rows, im.cols), CV_8UC1, cv::Scalar(0));
+	normalize(im, im, 0, 255, cv::NORM_MINMAX, CV_32F);
+
+	im.convertTo(img, CV_8UC1);
+
+	channels.push_back(img); //R
+	channels.push_back(img); //G
+	channels.push_back(img); //B
+
+	merge(channels, sim);
+
+	return sim;
+}
+
+QVector3D HelperFunctions::addPointToVector3D(QVector3D vect, QPointF pt)
+{
+	QVector3D ret = vect;
+
+	ret.setX(vect.x() + pt.x());
+	ret.setY(vect.y() + pt.y());
+
+	return ret;
+}
+
 bool HelperFunctions::checkMatCompatibility(cv::Mat& in, cv::Mat& out, const int expectedType, bool checkType)
 {
 	if (in.type() != out.type())
@@ -41,6 +72,33 @@ bool HelperFunctions::checkMatCompatibility(cv::Mat& in, cv::Mat& out, const int
 			return false;
 	}
 	return true;
+}
+
+QSharedPointer<QRect> HelperFunctions::getPaddRect(QPoint ptStart, QPoint ptEnd, int levels)
+{
+	// padd region to be divisible by 2
+	int width = abs(ptEnd.x() - ptStart.x());
+	int height = abs(ptEnd.y() - ptStart.y());
+
+	QPoint dims(width, height);
+
+	int newSizeW = HelperFunctions::padd(width, levels);
+	int newSizeH = HelperFunctions::padd(height, levels);
+
+	QPoint newSize(newSizeW, newSizeH);
+
+	QPoint start = ptStart;
+	QPoint end = ptEnd;
+
+	if (ptEnd.x() < ptStart.x() || ptEnd.y() < ptStart.y())
+	{
+		start = ptEnd;
+		end = ptStart;
+	}
+
+	QSize s(newSizeW, newSizeH);
+
+	return QSharedPointer<QRect>(new QRect(ptStart - (newSize - dims) / 2, s));
 }
 
 
@@ -57,9 +115,9 @@ bool HelperFunctions::checkMatCompatibility(cv::Mat& in, cv::Mat& out, const int
 * @return    std::string
 * Access     public 
 */
-string HelperFunctions::type2str(int type)
+QString HelperFunctions::type2str(int type)
 {
-	string r;
+	QString r;
 
 	uchar depth = type & CV_MAT_DEPTH_MASK;
 	uchar chans = 1 + (type >> CV_CN_SHIFT);
@@ -403,6 +461,26 @@ QImage::Format HelperFunctions::getFormat(int type)
 	return QImage::Format_Invalid;
 }
 
+
+QJsonObject HelperFunctions::ObjectFromString(const QString& in)
+{
+	QJsonObject obj;
+
+	QJsonDocument doc = QJsonDocument::fromJson(in.toUtf8());
+
+	// check validity of the document
+	if (!doc.isNull())
+	{
+		if (doc.isObject())
+		{
+			obj = doc.object();
+		}
+	}
+
+	return obj;
+}
+
+
 /**
 *
 *  determines if image is greyscale
@@ -428,6 +506,42 @@ bool HelperFunctions::isGrayImage(const cv::Mat& img) // returns true if the giv
 		}
 	}
 	return true;
+}
+
+bool HelperFunctions::pointInEllipse(QRectF ellipseRect, QPointF pt)
+{
+	bool inObject = false;
+	double rx = ellipseRect.width() / 2.0;
+	double ry = ellipseRect.height() / 2.0;
+
+	double rx2 = rx*rx;
+	double ry2 = ry*ry;
+	double dx = pt.x() - ellipseRect.center().x();
+	double dx2 = dx*dx;
+	double dy = pt.y() - ellipseRect.center().y();
+	double dy2 = dy*dy;
+
+	if(ellipseRect.contains(pt))
+	{
+		// within rectangle at least
+		return dx2 / rx2 + dy2 / ry2 <= 1;
+	}
+	return false;
+}
+
+bool HelperFunctions::pointInPoly(QPolygonF poly, QPointF pt)
+{
+	int i, j;
+	bool inObject = false;
+	int nvert = poly.size();
+	bool c = false;
+
+	for (i = 0, j = nvert - 1; i < nvert; j = i++) {
+		if (((poly.at(i).y() >= pt.y()) != (poly.at(j).y() >= pt.y())) &&
+			(pt.x() <= (poly.at(j).y() - poly.at(i).x()) * (pt.y() - poly.at(i).y()) / (poly.at(j).y() - poly.at(i).y()) + poly.at(i).x()))
+			c = !c;
+	}
+	return c;
 }
 
 int* HelperFunctions::getCImage(const cv::Mat& img) // returns true if the given 3 channel image is B = G = R

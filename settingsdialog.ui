@@ -17,16 +17,22 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Targeter Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_7">
    <item>
     <widget class="QTabWidget" name="SettingsTab">
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="ProjectSettingsTab">
       <attribute name="title">
@@ -35,10 +41,10 @@
       <widget class="QWidget" name="verticalLayoutWidget_7">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>320</y>
-         <width>213</width>
-         <height>80</height>
+         <x>590</x>
+         <y>20</y>
+         <width>151</width>
+         <height>81</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -55,7 +61,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_16">
+         <layout class="QVBoxLayout" name="verticalLayout_51">
           <item>
            <widget class="QPushButton" name="btnSaveBackup">
             <property name="toolTip">
@@ -80,213 +86,308 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="verticalLayoutWidget_15">
        <property name="geometry">
         <rect>
-         <x>9</x>
-         <y>9</y>
-         <width>721</width>
-         <height>285</height>
+         <x>20</x>
+         <y>20</y>
+         <width>511</width>
+         <height>80</height>
         </rect>
        </property>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetMinimumSize</enum>
-        </property>
-        <item row="8" column="0">
-         <widget class="QLabel" name="label_85">
-          <property name="text">
-           <string>Sample Type</string>
-          </property>
-          <property name="buddy">
-           <cstring>editSampleDescription</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0">
-         <widget class="QLabel" name="label_93">
-          <property name="text">
-           <string>BarCode</string>
-          </property>
-          <property name="buddy">
-           <cstring>editBarcode</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_89">
-          <property name="text">
-           <string>Name of Institute</string>
-          </property>
-          <property name="buddy">
-           <cstring>editInstitute</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_94">
-          <property name="text">
-           <string>Project Directory</string>
-          </property>
-          <property name="buddy">
-           <cstring>editProjectDirectoryName</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="0">
-         <widget class="QLabel" name="label_87">
-          <property name="text">
-           <string>Date</string>
-          </property>
-          <property name="buddy">
-           <cstring>projectDate</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_40">
-          <property name="text">
-           <string>Project Name</string>
-          </property>
-          <property name="buddy">
-           <cstring>editProjectName</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_86">
-          <property name="text">
-           <string>Researcher Name(s)</string>
-          </property>
-          <property name="buddy">
-           <cstring>editName</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_41">
-          <property name="text">
-           <string>Project Reference (ID)</string>
-          </property>
-          <property name="buddy">
-           <cstring>editProjectID</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_88">
-          <property name="text">
-           <string>Version name</string>
-          </property>
-          <property name="buddy">
-           <cstring>editVersion</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label_83">
-          <property name="text">
-           <string>Project Description</string>
-          </property>
-          <property name="buddy">
-           <cstring>editDescription</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="label_84">
-          <property name="text">
-           <string>Saved Filename Prefix</string>
-          </property>
-          <property name="buddy">
-           <cstring>editFilenamePrefix</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QPushButton" name="btnProjectDirectory">
-          <property name="toolTip">
-           <string>Choose directory path</string>
+       <layout class="QVBoxLayout" name="verticalLayout_50">
+        <item>
+         <widget class="QLabel" name="label_287">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
           </property>
           <property name="text">
-           <string>Choose Directory Path</string>
+           <string>Project File</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="editProjectDirectoryName">
-          <property name="toolTip">
-           <string>name of directory to create</string>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_57">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_94">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Project Directory</string>
+            </property>
+            <property name="buddy">
+             <cstring>editProjectDirectoryName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="editProjectDirectoryName">
+            <property name="toolTip">
+             <string>name of directory to create</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="editFilenamePrefix">
+            <property name="toolTip">
+             <string>The name will be used when saving files</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_84">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Project Filename (XML)</string>
+            </property>
+            <property name="buddy">
+             <cstring>editFilenamePrefix</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="btnProjectDirectory">
+            <property name="toolTip">
+             <string>Choose directory path</string>
+            </property>
+            <property name="text">
+             <string>Choose Directory Path</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_17">
+       <property name="geometry">
+        <rect>
+         <x>19</x>
+         <y>130</y>
+         <width>721</width>
+         <height>271</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_52">
+        <item>
+         <widget class="QLabel" name="label_288">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Project Information</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QLineEdit" name="editName">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Names of the experiments involved in the project&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Project Name</string>
+            </property>
+            <property name="buddy">
+             <cstring>editProjectName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_93">
+            <property name="text">
+             <string>BarCode</string>
+            </property>
+            <property name="buddy">
+             <cstring>editBarcode</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_89">
+            <property name="text">
+             <string>Name of Institute</string>
+            </property>
+            <property name="buddy">
+             <cstring>editInstitute</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="label_87">
+            <property name="text">
+             <string>Date</string>
+            </property>
+            <property name="buddy">
+             <cstring>projectDate</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_86">
+            <property name="text">
+             <string>Researcher Name(s)</string>
+            </property>
+            <property name="buddy">
+             <cstring>editName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_41">
+            <property name="text">
+             <string>Project Reference (ID)</string>
+            </property>
+            <property name="buddy">
+             <cstring>editProjectID</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_88">
+            <property name="text">
+             <string>Version name</string>
+            </property>
+            <property name="buddy">
+             <cstring>editVersion</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_83">
+            <property name="text">
+             <string>Project Description</string>
+            </property>
+            <property name="buddy">
+             <cstring>editDescription</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QLineEdit" name="editName">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Names of the experiments involved in the project&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="editInstitute">
+            <property name="toolTip">
+             <string>Name of your institute</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <widget class="QLineEdit" name="editProjectName">
+            <property name="toolTip">
+             <string>Give your experiment a name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1" colspan="2">
+           <widget class="QLineEdit" name="editProjectID">
+            <property name="toolTip">
+             <string>You can also add a reference ID</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1" colspan="2">
+           <widget class="QLineEdit" name="editVersion">
+            <property name="toolTip">
+             <string>You can give this experiment a version number</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1" colspan="2">
+           <widget class="QLineEdit" name="editDescription">
+            <property name="toolTip">
+             <string>Use this field to describe your experiment</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1" colspan="2">
+           <widget class="QLineEdit" name="editSampleDescription">
+            <property name="toolTip">
+             <string>Explain more about your sample here</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1" colspan="2">
+           <widget class="QLineEdit" name="editBarcode">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If unable to scan the barcode of the sample frame the barcode can be entered here. This field also tells you what the scanned barcode is.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1" colspan="2">
+           <widget class="QDateEdit" name="projectDate">
+            <property name="toolTip">
+             <string>This should be the date of the experiment</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="label_85">
+            <property name="text">
+             <string>Sample Type</string>
+            </property>
+            <property name="buddy">
+             <cstring>editSampleDescription</cstring>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="projectData">
+      <attribute name="title">
+       <string>Project Data</string>
+      </attribute>
+      <widget class="QWidget" name="verticalLayoutWidget_18">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>751</width>
+         <height>451</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_53">
+        <item>
+         <widget class="QLabel" name="label_289">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Targeter XML File</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1" colspan="2">
-         <widget class="QLineEdit" name="editInstitute">
-          <property name="toolTip">
-           <string>Name of your institute</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="2">
-         <widget class="QLineEdit" name="editProjectName">
-          <property name="toolTip">
-           <string>Give your experiment a name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1" colspan="2">
-         <widget class="QLineEdit" name="editProjectID">
-          <property name="toolTip">
-           <string>You can also add a reference ID</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1" colspan="2">
-         <widget class="QLineEdit" name="editVersion">
-          <property name="toolTip">
-           <string>You can give this experiment a version number</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1" colspan="2">
-         <widget class="QLineEdit" name="editDescription">
-          <property name="toolTip">
-           <string>Use this field to describe your experiment</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1" colspan="2">
-         <widget class="QLineEdit" name="editFilenamePrefix">
-          <property name="toolTip">
-           <string>The name will be used when saving files</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1" colspan="2">
-         <widget class="QLineEdit" name="editSampleDescription">
-          <property name="toolTip">
-           <string>Explain more about your sample here</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1" colspan="2">
-         <widget class="QLineEdit" name="editBarcode">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If unable to scan the barcode of the sample frame the barcode can be entered here. This field also tells you what the scanned barcode is.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="1" colspan="2">
-         <widget class="QDateEdit" name="projectDate">
-          <property name="toolTip">
-           <string>This should be the date of the experiment</string>
+        <item>
+         <widget class="QWebEngineView" name="widget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
           </property>
          </widget>
         </item>
@@ -662,7 +763,7 @@
               <string>This is the actual experimental value of pixel size and is best measured using a graticule and dividing the unit length by the image distance in pixels</string>
              </property>
              <property name="text">
-              <string>6.1274509803921568627450980392157</string>
+              <string>0,00061274</string>
              </property>
             </widget>
            </item>
@@ -679,7 +780,7 @@
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>430</x>
+         <x>400</x>
          <y>20</y>
          <width>221</width>
          <height>71</height>
@@ -739,7 +840,7 @@
          <x>10</x>
          <y>20</y>
          <width>371</width>
-         <height>381</height>
+         <height>411</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -754,7 +855,7 @@
           <x>0</x>
           <y>0</y>
           <width>370</width>
-          <height>380</height>
+          <height>411</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -939,6 +1040,13 @@
                  </item>
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_14">
+                   <item>
+                    <widget class="QPushButton" name="btnMoveOverviewPosition">
+                     <property name="text">
+                      <string>Move to Overview Camera Position</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item>
                     <widget class="QPushButton" name="btnMoveAbsoluteXY">
                      <property name="text">
@@ -1220,29 +1328,13 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QCheckBox" name="chkJoystickOn">
-       <property name="geometry">
-        <rect>
-         <x>180</x>
-         <y>410</y>
-         <width>201</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::RightToLeft</enum>
-       </property>
-       <property name="text">
-        <string>XY Stage Joystick on</string>
-       </property>
-      </widget>
       <widget class="QCheckBox" name="chkKeypadOn">
        <property name="geometry">
         <rect>
-         <x>430</x>
-         <y>430</y>
-         <width>221</width>
-         <height>17</height>
+         <x>470</x>
+         <y>440</y>
+         <width>151</width>
+         <height>20</height>
         </rect>
        </property>
        <property name="layoutDirection">
@@ -1255,10 +1347,10 @@
       <widget class="QFrame" name="ZStageFrame">
        <property name="geometry">
         <rect>
-         <x>430</x>
-         <y>90</y>
+         <x>400</x>
+         <y>100</y>
          <width>221</width>
-         <height>341</height>
+         <height>331</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -1267,384 +1359,277 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QWidget" name="verticalLayoutWidget_6">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>221</width>
-          <height>331</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="ZStageLayout">
-         <item>
-          <widget class="QLabel" name="label_100">
-           <property name="font">
-            <font>
-             <underline>true</underline>
-            </font>
-           </property>
-           <property name="cursor">
-            <cursorShape>ArrowCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string>Newport Stage Z Axis  Control</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_22">
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_24">
-             <item>
-              <widget class="QLabel" name="label_101">
-               <property name="font">
-                <font>
-                 <underline>true</underline>
-                </font>
-               </property>
-               <property name="text">
-                <string>Connect Stage</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buddy">
-                <cstring>btnConnectXY</cstring>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_17">
-               <item>
-                <widget class="QPushButton" name="btnConnectZ">
-                 <property name="text">
-                  <string>Connect</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnDisconnectZ">
-                 <property name="text">
-                  <string>Disconnect</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_104">
-             <property name="font">
-              <font>
-               <underline>true</underline>
-              </font>
-             </property>
-             <property name="text">
-              <string>Axis Positions</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QGridLayout" name="gridLayout_17">
-             <item row="0" column="1">
-              <widget class="QLabel" name="lbl_positionZ">
-               <property name="text">
-                <string>?</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_106">
-               <property name="text">
-                <string>Z position (μm)</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QGridLayout" name="gridLayout_27">
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="spinPositionAbsoluteZ">
-               <property name="minimum">
-                <double>0.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>200.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QDoubleSpinBox" name="spinPositionRelativeZ">
-               <property name="minimum">
-                <double>-200.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>200.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="label_111">
-               <property name="text">
-                <string>Relative</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buddy">
-                <cstring>spinXPositionRelativeXY</cstring>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_110">
-               <property name="text">
-                <string>Absolute</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buddy">
-                <cstring>spinXPositionAbsoluteXY</cstring>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_45">
-               <property name="text">
-                <string>Position</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_108">
-               <property name="text">
-                <string>Position Z</string>
-               </property>
-               <property name="buddy">
-                <cstring>spinXPositionAbsoluteXY</cstring>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_23">
-             <item>
-              <widget class="QPushButton" name="btnMoveAbsoluteZ">
-               <property name="text">
-                <string>Move Absolute</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnMoveRelativeZ">
-               <property name="text">
-                <string>Move Relative</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_32">
-               <item>
-                <widget class="QPushButton" name="btnUpZ">
-                 <property name="text">
-                  <string>UP</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnDownZ">
-                 <property name="text">
-                  <string>DOWN</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_112">
-               <property name="font">
-                <font>
-                 <underline>true</underline>
-                </font>
-               </property>
-               <property name="text">
-                <string>Send Text Command to Stage</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="buddy">
-                <cstring>editSendCommandXY</cstring>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="editSendCommandZ"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btnSendCommandZ">
-               <property name="text">
-                <string>Send Command</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>100</y>
+         <width>221</width>
+         <height>331</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="ZStageLayout">
+        <item>
+         <widget class="QLabel" name="label_100">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>ArrowCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string>Newport Stage Z Axis  Control</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_22">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_24">
+            <item>
+             <widget class="QLabel" name="label_101">
+              <property name="font">
+               <font>
+                <underline>true</underline>
+               </font>
+              </property>
+              <property name="text">
+               <string>Connect Stage</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>btnConnectXY</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_17">
+              <item>
+               <widget class="QPushButton" name="btnConnectZ">
+                <property name="text">
+                 <string>Connect</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnDisconnectZ">
+                <property name="text">
+                 <string>Disconnect</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_104">
+            <property name="font">
+             <font>
+              <underline>true</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Axis Positions</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_17">
+            <item row="0" column="1">
+             <widget class="QLabel" name="lbl_positionZ">
+              <property name="text">
+               <string>?</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_106">
+              <property name="text">
+               <string>Z position (μm)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_27">
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="spinPositionAbsoluteZ">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>200.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QDoubleSpinBox" name="spinPositionRelativeZ">
+              <property name="minimum">
+               <double>-200.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>200.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_111">
+              <property name="text">
+               <string>Relative</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>spinXPositionRelativeXY</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_110">
+              <property name="text">
+               <string>Absolute</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>spinXPositionAbsoluteXY</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_45">
+              <property name="text">
+               <string>Position</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_108">
+              <property name="text">
+               <string>Position Z</string>
+              </property>
+              <property name="buddy">
+               <cstring>spinXPositionAbsoluteXY</cstring>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_23">
+            <item>
+             <widget class="QPushButton" name="btnMoveAbsoluteZ">
+              <property name="text">
+               <string>Move Absolute</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnMoveRelativeZ">
+              <property name="text">
+               <string>Move Relative</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_32">
+              <item>
+               <widget class="QPushButton" name="btnUpZ">
+                <property name="text">
+                 <string>UP</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnDownZ">
+                <property name="text">
+                 <string>DOWN</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_112">
+              <property name="font">
+               <font>
+                <underline>true</underline>
+               </font>
+              </property>
+              <property name="text">
+               <string>Send Text Command to Stage</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="buddy">
+               <cstring>editSendCommandXY</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="editSendCommandZ"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnSendCommandZ">
+              <property name="text">
+               <string>Send Command</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QCheckBox" name="chkJoystickOn">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>440</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
+       </property>
+       <property name="text">
+        <string>XY Stage Joystick on</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Focusing</string>
       </attribute>
-      <widget class="QWidget" name="gridLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>10</y>
-         <width>361</width>
-         <height>152</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_107">
-          <property name="text">
-           <string>Algorithm used for focusing</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="cboFocusAlgorithm"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_114">
-          <property name="text">
-           <string>Coarse Focus Step</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="spinMaxFocus">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>-12.500000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>12.500000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.050000000000000</double>
-          </property>
-          <property name="value">
-           <double>8.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_109">
-          <property name="text">
-           <string>Maximum Focus position</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_113">
-          <property name="text">
-           <string>Minimum Focus Position</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_115">
-          <property name="text">
-           <string>Fine Focus Step</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="spinMinFocus">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>-12.500000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>12.500000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.005000000000000</double>
-          </property>
-          <property name="value">
-           <double>5.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QDoubleSpinBox" name="spinCoarseFocusStep">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>25.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.000100000000000</double>
-          </property>
-          <property name="value">
-           <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QDoubleSpinBox" name="spinFineFocusStep">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <double>25.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.000100000000000</double>
-          </property>
-          <property name="value">
-           <double>0.002000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QLabel" name="label_267">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>170</y>
+         <y>300</y>
          <width>421</width>
          <height>16</height>
         </rect>
@@ -1652,6 +1637,384 @@
        <property name="text">
         <string>Fine forcus range is coarse focus step either side of the best coarse focus position</string>
        </property>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>671</width>
+         <height>271</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_14">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_107">
+            <property name="text">
+             <string>Algorithm used for focusing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="cboFocusAlgorithm"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_114">
+            <property name="text">
+             <string>Coarse Focus Step</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="spinDefaultFocusPosition">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-12.500000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>12.500000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.050000000000000</double>
+            </property>
+            <property name="value">
+             <double>6.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_109">
+            <property name="text">
+             <string>Default Focus Position</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_113">
+            <property name="text">
+             <string>Coarse Focus Range</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_115">
+            <property name="text">
+             <string>Fine Focus Step</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="spinFocusRange">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-12.500000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>12.500000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.005000000000000</double>
+            </property>
+            <property name="value">
+             <double>2.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="spinCoarseFocusStep">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>25.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.000100000000000</double>
+            </property>
+            <property name="value">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QDoubleSpinBox" name="spinFineFocusStep">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="maximum">
+             <double>25.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.000100000000000</double>
+            </property>
+            <property name="value">
+             <double>0.002000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QPushButton" name="btnAddFocusPosition">
+            <property name="text">
+             <string>Register Focus Point</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_117">
+            <property name="text">
+             <string>Use stage position as focus point</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QPushButton" name="btnRemoveFocusPosition">
+            <property name="text">
+             <string>Remove selected Focus Position</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QComboBox" name="cboFocusPosition"/>
+          </item>
+          <item row="5" column="1">
+           <widget class="QDoubleSpinBox" name="spinFocusFraction">
+            <property name="toolTip">
+             <string>The focus Threhold fraction is used to determine the focus range in the Best Range focus algorithms</string>
+            </property>
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.050000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_118">
+            <property name="toolTip">
+             <string>The focus Threhold fraction is used to determine the focus range in the Best Range focus algorithms</string>
+            </property>
+            <property name="text">
+             <string>Focus Threshold Fraction</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_26">
+          <item>
+           <widget class="QLabel" name="label_119">
+            <property name="font">
+             <font>
+              <underline>true</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Focus Optimisation</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkOptimiseFocusRange">
+            <property name="toolTip">
+             <string>The focus range shrinks according to the previous focus values, this speeds up focus tim but may lead to errors</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Optimise Focus Range</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkInterpolateFocusPosition">
+            <property name="toolTip">
+             <string>The focus position is interpolated from previous position, this can give a more accurate focus starting position.</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Interpolate Focus Position</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkUseFocusThreshold">
+            <property name="toolTip">
+             <string>If the focus value is greater than a threshold it is accepted as a best focus position. This speeds up processing a lot but can lead to focus errors.</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Use Focus Threshold</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkUseCoarseFocusRange">
+            <property name="toolTip">
+             <string>Perform focusing over a the coarse focusing range</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Coarse Focus Range</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkUseFineFocusRange">
+            <property name="toolTip">
+             <string>Perform focusing over a the fine focusing range</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Fine Focus Range</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkCenterFocus">
+            <property name="toolTip">
+             <string>Focus range will be centered at the previous best focus position</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Center coarse Focus Range at Focus Position</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkUseRegisteredFocusPoints">
+            <property name="toolTip">
+             <string>The clicked focus points will be used to estimate a good focus starting position and range. One value will be used as the default focus position, multiple registered values will be used as estimate of Coarse Focus Range</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Use registered focus points for default values</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_120">
+            <property name="font">
+             <font>
+              <underline>true</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Process mosaic images</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkShowBestFocusImage">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>the best focused image will be updated in the targeter GUI</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Display best focused image</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkDetectTargetsWhileScanning">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>Targets will be detected in images aquired during scanning. 
+* Requires example target image(s) to be created.</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Detect targets as images scanned</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="FiducialMarksTab">
@@ -2569,7 +2932,7 @@
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout_20">
-           <item row="2" column="2">
+           <item row="3" column="2">
             <widget class="QSlider" name="ScoreThreshold">
              <property name="maximum">
               <number>100</number>
@@ -2582,7 +2945,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_5">
              <property name="toolTip">
               <string>This value determines the area over which the score is summed (relative to the target object size). If the value is less than 1 then the summed area will be smaller than the example object, if it is greater than one then larger image regions than that of the example target will be summed. When the value is 1 then the summed score region willl be the same as the target.</string>
@@ -2598,6 +2961,9 @@ Size Factor</string>
            </item>
            <item row="0" column="2">
             <widget class="QSlider" name="numClusters">
+             <property name="toolTip">
+              <string>The number of greyscale levels used for texture analysis, this has a similar effect on processing speed as distance bins, but not as much as distance. If too few levels are choosen there wont be enough greyscale variation to distinguish different targets.</string>
+             </property>
              <property name="maximum">
               <number>20</number>
              </property>
@@ -2611,6 +2977,9 @@ Size Factor</string>
            </item>
            <item row="1" column="2">
             <widget class="QSlider" name="distanceThreshold">
+             <property name="toolTip">
+              <string>The maximum spatical distance that pixel statistics will be gathered. A large value choosen here will increase processing time, but it also constitutes most of the texture information.</string>
+             </property>
              <property name="maximum">
               <number>50</number>
              </property>
@@ -2632,7 +3001,7 @@ Size Factor</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="2">
+           <item row="4" column="2">
             <widget class="QSlider" name="scoreRegionArea">
              <property name="maximum">
               <number>500</number>
@@ -2645,7 +3014,7 @@ Size Factor</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_20">
              <property name="text">
               <string>Score
@@ -2666,7 +3035,7 @@ Threshold</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="3">
+           <item row="3" column="3">
             <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
               <widget class="QLabel" name="ScoreThresholdLbl">
@@ -2687,7 +3056,7 @@ Threshold</string>
              </item>
             </layout>
            </item>
-           <item row="3" column="3">
+           <item row="4" column="3">
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
               <widget class="QLabel" name="lblScoreSizeFactor">
@@ -2733,39 +3102,161 @@ Threshold</string>
              </property>
             </widget>
            </item>
+           <item row="2" column="2">
+            <widget class="QSlider" name="distanceBinsThreshold">
+             <property name="toolTip">
+              <string>Number of histograms used to represent euclidean distance. Its a good idea to have this greater than the distance value then you have histogram bins for diagonal distances. It slows up processing but not as much as the distance setting.</string>
+             </property>
+             <property name="maximum">
+              <number>50</number>
+             </property>
+             <property name="pageStep">
+              <number>5</number>
+             </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QLabel" name="label_distanceBins">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_123">
+               <property name="text">
+                <string>%</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_124">
+             <property name="text">
+              <string>Distance Bins</string>
+             </property>
+             <property name="buddy">
+              <cstring>distanceThreshold</cstring>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_21">
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="spinWaveletLevels">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>5</number>
+             </property>
+             <property name="value">
+              <number>3</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_122">
+             <property name="text">
+              <string>Wavelet Decomposition Levels</string>
+             </property>
+             <property name="buddy">
+              <cstring>spinSamplingDistanceX</cstring>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QCheckBox" name="chkTargetImageAsMask">
+            <widget class="QCheckBox" name="chkPaddTargetImage">
+             <property name="toolTip">
+              <string>If Haar target detection method used then size of selected region should be divisible by 2  for each resolution level of the transform (eg. level 3: if width is 33., new width is 36 eg 36/2=18/2=9). Therefore the mask of the image region will be a bit bigger than you selected.</string>
+             </property>
              <property name="layoutDirection">
               <enum>Qt::RightToLeft</enum>
              </property>
              <property name="text">
-              <string>Target image as mask</string>
+              <string>Padd target to power 2</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+            <widget class="QCheckBox" name="chkProcessGrayscale">
+             <property name="toolTip">
+              <string>Images will be convered to grayscale for processing. This speeds up target detection. If your image has colour and that is a feature of the target it is better to uncheck this button even if analysis takes longer.</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
              </property>
-            </spacer>
+             <property name="text">
+              <string>Make grayscale</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
          <item>
+          <widget class="QCheckBox" name="chkCorrectBackGround">
+           <property name="toolTip">
+            <string>If Haar target detection method used then size of selected region should be divisible by 2  for each resolution level of the transform (eg. level 3: if width is 33., new width is 36 eg 36/2=18/2=9). Therefore the mask of the image region will be a bit bigger than you selected.</string>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>correct for background illumination</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QGridLayout" name="gridLayout_5">
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spinSamplingDistanceY">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>35</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_116">
+             <property name="text">
+              <string>Spacing of sampling grid Y (px)</string>
+             </property>
+             <property name="buddy">
+              <cstring>spinSamplingDistanceX</cstring>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="spinSamplingDistance">
+            <widget class="QSpinBox" name="spinSamplingDistanceX">
              <property name="minimum">
               <number>1</number>
              </property>
@@ -2793,25 +3284,25 @@ Threshold</string>
            <item row="1" column="0">
             <widget class="QLabel" name="label_43">
              <property name="text">
-              <string>Spacing of sampling grid (px)</string>
+              <string>Spacing of sampling grid X (px)</string>
              </property>
              <property name="buddy">
-              <cstring>spinSamplingDistance</cstring>
+              <cstring>spinSamplingDistanceX</cstring>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_42">
              <property name="text">
-              <string>Distance From edge/center (px) </string>
+              <string>Offset From edge/center X (px) </string>
              </property>
              <property name="buddy">
-              <cstring>spinExclusionDistance</cstring>
+              <cstring>spinSamplingOffsetX</cstring>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="spinExclusionDistance">
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="spinSamplingOffsetX">
              <property name="maximum">
               <number>100</number>
              </property>
@@ -2820,11 +3311,305 @@ Threshold</string>
              </property>
             </widget>
            </item>
+           <item row="4" column="1">
+            <widget class="QSpinBox" name="spinSamplingOffsetY">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>35</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_121">
+             <property name="text">
+              <string>Offset From edge/center Y (px) </string>
+             </property>
+             <property name="buddy">
+              <cstring>spinSamplingOffsetX</cstring>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
         </layout>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="ThresholdSettingsTab">
+      <attribute name="title">
+       <string>Threshold Settings</string>
+      </attribute>
+      <widget class="QWidget" name="verticalLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>641</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <layout class="QGridLayout" name="gridLayout_18">
+          <item row="4" column="1">
+           <widget class="QSlider" name="NoClustersSlider">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The image will be posterized into the set number of gray levels. When No. levels = 2, this isthe same as performing a binary threshold.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="minimum">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="pageStep">
+             <number>5</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QComboBox" name="cboThresholdType">
+              <item>
+               <property name="text">
+                <string>Posterize (greyscale clusters)</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSlider" name="ThresholdMinSlider">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;All values &lt;span style=&quot; font-weight:600;&quot;&gt;above&lt;/span&gt; this threshold are white in the image otherwise black&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="maximum">
+             <number>254</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QGridLayout" name="gridLayout_histogram">
+            <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_15">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetFixedSize</enum>
+              </property>
+              <item row="0" column="2">
+               <widget class="QLabel" name="ThresholdMaxLbl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>255</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="ThresholdMinLbl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="histogram_image">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_92">
+            <property name="text">
+             <string>Image Histogram</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_90">
+            <property name="text">
+             <string> 0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_91">
+            <property name="text">
+             <string>255</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="NoClustersLbl">
+            <property name="text">
+             <string>2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelThresholdMin">
+            <property name="text">
+             <string>Threshold Min</string>
+            </property>
+            <property name="buddy">
+             <cstring>ThresholdMinSlider</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelThresholdMax">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Threshold Max</string>
+            </property>
+            <property name="buddy">
+             <cstring>ThresholdMaxSlider</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_28">
+            <property name="text">
+             <string>Threshold Type</string>
+            </property>
+            <property name="buddy">
+             <cstring>cboThresholdType</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSlider" name="ThresholdMaxSlider">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;All values &lt;span style=&quot; font-weight:600;&quot;&gt;below&lt;/span&gt; this threshold are white in the image otherwise black&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="value">
+             <number>254</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>Number of levels</string>
+            </property>
+            <property name="buddy">
+             <cstring>NoClustersSlider</cstring>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QCheckBox" name="chkAutoThreshold">
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="text">
+             <string>Automatic Thresholding</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="Drawing">
       <attribute name="title">
@@ -3324,280 +4109,6 @@ Threshold</string>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="ThresholdSettingsTab">
-      <attribute name="title">
-       <string>Threshold Settings</string>
-      </attribute>
-      <widget class="QWidget" name="verticalLayoutWidget_4">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>30</y>
-         <width>641</width>
-         <height>301</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_18">
-          <item row="4" column="1">
-           <widget class="QSlider" name="NoClustersSlider">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The image will be posterized into the set number of gray levels. When No. levels = 2, this isthe same as performing a binary threshold.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="minimum">
-             <number>2</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="pageStep">
-             <number>5</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QComboBox" name="cboThresholdType">
-              <item>
-               <property name="text">
-                <string>Posterize (greyscale clusters)</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_10">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSlider" name="ThresholdMinSlider">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;All values &lt;span style=&quot; font-weight:600;&quot;&gt;above&lt;/span&gt; this threshold are white in the image otherwise black&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="maximum">
-             <number>254</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <layout class="QGridLayout" name="gridLayout_histogram">
-            <item row="1" column="0">
-             <layout class="QGridLayout" name="gridLayout_15">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetFixedSize</enum>
-              </property>
-              <item row="0" column="2">
-               <widget class="QLabel" name="ThresholdMaxLbl">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>255</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="ThresholdMinLbl">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>0</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <spacer name="horizontalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="histogram_image">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_92">
-            <property name="text">
-             <string>Image Histogram</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_90">
-            <property name="text">
-             <string> 0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_91">
-            <property name="text">
-             <string>255</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="NoClustersLbl">
-            <property name="text">
-             <string>2</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="labelThresholdMin">
-            <property name="text">
-             <string>Threshold Min</string>
-            </property>
-            <property name="buddy">
-             <cstring>ThresholdMinSlider</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="labelThresholdMax">
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="text">
-             <string>Threshold Max</string>
-            </property>
-            <property name="buddy">
-             <cstring>ThresholdMaxSlider</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_28">
-            <property name="text">
-             <string>Threshold Type</string>
-            </property>
-            <property name="buddy">
-             <cstring>cboThresholdType</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QSlider" name="ThresholdMaxSlider">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;All values &lt;span style=&quot; font-weight:600;&quot;&gt;below&lt;/span&gt; this threshold are white in the image otherwise black&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="value">
-             <number>254</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Number of levels</string>
-            </property>
-            <property name="buddy">
-             <cstring>NoClustersSlider</cstring>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <item>
-           <widget class="QCheckBox" name="chkAutoThreshold">
-            <property name="layoutDirection">
-             <enum>Qt::RightToLeft</enum>
-            </property>
-            <property name="text">
-             <string>Automatic Thresholding</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_12">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </widget>
      <widget class="QWidget" name="ConnectedComponentsTab">
       <attribute name="title">
        <string>Connected Components</string>
@@ -3933,16 +4444,21 @@ Threshold</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>qwebengineview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>editName</tabstop>
   <tabstop>editInstitute</tabstop>
   <tabstop>editProjectName</tabstop>
-  <tabstop>editProjectDirectoryName</tabstop>
-  <tabstop>btnProjectDirectory</tabstop>
   <tabstop>editProjectID</tabstop>
   <tabstop>editVersion</tabstop>
   <tabstop>editDescription</tabstop>
-  <tabstop>editFilenamePrefix</tabstop>
   <tabstop>editSampleDescription</tabstop>
   <tabstop>editBarcode</tabstop>
   <tabstop>projectDate</tabstop>
@@ -3972,10 +4488,9 @@ Threshold</string>
   <tabstop>distanceThreshold</tabstop>
   <tabstop>ScoreThreshold</tabstop>
   <tabstop>scoreRegionArea</tabstop>
-  <tabstop>chkTargetImageAsMask</tabstop>
   <tabstop>cboSamplingType</tabstop>
-  <tabstop>spinSamplingDistance</tabstop>
-  <tabstop>spinExclusionDistance</tabstop>
+  <tabstop>spinSamplingDistanceX</tabstop>
+  <tabstop>spinSamplingOffsetX</tabstop>
   <tabstop>cboAnnotationColour</tabstop>
   <tabstop>btnSelectColour</tabstop>
   <tabstop>sliderGridOffsetX</tabstop>
@@ -4027,8 +4542,8 @@ Threshold</string>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>31</y>
+     <x>176</x>
+     <y>533</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -4043,8 +4558,8 @@ Threshold</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>203</x>
-     <y>31</y>
+     <x>212</x>
+     <y>533</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -4059,12 +4574,12 @@ Threshold</string>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>461</x>
-     <y>360</y>
+     <x>561</x>
+     <y>331</y>
     </hint>
     <hint type="destinationlabel">
      <x>669</x>
-     <y>360</y>
+     <y>331</y>
     </hint>
    </hints>
   </connection>
@@ -4076,11 +4591,11 @@ Threshold</string>
    <hints>
     <hint type="sourcelabel">
      <x>263</x>
-     <y>166</y>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>322</x>
-     <y>166</y>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -4091,12 +4606,12 @@ Threshold</string>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>571</x>
-     <y>282</y>
+     <x>645</x>
+     <y>253</y>
     </hint>
     <hint type="destinationlabel">
      <x>669</x>
-     <y>282</y>
+     <y>253</y>
     </hint>
    </hints>
   </connection>
@@ -4108,11 +4623,11 @@ Threshold</string>
    <hints>
     <hint type="sourcelabel">
      <x>209</x>
-     <y>155</y>
+     <y>126</y>
     </hint>
     <hint type="destinationlabel">
      <x>252</x>
-     <y>155</y>
+     <y>126</y>
     </hint>
    </hints>
   </connection>
@@ -4123,12 +4638,12 @@ Threshold</string>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>560</x>
-     <y>307</y>
+     <x>645</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>669</x>
-     <y>307</y>
+     <y>278</y>
     </hint>
    </hints>
   </connection>
@@ -4140,11 +4655,11 @@ Threshold</string>
    <hints>
     <hint type="sourcelabel">
      <x>209</x>
-     <y>180</y>
+     <y>151</y>
     </hint>
     <hint type="destinationlabel">
      <x>231</x>
-     <y>179</y>
+     <y>150</y>
     </hint>
    </hints>
   </connection>
@@ -4155,12 +4670,12 @@ Threshold</string>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>208</y>
+     <x>216</x>
+     <y>204</y>
     </hint>
     <hint type="destinationlabel">
-     <x>234</x>
-     <y>211</y>
+     <x>241</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -4171,12 +4686,12 @@ Threshold</string>
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>246</y>
+     <x>339</x>
+     <y>307</y>
     </hint>
     <hint type="destinationlabel">
      <x>208</x>
-     <y>246</y>
+     <y>307</y>
     </hint>
    </hints>
   </connection>
@@ -4187,12 +4702,12 @@ Threshold</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>425</x>
-     <y>245</y>
+     <x>391</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
-     <x>373</x>
-     <y>246</y>
+     <x>339</x>
+     <y>307</y>
     </hint>
    </hints>
   </connection>
@@ -4203,12 +4718,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>292</x>
-     <y>340</y>
+     <x>347</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>287</x>
-     <y>356</y>
+     <x>347</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -4219,12 +4734,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>343</x>
-     <y>338</y>
+     <x>424</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>342</x>
-     <y>363</y>
+     <x>424</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -4235,12 +4750,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>344</y>
+     <x>347</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>295</x>
-     <y>389</y>
+     <x>347</x>
+     <y>197</y>
     </hint>
    </hints>
   </connection>
@@ -4251,12 +4766,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>332</y>
+     <x>424</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>330</x>
-     <y>391</y>
+     <x>424</x>
+     <y>197</y>
     </hint>
    </hints>
   </connection>
@@ -4267,12 +4782,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>366</x>
-     <y>333</y>
+     <x>424</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>355</x>
-     <y>413</y>
+     <x>424</x>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
@@ -4283,12 +4798,12 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>305</x>
-     <y>335</y>
+     <x>347</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>305</x>
-     <y>390</y>
+     <x>347</x>
+     <y>197</y>
     </hint>
    </hints>
   </connection>
@@ -4299,12 +4814,44 @@ Threshold</string>
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>266</x>
-     <y>335</y>
+     <x>347</x>
+     <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>272</x>
-     <y>421</y>
+     <x>347</x>
+     <y>223</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>distanceBinsThreshold</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_distanceBins</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>167</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scoreRegionArea</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lblScoreSizeFactor</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>171</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>233</x>
+     <y>233</y>
     </hint>
    </hints>
   </connection>

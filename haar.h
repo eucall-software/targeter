@@ -25,7 +25,7 @@ public:
 	static cv::Mat PyramidLevels(cv::Mat data, int width, int height, int iterations, const int NoFocusImages);
 	static cv::Mat LaplacianPyramid(cv::Mat im, int levels, bool includeScale = true);
 	static void Haar2(cv::Mat& data, int iterations);
-
+	static float** getHaarCooc(cv::Mat data, cv::Mat coocImage, int width, int height, int iterations, float maxEnergy);
 
     /**
     *

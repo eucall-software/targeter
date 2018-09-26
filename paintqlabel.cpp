@@ -10,6 +10,7 @@
 #include "paintqlabel.h"
 #include "globals.h"
 #include "BaslerCamera.h"
+#include "HelperFunctions.h"
 #include "MainWindow.h"
 #include "drawingObjects.h"
 
@@ -20,6 +21,7 @@ using namespace std;
 #define _COLOUR_SELECT "#00F"
 #define _COLOUR_NORMAL "#0F0"
 #define _COLOUR_SELECT_BOUNDING_BOX "#FF0"
+#define _COLOUR_HIGHLIGHT "#F00"
 
 #define _CROSS_SIZE 7
 
@@ -42,7 +44,7 @@ PaintQLabel::PaintQLabel(QWidget * parent) : QLabel(parent)
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 	m_pImagesContainer = nullptr;
-	imageContainerIndex = 0;
+	m_currentImage = 0;
 
     resetDrawingObjects();
     setMouseTracking(true);
@@ -106,11 +108,7 @@ void PaintQLabel::resetDrawingObjects()
 */
 PaintQLabel::~PaintQLabel()
 {
-	foreach(QObject* pObj, m_drawingObjects)
-	{
-		if (pObj)
-			delete pObj;
-	}
+	
 }
 
 void PaintQLabel::setImageContainerPointer(ImagesContainer* pIC)
@@ -171,11 +169,16 @@ void PaintQLabel::setGrid(bool bChecked, double offX, double offY, double spaceX
 	this->repaint();
 }
 
-void PaintQLabel::addPolygon()
+void PaintQLabel::addPolygon(drawingMode::drawingMode shape)
 {
-	drawingPoly* dObj = new drawingPoly(this);
+	bool bFound = false;
 
-	dObj->m_pPoly = new QPolygon;
+	QSharedPointer<drawingPoly> dObj;
+
+	if(shape == drawingMode::poly)
+		dObj = QSharedPointer<drawingPoly>(new drawingPoly(this));
+	else
+		dObj = QSharedPointer<drawingSampling>(new drawingSampling(this));
 
 	QPoint poly1 = GetImagePosition(m_PolygonPoints[0], &m_imageRect, &m_displayRect);
 
@@ -189,7 +192,7 @@ void PaintQLabel::addPolygon()
 		// coordinates relative to image
 		QPoint pt = GetImagePosition(m_PolygonPoints[i], &m_imageRect, &m_displayRect);
 
-		dObj->m_pPoly->append(pt);
+		dObj->addPoint(pt);
 
 		minx = std::min(pt.x(), minx);
 		miny = std::min(pt.y(), miny);
@@ -197,13 +200,30 @@ void PaintQLabel::addPolygon()
 		maxy = std::max(pt.y(), maxy);
 	}
 
-	dObj->m_pRect = new QRect(minx, miny, maxx-minx, maxy-miny);
-	dObj->m_type = drawingMode::poly;
+	dObj->m_pRect = QSharedPointer<QRect>(new QRect(minx, miny, maxx-minx, maxy-miny));
+	dObj->m_type = shape;
 	dObj->m_fillColour = m_fillColour;
 
-	dObj->m_ImageIndex = imageContainerIndex;
+	dObj->m_ImageIndex = m_currentImage;
 
-	m_drawingObjects.append(dObj);
+	QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+	if(shape == drawingMode::sampleSpacing)
+	{
+		for(int i=0;i<tar->drawingObjects.length();i++)
+		{
+			if ((tar->drawingObjects[i])->m_type == drawingMode::sampleSpacing)
+			{
+				tar->drawingObjects[i] = dObj;	// replace object
+				bFound = true;
+			}
+		}
+
+		emit setSamplingDistance(dObj->getPoly());
+	}
+
+	if(!bFound)
+		tar->drawingObjects.append((QSharedPointer<drawingObject>)dObj);
 }
 
 /**
@@ -231,16 +251,12 @@ bool PaintQLabel::checkForPolygonClose(QPoint mp)
 			QPoint point = mp - m_PolygonPoints[i];
 
 			if (point.manhattanLength() < 5)
-			{
 				return true;
-			}
 		}
 	}
 
     return false;
 }
-
-
 
 /**
 *
@@ -373,7 +389,7 @@ void PaintQLabel::displayStatusBarPixel(QPoint p)
 {
 	QPoint imPos = GetImagePosition(p, &m_imageRect, &m_displayRect);
 
-	if (imPos.x() >= 0 && imPos.x() >= 0)
+	if (imPos.x() >= 0 && imPos.x() >= 0 && imPos.x() < m_imageRect.width() && imPos.y() < m_imageRect.height())
 	{
 		QColor clrCurrent(getImage().pixel(imPos.x(), imPos.y()));
 
@@ -450,24 +466,29 @@ void PaintQLabel::mousePressEvent ( QMouseEvent * event )
 		// if object clicked in, then that object is selected and can be shifted -> object in shift/selected mode
 		m_bObjectClicked = false;
 		int hitObject = -1;
-		for (int i = 0; i < m_drawingObjects.length(); i++)
+
+		QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+		for (int i = 0; i < tar->drawingObjects.length(); i++)
 		{
-			bool bHit = m_drawingObjects[i]->m_bHoveredOver;
+			QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
+
+			bool bHit = pObj->m_bHoveredOver;
 
 			if (bHit)
 			{
 				if (m_drawingMode == drawingMode::shift)
-					m_drawingObjects[i]->m_bDragging = true;
+					pObj->m_bDragging = true;
 				else
-					m_drawingObjects[i]->m_bSelected = !m_drawingObjects[i]->m_bSelected;	// toogle state
+					pObj->m_bSelected = !pObj->m_bSelected;	// toggle state
 
-				m_drawingObjectOffset = mp - GetDisplayPosition(m_drawingObjects[i]->m_pRect->topLeft(), &m_imageRect, &m_displayRect);
+				m_drawingObjectOffset = mp - GetDisplayPosition(pObj->m_pRect->topLeft(), &m_imageRect, &m_displayRect);
 
 				hitObject = i;
 			}
 			else
 			{
-				m_drawingObjects[i]->m_bDragging = false;
+				pObj->m_bDragging = false;
 			}
 
 			m_bObjectClicked |= bHit;
@@ -476,14 +497,37 @@ void PaintQLabel::mousePressEvent ( QMouseEvent * event )
 		// put object to back of queue
 		if(hitObject>=0)
 		{
+			QSharedPointer<drawingObject> Obj =  tar->drawingObjects.takeAt(hitObject);
+
 			// get hit object
-			m_drawingObjects.push_back((drawingObject*)m_drawingObjects.takeAt(hitObject));
+			tar->drawingObjects.push_back(Obj);
 		}
 
 		// add polygon point
 		if (m_drawingMode == drawingMode::poly)
 		{
 			addPolygonPoint(mp);
+
+			this->repaint();
+		}
+		else if (m_drawingMode == drawingMode::sampleSpacing)
+		{
+			// add point to polygon either as another polygon point or in a new polygon
+			// add point to polygon either as another polygon point or in a new polygon
+			m_PolygonPoints.push_front(mp);
+
+			// if loop closed then add polygon to list, do bounding rect and clear temp polygon vector
+			if (m_PolygonPoints.length()>2)
+			{
+				addPolygon(m_drawingMode);
+
+				// if clicked point hits another polygon point then close polygon
+				m_PolygonPoints.clear();
+
+				m_bLoopClosed = true;
+			}
+			else
+				m_bLoopClosed = false;
 
 			this->repaint();
 		}
@@ -534,9 +578,13 @@ void PaintQLabel::mouseMoveEvent(QMouseEvent * event)
 		// if we have an image then show the pixel value at the mouse position /////////////////////////////////////////
 		displayStatusBarPixel(p);
 
+		QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+		QVector<QSharedPointer<drawingObject>> drawingObjVect = tar->getDrawingObjects();
+
 		// if object hovered over (or not) then toggle hover over setting //////////////////////////////////////////
-		for (int i = 0; i < m_drawingObjects.length(); i++)
-			m_drawingObjects[i]->hitTest(p, m_mouseDown);
+		for (int i = 0; i < drawingObjVect.length(); i++)
+			drawingObjVect[i]->hitTest(p, m_mouseDown);
 
 		// if image in shift mode then shift image /////////////////////////////////////////////////////////////////
 		if (m_mouseDown)
@@ -558,28 +606,32 @@ void PaintQLabel::mouseMoveEvent(QMouseEvent * event)
 			}
 			else if(m_bDragDrawingObject)
 			{
-				for (int i = 0; i < m_drawingObjects.length(); i++)
+				for (int i = 0; i < tar->drawingObjects.length(); i++)
 				{
-					if (m_drawingObjects[i]->m_bDragging)
-						m_drawingObjects[i]->moveObject(p - m_drawingObjectOffset);
+					if (drawingObjVect[i]->m_bDragging)
+						drawingObjVect[i]->moveObject(p - m_drawingObjectOffset);
 				}
 			}
 			else if(!m_bObjectClicked)// if object in draw mode then resize object ///////////////////////////////////////////////////////////////////
 			{
 				// if the background has been clicked
-				m_ObjectPositionRectangle = QRect(m_mouseStartPos, m_mouseEndPos);
+				if (bPaddTargetImage)
+					m_ObjectPositionRectangle = *(HelperFunctions::getPaddRect(m_mouseStartPos, m_mouseEndPos, paddlevels));
+				else
+					m_ObjectPositionRectangle = QRect(m_mouseStartPos, m_mouseEndPos);
 			}
 		}
+
+		// redraw
+		this->repaint();
 	}
 
-	// redraw
-	this->repaint();
 	event->accept();
 }
 
 void PaintQLabel::addObject(drawingMode::drawingMode mode)
 {
-	m_ObjectPositionRectangle = m_MouseRectangle;
+	//m_ObjectPositionRectangle = m_MouseRectangle;
 	drawingObject* dObj = nullptr;
 
 	if (mode == drawingMode::fiducial)
@@ -592,61 +644,74 @@ void PaintQLabel::addObject(drawingMode::drawingMode mode)
 		dObj = new drawingRect(this);
 	else if (mode == drawingMode::poly)
 		dObj = new drawingPoly(this);
+	else if (mode == drawingMode::sampleSpacing)
+		dObj = new drawingSampling(this);
 	else if (mode == drawingMode::centerObjective)
 		dObj = new drawingMoveObjective(this);
 
 	dObj->m_fillColour = m_fillColour;
-	dObj->m_ImageIndex = imageContainerIndex;
+	dObj->m_ImageIndex = m_currentImage;
 
 	if(dObj != nullptr)
 	{
-		dObj->m_type = mode;
+		QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
 
-		QPoint ptEnd = GetImagePosition(m_mouseEndPos, &m_imageRect, &m_displayRect);
-		QPoint ptStart = GetImagePosition(m_mouseStartPos, &m_imageRect, &m_displayRect);
-
-		if (mode == drawingMode::fiducial || m_drawingMode == drawingMode::cross)
+		if(tar != nullptr)
 		{
-			if (mode == drawingMode::fiducial)
+			dObj->m_type = mode;
+
+			QPoint ptEnd = GetImagePosition(m_mouseEndPos, &m_imageRect, &m_displayRect);
+			QPoint ptStart = GetImagePosition(m_mouseStartPos, &m_imageRect, &m_displayRect);
+
+			if (mode == drawingMode::fiducial || m_drawingMode == drawingMode::cross)
 			{
-				// check all other fiducials to see if it already exists if so remove 
-				for(int i=0;i<m_drawingObjects.size();i++)
+				if (mode == drawingMode::fiducial)
 				{
-					drawingObject* pObj = m_drawingObjects[i];
-
-					if(pObj->m_ImageIndex == imageContainerIndex && pObj->m_type == drawingMode::fiducial)
+					// check all other fiducials to see if it already exists if so remove 
+					for (int i = 0; i < tar->drawingObjects.size(); i++)
 					{
-						drawingFiducial* pFid = (drawingFiducial*)pObj;
+						QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
 
-						if(pFid->getPosition() == m_fidPosition)
+						if (pObj->m_ImageIndex == m_currentImage && pObj->m_type == drawingMode::fiducial)
 						{
-							delete pFid;
-							m_drawingObjects.remove(i);
+							QSharedPointer<drawingFiducial> pFid = qSharedPointerCast<drawingFiducial>(pObj);
+
+							if (pFid->getPosition() == m_fidPosition)
+							{
+								tar->drawingObjects.remove(i);
+							}
 						}
 					}
+
+					((drawingFiducial*)dObj)->setPosition(m_fidPosition);
+
+					emit addFiducialMark(((drawingFiducial*)dObj)->getPosition(), ptEnd);
 				}
 
-				((drawingFiducial*)dObj)->setPosition(m_fidPosition);
-
-				emit addFiducialMark(((drawingFiducial*)dObj)->getPosition(), ptEnd);
+				dObj->m_pRect = QSharedPointer<QRect>(new QRect(ptEnd, ptEnd));
 			}
-			dObj->m_pRect = new QRect(ptEnd, ptEnd);
-		}
-		else if(mode == drawingMode::centerObjective)
-		{
-			emit moveObjective(ptEnd);
-			dObj->m_pRect = new QRect(ptEnd, ptEnd);
-		}
-		else
-		{
-			if(ptEnd.x() < ptStart.x() || ptEnd.y() < ptStart.y())
-				dObj->m_pRect = new QRect(ptEnd, ptStart);
+			else if (mode == drawingMode::centerObjective)
+			{
+				emit moveObjective(ptEnd);
+				dObj->m_pRect = QSharedPointer<QRect>(new QRect(ptEnd, ptEnd));
+			}
 			else
-				dObj->m_pRect = new QRect(ptStart, ptEnd);
-		}
+			{
+				if (bPaddTargetImage)
+					dObj->m_pRect = HelperFunctions::getPaddRect(ptStart, ptEnd, paddlevels);
+				else
+				{
+					if (ptEnd.x() < ptStart.x() || ptEnd.y() < ptStart.y())
+						dObj->m_pRect = QSharedPointer<QRect>(new QRect(ptEnd, ptStart));
+					else
+						dObj->m_pRect = QSharedPointer<QRect>(new QRect(ptStart, ptEnd));
+				}
+			}
 
-		// add to drawing objects list
-		m_drawingObjects.append(dObj);
+			// add to drawing objects list
+			tar->drawingObjects.append((QSharedPointer<drawingObject>)dObj);
+		}
+		
 	}
 }
 
@@ -693,10 +758,10 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
 	{
 		if (m_drawingMode == drawingMode::shift)
 		{
-			drawingObject* pObj = getObjectAtPoint(pt, drawingMode::fiducial);
+			QSharedPointer<drawingObject> pObj = getObjectAtPoint(pt, drawingMode::fiducial);
 
 			if (pObj != nullptr)
-				emit addFiducialMark(((drawingFiducial*)pObj)->getPosition(), pObj->getCenter());
+				emit addFiducialMark((qSharedPointerCast<drawingFiducial>(pObj))->getPosition(), pObj->getCenter());
 		}
 	}
 	else if (!m_bObjectClicked && m_drawingMode != drawingMode::none && m_drawingMode != drawingMode::poly)	// no objects being dragged or clicked then add object
@@ -705,12 +770,7 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
 		addObject(m_drawingMode);
 	}
 	else if (!m_bObjectClicked)	// select any objects in the rect 
-	{
-		drawingObject* pObj = getObjectInMouseRect();
-
-		if(pObj != nullptr)
-			pObj->m_bSelected = true;
-	}
+		checkObjectsInMouseRect();
 
 	m_mouseDown = false;
 
@@ -723,8 +783,10 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
 	// if object being shifted then reset object dragging
 	if (m_bDragDrawingObject)
 	{
-		for (int i = 0; i < m_drawingObjects.length(); i++)
-			m_drawingObjects[i]->m_bDragging = false;
+		QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+		for (int i = 0; i < tar->drawingObjects.length(); i++)
+			tar->drawingObjects[i]->m_bDragging = false;
 	}
 
     //redraw
@@ -741,60 +803,70 @@ void PaintQLabel::mouseReleaseEvent(QMouseEvent * event)
     event->accept();
 }
 
-drawingObject* PaintQLabel::getObjectInMouseRect(drawingMode::drawingMode mode)
+void PaintQLabel::checkObjectsInMouseRect(drawingMode::drawingMode mode)
 {
 	QRect r = GetImageRectPosition(m_MouseRectangle.normalized(), &m_imageRect, &m_displayRect);
 
-	for (int i = 0; i < m_drawingObjects.length(); i++)
+	QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+	if (tar != nullptr)
 	{
-		if (m_drawingObjects[i]->m_pRect->intersects(r) || r.contains(m_drawingObjects[i]->getCenter()))
+		for (int i = 0; i < tar->drawingObjects.length(); i++)
 		{
-			if (m_drawingObjects[i]->m_type == mode || mode == drawingMode::any)
-				return m_drawingObjects[i];
+			QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
+
+			if (pObj->m_pRect->intersects(r) || r.contains(pObj->getCenter()))
+			{
+				if (pObj->m_type == mode || mode == drawingMode::any)
+					pObj->m_bSelected = true;
+			}
+		}
+	}
+}
+
+QSharedPointer<drawingObject> PaintQLabel::getObjectInMouseRect(drawingMode::drawingMode mode)
+{
+	QRect r = GetImageRectPosition(m_MouseRectangle.normalized(), &m_imageRect, &m_displayRect);
+
+	QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+	if(tar != nullptr)
+	{
+		for (int i = 0; i < tar->drawingObjects.length(); i++)
+		{
+			QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
+
+			if (pObj->m_pRect->intersects(r) || r.contains(pObj->getCenter()))
+			{
+				if (pObj->m_type == mode || mode == drawingMode::any)
+					return pObj;
+			}
 		}
 	}
 
-	return nullptr;
+	return QSharedPointer<drawingObject>();
 }
-drawingObject* PaintQLabel::getObjectAtPoint(QPoint pt, drawingMode::drawingMode mode)
+
+QSharedPointer<drawingObject> PaintQLabel::getObjectAtPoint(QPoint pt, drawingMode::drawingMode mode)
 {
-	for (int i = 0; i < m_drawingObjects.length(); i++)
+	QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+	for (int i = 0; i < tar->drawingObjects.length(); i++)
 	{
-		if (m_drawingObjects[i]->hitTest(pt, true))
+		QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
+
+		if (pObj->hitTest(pt, true))
 		{
-			if (m_drawingObjects[i]->m_type == mode || mode == drawingMode::any)
-				return m_drawingObjects[i];
+			if (pObj->m_type == mode || mode == drawingMode::any)
+				return pObj;
 		}
 	}
 
-	return nullptr;
+	return QSharedPointer<drawingObject>();
 }
 
 
-/**
-*
-*  sets image of widget
-*
-* @author    David Watts
-* @since     2017/03/07
-* 
-* FullName   PaintQLabel::setImage
-* Qualifier 
-* @param     QImage im 
-* @return    void
-* Access     public 
-*/
-void PaintQLabel::setImageIndex(int index)
-{
-#ifdef DEBUGPRINT
-    qDebug() << "Function Name: " << Q_FUNC_INFO;
-#endif
-	imageContainerIndex = index;
-    m_imageRect = getImage().rect();
 
-    this->getDisplayRect();
-    this->repaint();
-}
 
 /**
 *
@@ -916,14 +988,62 @@ void PaintQLabel::resizeEvent(QResizeEvent *event)
     this->getDisplayRect();
 }
 
-QImage& PaintQLabel::getImage()
+/**
+*
+*  sets image of widget
+*
+* @author    David Watts
+* @since     2017/03/07
+*
+* FullName   PaintQLabel::setImage
+* Qualifier
+* @param     QImage im
+* @return    void
+* Access     public
+*/
+void PaintQLabel::setImageIndex(int index)
 {
-	targeterImage* t = m_pImagesContainer->getImageAtPtr(imageContainerIndex);
+#ifdef DEBUGPRINT
+	qDebug() << "Function Name: " << Q_FUNC_INFO;
+#endif
+	m_currentImage = index;
 
-	if (t != nullptr)
-		return t->getQTImage();
+	//imshow("Display window", m_pImagesContainer->getImageAt(m_currentImage)->getImage());
+
+	//return;
+
+	QImage qim = getImage();
+	m_imageRect = qim.rect();
+
+	this->getDisplayRect();
+	this->repaint();
+}
+
+QImage PaintQLabel::getImage()
+{
+	if(m_pImagesContainer->getNumImages()>0)
+	{
+		QExplicitlySharedDataPointer<targeterImage> t = m_pImagesContainer->getImageAt(m_currentImage);
+
+		if (t != nullptr)
+			return t->getQTImage();
+		else
+			return QImage();
+	}
 	else
 		return QImage();
+}
+
+QVector<QSharedPointer<drawingObject>> PaintQLabel::getImageDrawingObjects()
+{
+	if(m_pImagesContainer->getNumImages()>0)
+	{
+		QExplicitlySharedDataPointer<targeterImage> t = m_pImagesContainer->getImageAt(m_currentImage);
+
+		return t->getDrawingObjects();
+	}
+	else 
+		return QVector<QSharedPointer<drawingObject>>();
 }
 
 /**
@@ -1016,6 +1136,15 @@ void printRect(QString s, QRect r)
          << " bottomright x = " << r.bottomRight().x() << " bottom right y = " << r.bottomRight().y() << endl;
 }
 
+void PaintQLabel::highLightShape(QSharedPointer<drawingObject> pObj, bool highlight)
+{
+	pObj->setHighlight(highlight);
+
+	this->repaint();
+	
+}
+
+
 /**
 *
 *  gets target image from drawing shape region
@@ -1028,54 +1157,68 @@ void printRect(QString s, QRect r)
 * @return    void
 * Access     public 
 */
-QVector<drawingShape> PaintQLabel::getTargetImage(bool bSetAsTarget, bool bTargetRegions, int imageIndex)
+QVector<QSharedPointer<drawingShape>> PaintQLabel::getImageShapes(bool bSetAsTarget, bool bTargetRegions, int imageIndex)
 {
 #ifdef DEBUGPRINT
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
     QRect boundingImageRegion;
-	QVector<drawingShape> shapes;
+	QVector<QSharedPointer<drawingShape>> shapes;
    
 	double scaleW = ((double)m_imageRect.width()) / ((double)m_displayRect.width());
 	double scaleH = ((double)m_imageRect.height()) / ((double)m_displayRect.height());
 
-	for (int i = 0; i < m_drawingObjects.length(); i++)
+	QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
+	for (int i = 0; i < tar->drawingObjects.length(); i++)
 	{
-		drawingObject* pObj = m_drawingObjects[i];
+		QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
 
 		// skip images not being indexed -1 indicates return all shapes, if only target sample regions to be returned skip those not filled
 		if (imageIndex >= 0 && imageIndex != pObj->m_ImageIndex && bTargetRegions && pObj->m_fillColour == drawingColour::none)
 			continue;
 
-		drawingShape shape;
+		QSharedPointer<drawingShape> shape = QSharedPointer<drawingShape>(new drawingShape);
 
-		shape.colour = pObj->m_fillColour;
+		shape->drawingObjectIndex = i;
 
+		shape->colour = pObj->m_fillColour;
+		shape->ID = pObj->ID;
+		shape->name = pObj->name;
+		shape->desc = pObj->desc;
+		shape->regionType = pObj->regionType;
+		
 		//QTransform transform = QTransform().translate(-m_displayRect.left(), -m_displayRect.top()).scale(scaleW, scaleH).translate(m_imageRect.left(), m_imageRect.top());
 		if (pObj->m_type == drawingMode::rect)
 		{
-			shape.type = drawingMode::rect;
+			shape->type = drawingMode::rect;
 
 			// make coordinates relative to window region by translating
-			shape.boundingBox = pObj->m_pRect->normalized();
+			shape->boundingBox = pObj->m_pRect->normalized();
 		}
 		else if (pObj->m_type == drawingMode::circle)
 		{
-			shape.type = drawingMode::circle;
-			shape.boundingBox = pObj->m_pRect->normalized();
+			shape->type = drawingMode::circle;
+			shape->boundingBox = pObj->m_pRect->normalized();
 		}
-		else if (pObj->m_type == drawingMode::poly)
+		else if (pObj->m_type == drawingMode::poly || pObj->m_type == drawingMode::sampleSpacing)
 		{
-			shape.type = drawingMode::poly;
+			shape->type = drawingMode::poly;
 
 			// translate polygon points to image
-			shape.boundingBox = pObj->m_pRect->normalized();
+			shape->boundingBox = pObj->m_pRect->normalized();
 
-			shape.polygon = *((drawingPoly*)pObj)->m_pPoly;
+			QSharedPointer<drawingPoly> poly = qSharedPointerCast<drawingPoly>(pObj);
+
+			QSharedPointer<QPolygon> p = poly->getPoly();
+
+			// copy polygon
+			for(int i=0; i<p->size(); i++)
+				shape->polygon.append(p->at(i));
 		}
 		else
 		{
-			shape.type = drawingMode::none;
+			shape->type = drawingMode::none;
 			resetDrawingObjects();
 		}
 
@@ -1093,15 +1236,17 @@ QVector<drawingShape> PaintQLabel::getTargetImage(bool bSetAsTarget, bool bTarge
 QVector<QPoint> PaintQLabel::targetPoints()
 {
 	QVector<QPoint> targetPoints;
-	QVectorIterator<drawingObject*> pObj(m_drawingObjects);
+	QVectorIterator<QSharedPointer<drawingObject>> pObj(m_pImagesContainer->getImageAt(m_currentImage)->drawingObjects);
 
 	while (pObj.hasNext()) {
-		drawingObject* pdObj = pObj.next();
+		QSharedPointer<drawingObject> pdObj = pObj.next();
 
 		if (pdObj->m_type == drawingMode::cross)
 		{
-			QPoint p = GetImagePosition(pdObj->m_pRect->topLeft(), &m_imageRect, &m_displayRect);
-			
+		//	QPoint p = GetImagePosition(pdObj->m_pRect->topLeft(), &m_imageRect, &m_displayRect);
+
+			QPoint p = pdObj->m_pRect->topLeft();
+
 			if(p.x()>=0 && p.y()>=0)
 				targetPoints.push_back(p);
 		}
@@ -1110,28 +1255,10 @@ QVector<QPoint> PaintQLabel::targetPoints()
 	return targetPoints;
 }
 
-void PaintQLabel::deleteDrawingObjects(int index)
+void PaintQLabel::deleteDrawingObjects(int imageIndex)
 {
-	QMutableVectorIterator<drawingObject*> pObj(m_drawingObjects);
-	bool bDeleted = false;
-
-	while (pObj.hasNext()) {
-		drawingObject* pdObj = pObj.next();
-
-		// shuffle the other image indexes down that are higher than index
-		if (pdObj->m_ImageIndex > index)
-		{
-			pdObj->m_ImageIndex = pdObj->m_ImageIndex - 1;
-		}
-
-		// delete item only do this once
-		if (pdObj->m_ImageIndex == imageContainerIndex && !bDeleted)
-		{
-			pObj.remove();
-			bDeleted = true;
-			delete pdObj;
-		}
-	}
+	if(imageIndex < m_pImagesContainer->getNumImages() && m_pImagesContainer->getImageAt(imageIndex)->drawingObjects.length()>0)
+		m_pImagesContainer->getImageAt(imageIndex)->drawingObjects.clear();
 }
 
 /**
@@ -1152,17 +1279,13 @@ void PaintQLabel::deleteSelectedDrawingObject()
     qDebug() << "Function Name: " << Q_FUNC_INFO;
 #endif
 
-	QMutableVectorIterator<drawingObject*> pObj(m_drawingObjects);
+	QMutableVectorIterator<QSharedPointer<drawingObject>> pObj(m_pImagesContainer->getImageAt(m_currentImage)->drawingObjects);
 
 	while (pObj.hasNext()) {
-		drawingObject* pdObj = pObj.next();
+		QSharedPointer<drawingObject> pdObj = pObj.next();
 
 		if (pdObj->m_bSelected)
-		{
 			pObj.remove();
-
-			delete pdObj;
-		}
 	}
 
     this->repaint();
@@ -1172,11 +1295,11 @@ void PaintQLabel::setFillColour(drawingColour::colour colour)
 {
 	m_fillColour = colour;
 
-	QMutableVectorIterator<drawingObject*> pObj(m_drawingObjects);
+	QMutableVectorIterator<QSharedPointer<drawingObject>> pObj(m_pImagesContainer->getImageAt(m_currentImage)->drawingObjects);
 
 	while (pObj.hasNext()) 
 	{
-		drawingObject* pdObj = pObj.next();
+		QSharedPointer<drawingObject> pdObj = pObj.next();
 
 		if (pdObj->m_bSelected)
 			pdObj->m_fillColour = colour;
@@ -1184,7 +1307,7 @@ void PaintQLabel::setFillColour(drawingColour::colour colour)
 	this->repaint();
 }
 
-void PaintQLabel::getPenBrush(QPainter* painter, bool hover, bool selected, bool bSelectRect, bool drawFilled, drawingColour::colour col)
+void PaintQLabel::getPenBrush(QPainter* painter, bool hover, bool selected, bool bSelectRect, bool drawFilled, bool drawHightLight, drawingColour::colour col)
 {
 	QPen pen;
 	pen.setStyle(Qt::SolidLine);
@@ -1194,6 +1317,8 @@ void PaintQLabel::getPenBrush(QPainter* painter, bool hover, bool selected, bool
 		pen.setColor(QColor(_COLOUR_SELECT_BOUNDING_BOX));
 		pen.setStyle(Qt::DashLine);
 	}
+	else if(drawHightLight)
+		pen.setColor(QColor(_COLOUR_HIGHLIGHT));
 	else if (hover && selected)
 		pen.setColor(QColor(_COLOUR_SELECT_HOVER));
 	else if (hover)
@@ -1222,26 +1347,26 @@ void PaintQLabel::getPenBrush(QPainter* painter, bool hover, bool selected, bool
 	painter->setPen(pen);
 }
 
-void PaintQLabel::addShapeMaskToImage(cv::Mat& mask, drawingShape shape)
+void PaintQLabel::addShapeMaskToImage(cv::Mat& mask, QSharedPointer<drawingShape> shape)
 {
 	cv::Scalar col;
 
-	if (shape.colour != drawingColour::none)
+	if (shape->colour != drawingColour::none)
 	{
-		if (shape.colour == drawingColour::white || shape.colour == drawingColour::mask_white)
+		if (shape->colour == drawingColour::white || shape->colour == drawingColour::mask_white)
 			col = cv::Scalar(255, 255, 255);
-		else if (shape.colour == drawingColour::black || shape.colour == drawingColour::mask_black)
+		else if (shape->colour == drawingColour::black || shape->colour == drawingColour::mask_black)
 			col = cv::Scalar(0, 0, 0);
 
 		// get mask image
-		if (shape.type == drawingMode::poly)
+		if (shape->type == drawingMode::poly)
 		{
 			vector <cv::Point> triOut;
 
 			vector<vector<cv::Point> > contours;
 
 			// since poly must be in mask image
-			foreach(QPoint p, shape.polygon)
+			foreach(QPoint p, shape->polygon)
 				triOut.push_back(cv::Point(p.x(), p.y()));
 
 			contours.push_back(triOut);
@@ -1251,21 +1376,21 @@ void PaintQLabel::addShapeMaskToImage(cv::Mat& mask, drawingShape shape)
 			// fills concave as well as convex polygons
 			cv::drawContours(mask, contours, 0, col, CV_FILLED);
 		}
-		else if (shape.type == drawingMode::circle)
+		else if (shape->type == drawingMode::circle)
 		{
-			cv::ellipse(mask, cv::Point(shape.boundingBox.left() + shape.boundingBox.width() / 2, shape.boundingBox.top() + shape.boundingBox.height() / 2),
-				cv::Size(shape.boundingBox.width(), shape.boundingBox.height()), 0, 0, 360, col, CV_FILLED);
+			cv::ellipse(mask, cv::Point(shape->boundingBox.left() + shape->boundingBox.width() / 2, shape->boundingBox.top() + shape->boundingBox.height() / 2),
+						cv::Size(shape->boundingBox.width(), shape->boundingBox.height()), 0, 0, 360, col, CV_FILLED);
 		}
 		else
 		{
-			cv::rectangle(mask, cv::Rect(shape.boundingBox.left(), shape.boundingBox.top(), shape.boundingBox.width(), shape.boundingBox.height()), col, CV_FILLED);
+			cv::rectangle(mask, cv::Rect(shape->boundingBox.left(), shape->boundingBox.top(), shape->boundingBox.width(), shape->boundingBox.height()), col, CV_FILLED);
 		}
 	}
 }
 
-void PaintQLabel::getTargetsFromBinaryImage(cv::Mat binImage, int threshold, SAMPLINGTYPE::type sampling, int gridSpacing, int imageIndex)
+void PaintQLabel::getTargetsFromBinaryImage(cv::Mat binImage, QPoint gridSpacing, QPoint gridOffset, int threshold, SAMPLINGTYPE::type sampling, int imageIndex)
 {
-	cv::Mat sampleRegionsImage = sampleImageForTargets(binImage, threshold, gridSpacing, SAMPLINGTYPE::grid);
+	cv::Mat sampleRegionsImage = sampleImageForTargets(binImage, threshold, gridSpacing, gridOffset, SAMPLINGTYPE::grid);
 
 	cv::Mat labels, out, stats, centroids;
 
@@ -1293,18 +1418,18 @@ void PaintQLabel::setTargetPosition(QPoint imagePoint, int imageIndex)
 
 	dObj->m_type = drawingMode::drawingMode::cross;
 
-	dObj->m_pRect = new QRect(imagePoint, imagePoint);
+	dObj->m_pRect = QSharedPointer<QRect>(new QRect(imagePoint, imagePoint));
 
 	dObj->m_fillColour = drawingColour::none;
 	dObj->m_ImageIndex = imageIndex;
 
 	// add to drawing objects list
-	m_drawingObjects.append(dObj);
+	m_pImagesContainer->getImageAt(m_currentImage)->addDrawingObject((QSharedPointer<drawingObject>)dObj);
 }
 
 // returns image with sampling positions in white regions
 // grid, edge, center, noedge
-cv::Mat PaintQLabel::sampleImageForTargets(cv::Mat im, int edgeThreshold, int gridSpacing, SAMPLINGTYPE::type type)
+cv::Mat PaintQLabel::sampleImageForTargets(cv::Mat im, int edgeThreshold, QPoint gridSpacing, QPoint gridOffset, SAMPLINGTYPE::type type)
 {
 	cv::Mat dst;
 	cv::Mat bin;
@@ -1347,7 +1472,7 @@ cv::Mat PaintQLabel::sampleImageForTargets(cv::Mat im, int edgeThreshold, int gr
 	cv::Mat grid = cv::Mat(dst.size(), dst.type(), cv::Scalar(0, 0, 0));
 	
 	// draw white grid on black area
-	drawGrid(grid, gridSpacing, cv::Scalar(255, 255, 255), true);
+	drawGrid(grid, gridSpacing, gridOffset, cv::Scalar(255, 255, 255), true);
 
 	// apply AND masking operation 
 	bitwise_and(grid, bin, dst);
@@ -1367,20 +1492,20 @@ cv::Mat PaintQLabel::sampleImageForTargets(cv::Mat im, int edgeThreshold, int gr
 
 cv::Mat PaintQLabel::getBinaryImageFromShapes(int imageIndex)
 {
-	cv::Mat im = m_pImagesContainer->getImageAt(imageIndex).getImage();
+	cv::Mat im = m_pImagesContainer->getImageAt(imageIndex)->getImage();
 
 	cv::Mat out = cv::Mat(im.cols, im.rows, im.type(), cv::Scalar(255, 255, 255));  // white background
 	bool bWhite = false;
 
 	// check for drawing on image 
-	QVector<drawingShape> shapes = getTargetImage(false, true, imageIndex);
+	QVector<QSharedPointer<drawingShape>> shapes = getImageShapes(false, true, imageIndex);
 
 	if (shapes.length() > 0)
 	{
 		// any white regions then binary mask with those white regions white in mask, otherwise mask out regions as black
 		for (int j = 0; j < shapes.length(); j++)
 		{
-			 if(shapes[j].colour == drawingColour::mask_white)
+			 if(shapes[j]->colour == drawingColour::mask_white)
 				bWhite = true;
 		}
 
@@ -1395,7 +1520,7 @@ cv::Mat PaintQLabel::getBinaryImageFromShapes(int imageIndex)
 }
 
 // only on uchar images
-void PaintQLabel::drawGrid(cv::Mat& im, int gridSpacing, cv::Scalar s, bool bPoints)
+void PaintQLabel::drawGrid(cv::Mat& im, QPoint gridSpacing, QPoint gridOffset, cv::Scalar s, bool bPoints)
 {
 	int width = im.size().width;
 	int height = im.size().height;
@@ -1404,39 +1529,38 @@ void PaintQLabel::drawGrid(cv::Mat& im, int gridSpacing, cv::Scalar s, bool bPoi
 	{
 		if (im.channels() == 1)
 		{
-			for (int j = 0; j < height; j += gridSpacing)
-				for (int i = 0; i < width; i += gridSpacing)
+			for (int j = 0; j < height; j += gridSpacing.y())
+				for (int i = 0; i < width; i += gridSpacing.x())
 				{
 					im.at<uchar>(cv::Point(i, j)) = 255;
 				}
 		}
 		else
 		{
-			for (int j = 0; j < height; j += gridSpacing)
-				for (int i = 0; i < width; i += gridSpacing)
+			for (int j = 0; j < height; j += gridSpacing.y())
+				for (int i = 0; i < width; i += gridSpacing.x())
 				{
-
 					im.at<cv::Vec3b>(cv::Point(i, j)) = cv::Vec3b(255, 255, 255);
 				}
 		}
 	}
 	else
 	{
-		for (int i = 0; i < height; i += gridSpacing)
+		for (int i = 0; i < height; i += gridSpacing.x())
 			cv::line(im, cv::Point(0, i), cv::Point(width, i), s);
 
-		for (int i = 0; i < width; i += gridSpacing)
+		for (int i = 0; i < width; i += gridSpacing.x())
 			cv::line(im, cv::Point(i, 0), cv::Point(i, height), s);
 	}
 }
 
-void PaintQLabel::drawTempPoly(QVector<QPoint>* pPoly, QRect* pBoundingRect, QPainter* painter)
+void PaintQLabel::drawTempPoly(QVector<QPoint>* pPoly, QRect* pBoundingRect, QPainter* painter, drawingMode::drawingMode shape)
 {
 	if (pPoly == nullptr || pPoly->length() < 1)
 		return;
 
-	getPenBrush(painter, false, false, m_drawingMode == drawingMode::none, 
-				(m_fillColour == drawingColour::white || m_fillColour == drawingColour::black), 
+	getPenBrush(painter, false, false, m_drawingMode == drawingMode::none,
+				(m_fillColour == drawingColour::white || m_fillColour == drawingColour::black), false, 
 				m_fillColour);
 
 	painter->setPen(QPen(Qt::green));
@@ -1446,16 +1570,20 @@ void PaintQLabel::drawTempPoly(QVector<QPoint>* pPoly, QRect* pBoundingRect, QPa
 
 	path.moveTo(pPoly->at(0).x(), pPoly->at(0).y());
 
-	painter->drawRect(pPoly->at(0).x() - 5, pPoly->at(0).y() - 5, 10, 10);
+	if(shape == drawingMode::poly)
+		painter->drawRect(pPoly->at(0).x() - 5, pPoly->at(0).y() - 5, 10, 10);
+	else
+		painter->drawEllipse(pPoly->at(0).x() - 5, pPoly->at(0).y() - 5, 10, 10);
 
 	// lines
 	for (int i = 1; i < pPoly->length(); i++)
 	{
 		// handle
-		painter->drawRect(pPoly->at(i).x() - 5, pPoly->at(i).y() - 5, 10, 10);
+		if (shape == drawingMode::poly)
+			painter->drawRect(pPoly->at(i).x() - 5, pPoly->at(i).y() - 5, 10, 10);
+		else
+			painter->drawEllipse(pPoly->at(i).x() - 5, pPoly->at(i).y() - 5, 10, 10);
 
-		// line
-		//painter->drawLine(pPoly->at(i-1).x(), pPoly->at(i-1).y(), pPoly->at(i).x(), pPoly->at(i).y());
 		path.lineTo(pPoly->at(i).x(), pPoly->at(i).y());
 	}
 
@@ -1468,8 +1596,8 @@ void PaintQLabel::drawTempPoly(QVector<QPoint>* pPoly, QRect* pBoundingRect, QPa
 
 void PaintQLabel::drawTempRectCircle(QRect* pBoundingRect, QPainter* painter, bool bCircle)
 {
-	getPenBrush(painter, false, false, m_drawingMode == drawingMode::none, 
-				(m_fillColour == drawingColour::white || m_fillColour == drawingColour::black), 
+	getPenBrush(painter, false, false, m_drawingMode == drawingMode::none,
+				(m_fillColour == drawingColour::white || m_fillColour == drawingColour::black), false,
 				m_fillColour);
 
 	if (bCircle)
@@ -1510,16 +1638,22 @@ void PaintQLabel::paintEvent(QPaintEvent* event)
         else
             painter.drawImage(m_displayRect, getImage(), m_imageRect);
 
-		if (m_drawingMode == drawingMode::poly && m_PolygonPoints.length() > 0 && !m_bLoopClosed)
-			drawTempPoly(&m_PolygonPoints, &m_ObjectPositionRectangle, &painter);		// draw temp polygon
+		if (((m_drawingMode == drawingMode::poly&& !m_bLoopClosed) || m_drawingMode == drawingMode::sampleSpacing) && m_PolygonPoints.length() > 0 )
+			drawTempPoly(&m_PolygonPoints, &m_ObjectPositionRectangle, &painter, m_drawingMode);		// draw temp polygon
 		else if (m_ObjectPositionRectangle.x() >= 0 && !(m_drawingMode == drawingMode::fiducial || m_drawingMode == drawingMode::cross))
 			drawTempRectCircle(&m_ObjectPositionRectangle, &painter, m_drawingMode == drawingMode::circle);
 	
+		QExplicitlySharedDataPointer<targeterImage> tar = m_pImagesContainer->getImageAt(m_currentImage);
+
 		// paint drawing objects - already drawn rect, circle, poly etc
-		for (int i = 0; i < m_drawingObjects.length(); i++)
+		for (int i = 0; i < tar->drawingObjects.length(); i++)
 		{
-			if (m_drawingObjects[i]->m_ImageIndex == imageContainerIndex)
-				m_drawingObjects[i]->draw(&painter);
+			QSharedPointer<drawingObject> pObj = tar->drawingObjects[i];
+
+			if (pObj->m_ImageIndex == m_currentImage)
+			{
+				pObj->draw(&painter);
+			}
 		}
 		
 		if (m_drawGrid)

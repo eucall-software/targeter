@@ -16,7 +16,7 @@ private:
 	
 public:
 	
-	std::vector<targeterImage> m_Images;
+	QVector<QExplicitlySharedDataPointer<targeterImage>> m_Images;	/// collection of all images
 
 	ImagesContainer() {  };
 	~ImagesContainer() { 
@@ -27,44 +27,29 @@ public:
 	{
 		return (int)m_Images.size(); 
 	}
-	targeterImage* getImageAtPtr(int i) 
-	{ 
-		if (i >= 0 && i < m_Images.size())
-			return &(m_Images[i]);
-		else
-			return nullptr;
-	}
-
-	targeterImage* getLastImagePtr() 
+	
+	QExplicitlySharedDataPointer<targeterImage> getLastImagePtr()
 	{
 		int size = m_Images.size() - 1;
 
 		if (size >= 0)
-			return &(m_Images[m_Images.size() - 1]);
-		else
-			return nullptr;
+			return m_Images[m_Images.size() - 1];
 	}
 
-	targeterImage& getImageAt(int i) { 
+	QExplicitlySharedDataPointer<targeterImage> getImageAt(int i) {
 		if (i >= 0 && i < m_Images.size())
 			return m_Images[i];
-	}
-
-	targeterImage* getImageAtOfType(int i, imageType::imageType type) 
-	{ 
-		if (i >= 0 && i < m_Images.size()) 
-			return &(m_Images[m_Images[i].getFriendArrayIndexOfType(type)]);
 		else
-			return nullptr;
-		return nullptr;
+			return QExplicitlySharedDataPointer<targeterImage>();
 	}
 
-	std::vector<targeterImage> getImages() { 
+	QVector<QExplicitlySharedDataPointer<targeterImage>> getImages() {
 		return m_Images; 
 	};
 
-	std::vector<targeterImage> getImages(std::vector<int> indexes) {
-		std::vector<targeterImage> images;
+	QVector<QExplicitlySharedDataPointer<targeterImage>> getImages(std::vector<int> indexes)
+	{
+		QVector<QExplicitlySharedDataPointer<targeterImage>> images;
 
 		foreach(int i,  indexes)
 		{
@@ -74,19 +59,20 @@ public:
 		return m_Images;
 	};
 
-	void removeImage(int ind) {
-		std::vector<targeterImage>::iterator it = m_Images.begin();
+	void removeImage(int ind) 
+	{
+		QVector<QExplicitlySharedDataPointer<targeterImage>>::iterator it = m_Images.begin();
 		std::advance(it, ind);
 		m_Images.erase(it);
 	}
 
-	void addImage(targeterImage& im) { 
-		m_Images.push_back(im); 
+	void addImage(QExplicitlySharedDataPointer<targeterImage> im) {
+		m_Images.append(im); 
 	};
 
 	void freeImages() { 
-		foreach(targeterImage item, m_Images) 
-			item.free1DImages();  
+		foreach(QExplicitlySharedDataPointer<targeterImage> item, m_Images)
+			item.data()->free1DImages();  
 	};
 };
 

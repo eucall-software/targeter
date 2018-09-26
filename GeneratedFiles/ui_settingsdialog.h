@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsdialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -34,6 +34,7 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "qwebengineview.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -46,34 +47,45 @@ public:
     QWidget *verticalLayoutWidget_7;
     QVBoxLayout *verticalLayout_25;
     QLabel *label_105;
-    QHBoxLayout *horizontalLayout_16;
+    QVBoxLayout *verticalLayout_51;
     QPushButton *btnSaveBackup;
     QPushButton *btnRestoreBackup;
-    QWidget *layoutWidget;
+    QWidget *verticalLayoutWidget_15;
+    QVBoxLayout *verticalLayout_50;
+    QLabel *label_287;
+    QGridLayout *gridLayout_57;
+    QLabel *label_94;
+    QLineEdit *editProjectDirectoryName;
+    QLineEdit *editFilenamePrefix;
+    QLabel *label_84;
+    QPushButton *btnProjectDirectory;
+    QWidget *verticalLayoutWidget_17;
+    QVBoxLayout *verticalLayout_52;
+    QLabel *label_288;
     QGridLayout *gridLayout_6;
-    QLabel *label_85;
+    QLabel *label_40;
     QLabel *label_93;
     QLabel *label_89;
-    QLabel *label_94;
     QLabel *label_87;
-    QLabel *label_40;
     QLabel *label_86;
     QLabel *label_41;
     QLabel *label_88;
     QLabel *label_83;
-    QLabel *label_84;
-    QPushButton *btnProjectDirectory;
-    QLineEdit *editProjectDirectoryName;
     QLineEdit *editName;
     QLineEdit *editInstitute;
     QLineEdit *editProjectName;
     QLineEdit *editProjectID;
     QLineEdit *editVersion;
     QLineEdit *editDescription;
-    QLineEdit *editFilenamePrefix;
     QLineEdit *editSampleDescription;
     QLineEdit *editBarcode;
     QDateEdit *projectDate;
+    QLabel *label_85;
+    QWidget *projectData;
+    QWidget *verticalLayoutWidget_18;
+    QVBoxLayout *verticalLayout_53;
+    QLabel *label_289;
+    QWebEngineView *widget;
     QWidget *CameraSettingsTab;
     QGridLayout *gridLayout_10;
     QSpacerItem *verticalSpacer_2;
@@ -150,6 +162,7 @@ public:
     QDoubleSpinBox *spinYPositionAbsoluteXY;
     QDoubleSpinBox *spinYPositionRelativeXY;
     QVBoxLayout *verticalLayout_14;
+    QPushButton *btnMoveOverviewPosition;
     QPushButton *btnMoveAbsoluteXY;
     QPushButton *btnMoveRelativeXY;
     QPushButton *btnMoveToFiducial;
@@ -178,7 +191,6 @@ public:
     QLabel *label_59;
     QPushButton *btnConnectXY;
     QPushButton *btnDisconnectXY;
-    QCheckBox *chkJoystickOn;
     QCheckBox *chkKeypadOn;
     QFrame *ZStageFrame;
     QWidget *verticalLayoutWidget_6;
@@ -210,20 +222,41 @@ public:
     QLabel *label_112;
     QLineEdit *editSendCommandZ;
     QPushButton *btnSendCommandZ;
+    QCheckBox *chkJoystickOn;
     QWidget *tab;
-    QWidget *gridLayoutWidget_2;
+    QLabel *label_267;
+    QWidget *horizontalLayoutWidget;
+    QHBoxLayout *horizontalLayout_14;
     QGridLayout *gridLayout_7;
     QLabel *label_107;
     QComboBox *cboFocusAlgorithm;
     QLabel *label_114;
-    QDoubleSpinBox *spinMaxFocus;
+    QDoubleSpinBox *spinDefaultFocusPosition;
     QLabel *label_109;
     QLabel *label_113;
     QLabel *label_115;
-    QDoubleSpinBox *spinMinFocus;
+    QDoubleSpinBox *spinFocusRange;
     QDoubleSpinBox *spinCoarseFocusStep;
     QDoubleSpinBox *spinFineFocusStep;
-    QLabel *label_267;
+    QPushButton *btnAddFocusPosition;
+    QLabel *label_117;
+    QPushButton *btnRemoveFocusPosition;
+    QComboBox *cboFocusPosition;
+    QDoubleSpinBox *spinFocusFraction;
+    QLabel *label_118;
+    QVBoxLayout *verticalLayout_26;
+    QLabel *label_119;
+    QCheckBox *chkOptimiseFocusRange;
+    QCheckBox *chkInterpolateFocusPosition;
+    QCheckBox *chkUseFocusThreshold;
+    QCheckBox *chkUseCoarseFocusRange;
+    QCheckBox *chkUseFineFocusRange;
+    QCheckBox *chkCenterFocus;
+    QCheckBox *chkUseRegisteredFocusPoints;
+    QFrame *line;
+    QLabel *label_120;
+    QCheckBox *chkShowBestFocusImage;
+    QCheckBox *chkDetectTargetsWhileScanning;
     QWidget *FiducialMarksTab;
     QLabel *label_8;
     QLabel *lblFiducialCheck;
@@ -331,16 +364,56 @@ public:
     QLabel *label_distance;
     QLabel *label_22;
     QLabel *labelCluster;
+    QSlider *distanceBinsThreshold;
+    QHBoxLayout *horizontalLayout_15;
+    QLabel *label_distanceBins;
+    QLabel *label_123;
+    QLabel *label_124;
+    QGridLayout *gridLayout_21;
+    QSpinBox *spinWaveletLevels;
+    QLabel *label_122;
     QHBoxLayout *horizontalLayout_7;
-    QCheckBox *chkTargetImageAsMask;
-    QSpacerItem *horizontalSpacer_4;
+    QCheckBox *chkPaddTargetImage;
+    QCheckBox *chkProcessGrayscale;
+    QCheckBox *chkCorrectBackGround;
     QGridLayout *gridLayout_5;
-    QSpinBox *spinSamplingDistance;
+    QSpinBox *spinSamplingDistanceY;
+    QLabel *label_116;
+    QSpinBox *spinSamplingDistanceX;
     QComboBox *cboSamplingType;
     QLabel *label_9;
     QLabel *label_43;
     QLabel *label_42;
-    QSpinBox *spinExclusionDistance;
+    QSpinBox *spinSamplingOffsetX;
+    QSpinBox *spinSamplingOffsetY;
+    QLabel *label_121;
+    QWidget *ThresholdSettingsTab;
+    QWidget *verticalLayoutWidget_4;
+    QVBoxLayout *verticalLayout_11;
+    QGridLayout *gridLayout_18;
+    QSlider *NoClustersSlider;
+    QHBoxLayout *horizontalLayout_3;
+    QComboBox *cboThresholdType;
+    QSpacerItem *horizontalSpacer_10;
+    QSlider *ThresholdMinSlider;
+    QGridLayout *gridLayout_histogram;
+    QGridLayout *gridLayout_15;
+    QLabel *ThresholdMaxLbl;
+    QLabel *ThresholdMinLbl;
+    QSpacerItem *horizontalSpacer_7;
+    QLabel *histogram_image;
+    QLabel *label_92;
+    QLabel *label_90;
+    QLabel *label_91;
+    QLabel *NoClustersLbl;
+    QLabel *labelThresholdMin;
+    QLabel *labelThresholdMax;
+    QLabel *label_28;
+    QSlider *ThresholdMaxSlider;
+    QLabel *label_12;
+    QHBoxLayout *horizontalLayout_12;
+    QCheckBox *chkAutoThreshold;
+    QSpacerItem *horizontalSpacer_12;
     QWidget *Drawing;
     QFormLayout *formLayout_3;
     QVBoxLayout *verticalLayout_21;
@@ -395,33 +468,6 @@ public:
     QVBoxLayout *verticalLayout_3;
     QLabel *label_27;
     QCheckBox *chkCALIB_CB_CLUSTERING;
-    QWidget *ThresholdSettingsTab;
-    QWidget *verticalLayoutWidget_4;
-    QVBoxLayout *verticalLayout_11;
-    QGridLayout *gridLayout_18;
-    QSlider *NoClustersSlider;
-    QHBoxLayout *horizontalLayout_3;
-    QComboBox *cboThresholdType;
-    QSpacerItem *horizontalSpacer_10;
-    QSlider *ThresholdMinSlider;
-    QGridLayout *gridLayout_histogram;
-    QGridLayout *gridLayout_15;
-    QLabel *ThresholdMaxLbl;
-    QLabel *ThresholdMinLbl;
-    QSpacerItem *horizontalSpacer_7;
-    QLabel *histogram_image;
-    QLabel *label_92;
-    QLabel *label_90;
-    QLabel *label_91;
-    QLabel *NoClustersLbl;
-    QLabel *labelThresholdMin;
-    QLabel *labelThresholdMax;
-    QLabel *label_28;
-    QSlider *ThresholdMaxSlider;
-    QLabel *label_12;
-    QHBoxLayout *horizontalLayout_12;
-    QCheckBox *chkAutoThreshold;
-    QSpacerItem *horizontalSpacer_12;
     QWidget *ConnectedComponentsTab;
     QGridLayout *gridLayout_16;
     QGridLayout *gridLayout;
@@ -475,161 +521,223 @@ public:
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
         SettingsTab = new QTabWidget(SettingsDialog);
         SettingsTab->setObjectName(QStringLiteral("SettingsTab"));
+        QFont font;
+        font.setBold(false);
+        font.setWeight(50);
+        SettingsTab->setFont(font);
         SettingsTab->setStyleSheet(QStringLiteral(""));
         ProjectSettingsTab = new QWidget();
         ProjectSettingsTab->setObjectName(QStringLiteral("ProjectSettingsTab"));
         verticalLayoutWidget_7 = new QWidget(ProjectSettingsTab);
         verticalLayoutWidget_7->setObjectName(QStringLiteral("verticalLayoutWidget_7"));
-        verticalLayoutWidget_7->setGeometry(QRect(10, 320, 213, 80));
+        verticalLayoutWidget_7->setGeometry(QRect(590, 20, 151, 81));
         verticalLayout_25 = new QVBoxLayout(verticalLayoutWidget_7);
         verticalLayout_25->setObjectName(QStringLiteral("verticalLayout_25"));
         verticalLayout_25->setContentsMargins(0, 0, 0, 0);
         label_105 = new QLabel(verticalLayoutWidget_7);
         label_105->setObjectName(QStringLiteral("label_105"));
-        QFont font;
-        font.setUnderline(true);
-        label_105->setFont(font);
+        QFont font1;
+        font1.setUnderline(true);
+        label_105->setFont(font1);
 
         verticalLayout_25->addWidget(label_105);
 
-        horizontalLayout_16 = new QHBoxLayout();
-        horizontalLayout_16->setObjectName(QStringLiteral("horizontalLayout_16"));
+        verticalLayout_51 = new QVBoxLayout();
+        verticalLayout_51->setObjectName(QStringLiteral("verticalLayout_51"));
         btnSaveBackup = new QPushButton(verticalLayoutWidget_7);
         btnSaveBackup->setObjectName(QStringLiteral("btnSaveBackup"));
 
-        horizontalLayout_16->addWidget(btnSaveBackup);
+        verticalLayout_51->addWidget(btnSaveBackup);
 
         btnRestoreBackup = new QPushButton(verticalLayoutWidget_7);
         btnRestoreBackup->setObjectName(QStringLiteral("btnRestoreBackup"));
 
-        horizontalLayout_16->addWidget(btnRestoreBackup);
+        verticalLayout_51->addWidget(btnRestoreBackup);
 
 
-        verticalLayout_25->addLayout(horizontalLayout_16);
+        verticalLayout_25->addLayout(verticalLayout_51);
 
-        layoutWidget = new QWidget(ProjectSettingsTab);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(9, 9, 721, 285));
-        gridLayout_6 = new QGridLayout(layoutWidget);
+        verticalLayoutWidget_15 = new QWidget(ProjectSettingsTab);
+        verticalLayoutWidget_15->setObjectName(QStringLiteral("verticalLayoutWidget_15"));
+        verticalLayoutWidget_15->setGeometry(QRect(20, 20, 511, 80));
+        verticalLayout_50 = new QVBoxLayout(verticalLayoutWidget_15);
+        verticalLayout_50->setObjectName(QStringLiteral("verticalLayout_50"));
+        verticalLayout_50->setContentsMargins(0, 0, 0, 0);
+        label_287 = new QLabel(verticalLayoutWidget_15);
+        label_287->setObjectName(QStringLiteral("label_287"));
+        label_287->setFont(font1);
+
+        verticalLayout_50->addWidget(label_287);
+
+        gridLayout_57 = new QGridLayout();
+        gridLayout_57->setObjectName(QStringLiteral("gridLayout_57"));
+        label_94 = new QLabel(verticalLayoutWidget_15);
+        label_94->setObjectName(QStringLiteral("label_94"));
+        QFont font2;
+        font2.setBold(true);
+        font2.setWeight(75);
+        label_94->setFont(font2);
+
+        gridLayout_57->addWidget(label_94, 2, 0, 1, 1);
+
+        editProjectDirectoryName = new QLineEdit(verticalLayoutWidget_15);
+        editProjectDirectoryName->setObjectName(QStringLiteral("editProjectDirectoryName"));
+
+        gridLayout_57->addWidget(editProjectDirectoryName, 2, 1, 1, 1);
+
+        editFilenamePrefix = new QLineEdit(verticalLayoutWidget_15);
+        editFilenamePrefix->setObjectName(QStringLiteral("editFilenamePrefix"));
+
+        gridLayout_57->addWidget(editFilenamePrefix, 1, 1, 1, 1);
+
+        label_84 = new QLabel(verticalLayoutWidget_15);
+        label_84->setObjectName(QStringLiteral("label_84"));
+        label_84->setFont(font2);
+
+        gridLayout_57->addWidget(label_84, 1, 0, 1, 1);
+
+        btnProjectDirectory = new QPushButton(verticalLayoutWidget_15);
+        btnProjectDirectory->setObjectName(QStringLiteral("btnProjectDirectory"));
+
+        gridLayout_57->addWidget(btnProjectDirectory, 2, 2, 1, 1);
+
+
+        verticalLayout_50->addLayout(gridLayout_57);
+
+        verticalLayoutWidget_17 = new QWidget(ProjectSettingsTab);
+        verticalLayoutWidget_17->setObjectName(QStringLiteral("verticalLayoutWidget_17"));
+        verticalLayoutWidget_17->setGeometry(QRect(19, 130, 721, 271));
+        verticalLayout_52 = new QVBoxLayout(verticalLayoutWidget_17);
+        verticalLayout_52->setObjectName(QStringLiteral("verticalLayout_52"));
+        verticalLayout_52->setContentsMargins(0, 0, 0, 0);
+        label_288 = new QLabel(verticalLayoutWidget_17);
+        label_288->setObjectName(QStringLiteral("label_288"));
+        label_288->setFont(font1);
+
+        verticalLayout_52->addWidget(label_288);
+
+        gridLayout_6 = new QGridLayout();
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
         gridLayout_6->setSizeConstraint(QLayout::SetMinimumSize);
-        gridLayout_6->setContentsMargins(0, 0, 0, 0);
-        label_85 = new QLabel(layoutWidget);
-        label_85->setObjectName(QStringLiteral("label_85"));
-
-        gridLayout_6->addWidget(label_85, 8, 0, 1, 1);
-
-        label_93 = new QLabel(layoutWidget);
-        label_93->setObjectName(QStringLiteral("label_93"));
-
-        gridLayout_6->addWidget(label_93, 9, 0, 1, 1);
-
-        label_89 = new QLabel(layoutWidget);
-        label_89->setObjectName(QStringLiteral("label_89"));
-
-        gridLayout_6->addWidget(label_89, 1, 0, 1, 1);
-
-        label_94 = new QLabel(layoutWidget);
-        label_94->setObjectName(QStringLiteral("label_94"));
-
-        gridLayout_6->addWidget(label_94, 3, 0, 1, 1);
-
-        label_87 = new QLabel(layoutWidget);
-        label_87->setObjectName(QStringLiteral("label_87"));
-
-        gridLayout_6->addWidget(label_87, 10, 0, 1, 1);
-
-        label_40 = new QLabel(layoutWidget);
+        label_40 = new QLabel(verticalLayoutWidget_17);
         label_40->setObjectName(QStringLiteral("label_40"));
 
         gridLayout_6->addWidget(label_40, 2, 0, 1, 1);
 
-        label_86 = new QLabel(layoutWidget);
+        label_93 = new QLabel(verticalLayoutWidget_17);
+        label_93->setObjectName(QStringLiteral("label_93"));
+
+        gridLayout_6->addWidget(label_93, 10, 0, 1, 1);
+
+        label_89 = new QLabel(verticalLayoutWidget_17);
+        label_89->setObjectName(QStringLiteral("label_89"));
+
+        gridLayout_6->addWidget(label_89, 1, 0, 1, 1);
+
+        label_87 = new QLabel(verticalLayoutWidget_17);
+        label_87->setObjectName(QStringLiteral("label_87"));
+
+        gridLayout_6->addWidget(label_87, 11, 0, 1, 1);
+
+        label_86 = new QLabel(verticalLayoutWidget_17);
         label_86->setObjectName(QStringLiteral("label_86"));
 
         gridLayout_6->addWidget(label_86, 0, 0, 1, 1);
 
-        label_41 = new QLabel(layoutWidget);
+        label_41 = new QLabel(verticalLayoutWidget_17);
         label_41->setObjectName(QStringLiteral("label_41"));
 
-        gridLayout_6->addWidget(label_41, 4, 0, 1, 1);
+        gridLayout_6->addWidget(label_41, 5, 0, 1, 1);
 
-        label_88 = new QLabel(layoutWidget);
+        label_88 = new QLabel(verticalLayoutWidget_17);
         label_88->setObjectName(QStringLiteral("label_88"));
 
-        gridLayout_6->addWidget(label_88, 5, 0, 1, 1);
+        gridLayout_6->addWidget(label_88, 6, 0, 1, 1);
 
-        label_83 = new QLabel(layoutWidget);
+        label_83 = new QLabel(verticalLayoutWidget_17);
         label_83->setObjectName(QStringLiteral("label_83"));
 
-        gridLayout_6->addWidget(label_83, 6, 0, 1, 1);
+        gridLayout_6->addWidget(label_83, 7, 0, 1, 1);
 
-        label_84 = new QLabel(layoutWidget);
-        label_84->setObjectName(QStringLiteral("label_84"));
-
-        gridLayout_6->addWidget(label_84, 7, 0, 1, 1);
-
-        btnProjectDirectory = new QPushButton(layoutWidget);
-        btnProjectDirectory->setObjectName(QStringLiteral("btnProjectDirectory"));
-
-        gridLayout_6->addWidget(btnProjectDirectory, 3, 2, 1, 1);
-
-        editProjectDirectoryName = new QLineEdit(layoutWidget);
-        editProjectDirectoryName->setObjectName(QStringLiteral("editProjectDirectoryName"));
-
-        gridLayout_6->addWidget(editProjectDirectoryName, 3, 1, 1, 1);
-
-        editName = new QLineEdit(layoutWidget);
+        editName = new QLineEdit(verticalLayoutWidget_17);
         editName->setObjectName(QStringLiteral("editName"));
 
         gridLayout_6->addWidget(editName, 0, 1, 1, 2);
 
-        editInstitute = new QLineEdit(layoutWidget);
+        editInstitute = new QLineEdit(verticalLayoutWidget_17);
         editInstitute->setObjectName(QStringLiteral("editInstitute"));
 
         gridLayout_6->addWidget(editInstitute, 1, 1, 1, 2);
 
-        editProjectName = new QLineEdit(layoutWidget);
+        editProjectName = new QLineEdit(verticalLayoutWidget_17);
         editProjectName->setObjectName(QStringLiteral("editProjectName"));
 
         gridLayout_6->addWidget(editProjectName, 2, 1, 1, 2);
 
-        editProjectID = new QLineEdit(layoutWidget);
+        editProjectID = new QLineEdit(verticalLayoutWidget_17);
         editProjectID->setObjectName(QStringLiteral("editProjectID"));
 
-        gridLayout_6->addWidget(editProjectID, 4, 1, 1, 2);
+        gridLayout_6->addWidget(editProjectID, 5, 1, 1, 2);
 
-        editVersion = new QLineEdit(layoutWidget);
+        editVersion = new QLineEdit(verticalLayoutWidget_17);
         editVersion->setObjectName(QStringLiteral("editVersion"));
 
-        gridLayout_6->addWidget(editVersion, 5, 1, 1, 2);
+        gridLayout_6->addWidget(editVersion, 6, 1, 1, 2);
 
-        editDescription = new QLineEdit(layoutWidget);
+        editDescription = new QLineEdit(verticalLayoutWidget_17);
         editDescription->setObjectName(QStringLiteral("editDescription"));
 
-        gridLayout_6->addWidget(editDescription, 6, 1, 1, 2);
+        gridLayout_6->addWidget(editDescription, 7, 1, 1, 2);
 
-        editFilenamePrefix = new QLineEdit(layoutWidget);
-        editFilenamePrefix->setObjectName(QStringLiteral("editFilenamePrefix"));
-
-        gridLayout_6->addWidget(editFilenamePrefix, 7, 1, 1, 2);
-
-        editSampleDescription = new QLineEdit(layoutWidget);
+        editSampleDescription = new QLineEdit(verticalLayoutWidget_17);
         editSampleDescription->setObjectName(QStringLiteral("editSampleDescription"));
 
-        gridLayout_6->addWidget(editSampleDescription, 8, 1, 1, 2);
+        gridLayout_6->addWidget(editSampleDescription, 9, 1, 1, 2);
 
-        editBarcode = new QLineEdit(layoutWidget);
+        editBarcode = new QLineEdit(verticalLayoutWidget_17);
         editBarcode->setObjectName(QStringLiteral("editBarcode"));
 
-        gridLayout_6->addWidget(editBarcode, 9, 1, 1, 2);
+        gridLayout_6->addWidget(editBarcode, 10, 1, 1, 2);
 
-        projectDate = new QDateEdit(layoutWidget);
+        projectDate = new QDateEdit(verticalLayoutWidget_17);
         projectDate->setObjectName(QStringLiteral("projectDate"));
 
-        gridLayout_6->addWidget(projectDate, 10, 1, 1, 2);
+        gridLayout_6->addWidget(projectDate, 11, 1, 1, 2);
+
+        label_85 = new QLabel(verticalLayoutWidget_17);
+        label_85->setObjectName(QStringLiteral("label_85"));
+
+        gridLayout_6->addWidget(label_85, 9, 0, 1, 1);
+
+
+        verticalLayout_52->addLayout(gridLayout_6);
 
         SettingsTab->addTab(ProjectSettingsTab, QString());
+        projectData = new QWidget();
+        projectData->setObjectName(QStringLiteral("projectData"));
+        verticalLayoutWidget_18 = new QWidget(projectData);
+        verticalLayoutWidget_18->setObjectName(QStringLiteral("verticalLayoutWidget_18"));
+        verticalLayoutWidget_18->setGeometry(QRect(10, 10, 751, 451));
+        verticalLayout_53 = new QVBoxLayout(verticalLayoutWidget_18);
+        verticalLayout_53->setObjectName(QStringLiteral("verticalLayout_53"));
+        verticalLayout_53->setContentsMargins(0, 0, 0, 0);
+        label_289 = new QLabel(verticalLayoutWidget_18);
+        label_289->setObjectName(QStringLiteral("label_289"));
+        label_289->setFont(font1);
+
+        verticalLayout_53->addWidget(label_289);
+
+        widget = new QWebEngineView(verticalLayoutWidget_18);
+        widget->setObjectName(QStringLiteral("widget"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(1);
+        sizePolicy1.setVerticalStretch(1);
+        sizePolicy1.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
+        widget->setSizePolicy(sizePolicy1);
+
+        verticalLayout_53->addWidget(widget);
+
+        SettingsTab->addTab(projectData, QString());
         CameraSettingsTab = new QWidget();
         CameraSettingsTab->setObjectName(QStringLiteral("CameraSettingsTab"));
         gridLayout_10 = new QGridLayout(CameraSettingsTab);
@@ -850,7 +958,7 @@ public:
         StageSettingsTab->setObjectName(QStringLiteral("StageSettingsTab"));
         verticalLayoutWidget = new QWidget(StageSettingsTab);
         verticalLayoutWidget->setObjectName(QStringLiteral("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(430, 20, 221, 71));
+        verticalLayoutWidget->setGeometry(QRect(400, 20, 221, 71));
         verticalLayout_6 = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         verticalLayout_6->setContentsMargins(0, 0, 0, 0);
@@ -891,12 +999,12 @@ public:
 
         XYStageFrame = new QFrame(StageSettingsTab);
         XYStageFrame->setObjectName(QStringLiteral("XYStageFrame"));
-        XYStageFrame->setGeometry(QRect(10, 20, 371, 381));
+        XYStageFrame->setGeometry(QRect(10, 20, 371, 411));
         XYStageFrame->setFrameShape(QFrame::StyledPanel);
         XYStageFrame->setFrameShadow(QFrame::Raised);
         verticalLayoutWidget_5 = new QWidget(XYStageFrame);
         verticalLayoutWidget_5->setObjectName(QStringLiteral("verticalLayoutWidget_5"));
-        verticalLayoutWidget_5->setGeometry(QRect(0, 0, 370, 380));
+        verticalLayoutWidget_5->setGeometry(QRect(0, 0, 370, 411));
         verticalLayout_4 = new QVBoxLayout(verticalLayoutWidget_5);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         verticalLayout_4->setContentsMargins(0, 0, 0, 0);
@@ -904,7 +1012,7 @@ public:
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         label_49 = new QLabel(verticalLayoutWidget_5);
         label_49->setObjectName(QStringLiteral("label_49"));
-        label_49->setFont(font);
+        label_49->setFont(font1);
         label_49->setCursor(QCursor(Qt::ArrowCursor));
         label_49->setAlignment(Qt::AlignCenter);
 
@@ -918,7 +1026,7 @@ public:
         verticalLayout_13->setObjectName(QStringLiteral("verticalLayout_13"));
         label_51 = new QLabel(verticalLayoutWidget_5);
         label_51->setObjectName(QStringLiteral("label_51"));
-        label_51->setFont(font);
+        label_51->setFont(font1);
         label_51->setAlignment(Qt::AlignCenter);
 
         verticalLayout_13->addWidget(label_51);
@@ -1013,6 +1121,11 @@ public:
 
         verticalLayout_14 = new QVBoxLayout();
         verticalLayout_14->setObjectName(QStringLiteral("verticalLayout_14"));
+        btnMoveOverviewPosition = new QPushButton(verticalLayoutWidget_5);
+        btnMoveOverviewPosition->setObjectName(QStringLiteral("btnMoveOverviewPosition"));
+
+        verticalLayout_14->addWidget(btnMoveOverviewPosition);
+
         btnMoveAbsoluteXY = new QPushButton(verticalLayoutWidget_5);
         btnMoveAbsoluteXY->setObjectName(QStringLiteral("btnMoveAbsoluteXY"));
 
@@ -1030,7 +1143,7 @@ public:
 
         label_54 = new QLabel(verticalLayoutWidget_5);
         label_54->setObjectName(QStringLiteral("label_54"));
-        label_54->setFont(font);
+        label_54->setFont(font1);
         label_54->setAlignment(Qt::AlignCenter);
 
         verticalLayout_14->addWidget(label_54);
@@ -1058,7 +1171,7 @@ public:
         verticalLayout_16->setObjectName(QStringLiteral("verticalLayout_16"));
         label_55 = new QLabel(verticalLayoutWidget_5);
         label_55->setObjectName(QStringLiteral("label_55"));
-        label_55->setFont(font);
+        label_55->setFont(font1);
         label_55->setAlignment(Qt::AlignCenter);
 
         verticalLayout_16->addWidget(label_55);
@@ -1115,7 +1228,7 @@ public:
         verticalLayout_17->setObjectName(QStringLiteral("verticalLayout_17"));
         label_58 = new QLabel(verticalLayoutWidget_5);
         label_58->setObjectName(QStringLiteral("label_58"));
-        label_58->setFont(font);
+        label_58->setFont(font1);
         label_58->setAlignment(Qt::AlignCenter);
 
         verticalLayout_17->addWidget(label_58);
@@ -1132,7 +1245,7 @@ public:
 
         label_17 = new QLabel(verticalLayoutWidget_5);
         label_17->setObjectName(QStringLiteral("label_17"));
-        label_17->setFont(font);
+        label_17->setFont(font1);
         label_17->setAlignment(Qt::AlignCenter);
 
         verticalLayout_17->addWidget(label_17);
@@ -1154,7 +1267,7 @@ public:
         verticalLayout_18->setObjectName(QStringLiteral("verticalLayout_18"));
         label_59 = new QLabel(verticalLayoutWidget_5);
         label_59->setObjectName(QStringLiteral("label_59"));
-        label_59->setFont(font);
+        label_59->setFont(font1);
         label_59->setAlignment(Qt::AlignCenter);
 
         verticalLayout_18->addWidget(label_59);
@@ -1178,28 +1291,24 @@ public:
 
         verticalLayout_4->addLayout(verticalLayout_5);
 
-        chkJoystickOn = new QCheckBox(StageSettingsTab);
-        chkJoystickOn->setObjectName(QStringLiteral("chkJoystickOn"));
-        chkJoystickOn->setGeometry(QRect(180, 410, 201, 20));
-        chkJoystickOn->setLayoutDirection(Qt::RightToLeft);
         chkKeypadOn = new QCheckBox(StageSettingsTab);
         chkKeypadOn->setObjectName(QStringLiteral("chkKeypadOn"));
-        chkKeypadOn->setGeometry(QRect(430, 430, 221, 17));
+        chkKeypadOn->setGeometry(QRect(470, 440, 151, 20));
         chkKeypadOn->setLayoutDirection(Qt::RightToLeft);
         ZStageFrame = new QFrame(StageSettingsTab);
         ZStageFrame->setObjectName(QStringLiteral("ZStageFrame"));
-        ZStageFrame->setGeometry(QRect(430, 90, 221, 341));
+        ZStageFrame->setGeometry(QRect(400, 100, 221, 331));
         ZStageFrame->setFrameShape(QFrame::StyledPanel);
         ZStageFrame->setFrameShadow(QFrame::Raised);
-        verticalLayoutWidget_6 = new QWidget(ZStageFrame);
+        verticalLayoutWidget_6 = new QWidget(StageSettingsTab);
         verticalLayoutWidget_6->setObjectName(QStringLiteral("verticalLayoutWidget_6"));
-        verticalLayoutWidget_6->setGeometry(QRect(0, 0, 221, 331));
+        verticalLayoutWidget_6->setGeometry(QRect(400, 100, 221, 331));
         ZStageLayout = new QVBoxLayout(verticalLayoutWidget_6);
         ZStageLayout->setObjectName(QStringLiteral("ZStageLayout"));
         ZStageLayout->setContentsMargins(0, 0, 0, 0);
         label_100 = new QLabel(verticalLayoutWidget_6);
         label_100->setObjectName(QStringLiteral("label_100"));
-        label_100->setFont(font);
+        label_100->setFont(font1);
         label_100->setCursor(QCursor(Qt::ArrowCursor));
         label_100->setAlignment(Qt::AlignCenter);
 
@@ -1211,7 +1320,7 @@ public:
         verticalLayout_24->setObjectName(QStringLiteral("verticalLayout_24"));
         label_101 = new QLabel(verticalLayoutWidget_6);
         label_101->setObjectName(QStringLiteral("label_101"));
-        label_101->setFont(font);
+        label_101->setFont(font1);
         label_101->setAlignment(Qt::AlignCenter);
 
         verticalLayout_24->addWidget(label_101);
@@ -1236,7 +1345,7 @@ public:
 
         label_104 = new QLabel(verticalLayoutWidget_6);
         label_104->setObjectName(QStringLiteral("label_104"));
-        label_104->setFont(font);
+        label_104->setFont(font1);
         label_104->setAlignment(Qt::AlignCenter);
 
         verticalLayout_22->addWidget(label_104);
@@ -1328,7 +1437,7 @@ public:
 
         label_112 = new QLabel(verticalLayoutWidget_6);
         label_112->setObjectName(QStringLiteral("label_112"));
-        label_112->setFont(font);
+        label_112->setFont(font1);
         label_112->setAlignment(Qt::AlignCenter);
 
         verticalLayout_23->addWidget(label_112);
@@ -1349,66 +1458,75 @@ public:
 
         ZStageLayout->addLayout(verticalLayout_22);
 
+        chkJoystickOn = new QCheckBox(StageSettingsTab);
+        chkJoystickOn->setObjectName(QStringLiteral("chkJoystickOn"));
+        chkJoystickOn->setGeometry(QRect(250, 440, 131, 20));
+        chkJoystickOn->setLayoutDirection(Qt::RightToLeft);
         SettingsTab->addTab(StageSettingsTab, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
-        gridLayoutWidget_2 = new QWidget(tab);
-        gridLayoutWidget_2->setObjectName(QStringLiteral("gridLayoutWidget_2"));
-        gridLayoutWidget_2->setGeometry(QRect(20, 10, 361, 152));
-        gridLayout_7 = new QGridLayout(gridLayoutWidget_2);
+        label_267 = new QLabel(tab);
+        label_267->setObjectName(QStringLiteral("label_267"));
+        label_267->setGeometry(QRect(20, 300, 421, 16));
+        horizontalLayoutWidget = new QWidget(tab);
+        horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
+        horizontalLayoutWidget->setGeometry(QRect(20, 20, 671, 271));
+        horizontalLayout_14 = new QHBoxLayout(horizontalLayoutWidget);
+        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
+        horizontalLayout_14->setContentsMargins(0, 0, 0, 0);
+        gridLayout_7 = new QGridLayout();
         gridLayout_7->setObjectName(QStringLiteral("gridLayout_7"));
-        gridLayout_7->setContentsMargins(0, 0, 0, 0);
-        label_107 = new QLabel(gridLayoutWidget_2);
+        label_107 = new QLabel(horizontalLayoutWidget);
         label_107->setObjectName(QStringLiteral("label_107"));
 
         gridLayout_7->addWidget(label_107, 0, 0, 1, 1);
 
-        cboFocusAlgorithm = new QComboBox(gridLayoutWidget_2);
+        cboFocusAlgorithm = new QComboBox(horizontalLayoutWidget);
         cboFocusAlgorithm->setObjectName(QStringLiteral("cboFocusAlgorithm"));
 
         gridLayout_7->addWidget(cboFocusAlgorithm, 0, 1, 1, 1);
 
-        label_114 = new QLabel(gridLayoutWidget_2);
+        label_114 = new QLabel(horizontalLayoutWidget);
         label_114->setObjectName(QStringLiteral("label_114"));
 
         gridLayout_7->addWidget(label_114, 3, 0, 1, 1);
 
-        spinMaxFocus = new QDoubleSpinBox(gridLayoutWidget_2);
-        spinMaxFocus->setObjectName(QStringLiteral("spinMaxFocus"));
-        spinMaxFocus->setDecimals(3);
-        spinMaxFocus->setMinimum(-12.5);
-        spinMaxFocus->setMaximum(12.5);
-        spinMaxFocus->setSingleStep(0.05);
-        spinMaxFocus->setValue(8);
+        spinDefaultFocusPosition = new QDoubleSpinBox(horizontalLayoutWidget);
+        spinDefaultFocusPosition->setObjectName(QStringLiteral("spinDefaultFocusPosition"));
+        spinDefaultFocusPosition->setDecimals(3);
+        spinDefaultFocusPosition->setMinimum(-12.5);
+        spinDefaultFocusPosition->setMaximum(12.5);
+        spinDefaultFocusPosition->setSingleStep(0.05);
+        spinDefaultFocusPosition->setValue(6);
 
-        gridLayout_7->addWidget(spinMaxFocus, 1, 1, 1, 1);
+        gridLayout_7->addWidget(spinDefaultFocusPosition, 1, 1, 1, 1);
 
-        label_109 = new QLabel(gridLayoutWidget_2);
+        label_109 = new QLabel(horizontalLayoutWidget);
         label_109->setObjectName(QStringLiteral("label_109"));
 
         gridLayout_7->addWidget(label_109, 1, 0, 1, 1);
 
-        label_113 = new QLabel(gridLayoutWidget_2);
+        label_113 = new QLabel(horizontalLayoutWidget);
         label_113->setObjectName(QStringLiteral("label_113"));
 
         gridLayout_7->addWidget(label_113, 2, 0, 1, 1);
 
-        label_115 = new QLabel(gridLayoutWidget_2);
+        label_115 = new QLabel(horizontalLayoutWidget);
         label_115->setObjectName(QStringLiteral("label_115"));
 
         gridLayout_7->addWidget(label_115, 4, 0, 1, 1);
 
-        spinMinFocus = new QDoubleSpinBox(gridLayoutWidget_2);
-        spinMinFocus->setObjectName(QStringLiteral("spinMinFocus"));
-        spinMinFocus->setDecimals(3);
-        spinMinFocus->setMinimum(-12.5);
-        spinMinFocus->setMaximum(12.5);
-        spinMinFocus->setSingleStep(0.005);
-        spinMinFocus->setValue(5);
+        spinFocusRange = new QDoubleSpinBox(horizontalLayoutWidget);
+        spinFocusRange->setObjectName(QStringLiteral("spinFocusRange"));
+        spinFocusRange->setDecimals(3);
+        spinFocusRange->setMinimum(-12.5);
+        spinFocusRange->setMaximum(12.5);
+        spinFocusRange->setSingleStep(0.005);
+        spinFocusRange->setValue(2);
 
-        gridLayout_7->addWidget(spinMinFocus, 2, 1, 1, 1);
+        gridLayout_7->addWidget(spinFocusRange, 2, 1, 1, 1);
 
-        spinCoarseFocusStep = new QDoubleSpinBox(gridLayoutWidget_2);
+        spinCoarseFocusStep = new QDoubleSpinBox(horizontalLayoutWidget);
         spinCoarseFocusStep->setObjectName(QStringLiteral("spinCoarseFocusStep"));
         spinCoarseFocusStep->setDecimals(3);
         spinCoarseFocusStep->setMinimum(0);
@@ -1418,7 +1536,7 @@ public:
 
         gridLayout_7->addWidget(spinCoarseFocusStep, 3, 1, 1, 1);
 
-        spinFineFocusStep = new QDoubleSpinBox(gridLayoutWidget_2);
+        spinFineFocusStep = new QDoubleSpinBox(horizontalLayoutWidget);
         spinFineFocusStep->setObjectName(QStringLiteral("spinFineFocusStep"));
         spinFineFocusStep->setDecimals(3);
         spinFineFocusStep->setMaximum(25);
@@ -1427,16 +1545,141 @@ public:
 
         gridLayout_7->addWidget(spinFineFocusStep, 4, 1, 1, 1);
 
-        label_267 = new QLabel(tab);
-        label_267->setObjectName(QStringLiteral("label_267"));
-        label_267->setGeometry(QRect(20, 170, 421, 16));
+        btnAddFocusPosition = new QPushButton(horizontalLayoutWidget);
+        btnAddFocusPosition->setObjectName(QStringLiteral("btnAddFocusPosition"));
+
+        gridLayout_7->addWidget(btnAddFocusPosition, 7, 1, 1, 1);
+
+        label_117 = new QLabel(horizontalLayoutWidget);
+        label_117->setObjectName(QStringLiteral("label_117"));
+
+        gridLayout_7->addWidget(label_117, 7, 0, 1, 1);
+
+        btnRemoveFocusPosition = new QPushButton(horizontalLayoutWidget);
+        btnRemoveFocusPosition->setObjectName(QStringLiteral("btnRemoveFocusPosition"));
+
+        gridLayout_7->addWidget(btnRemoveFocusPosition, 8, 1, 1, 1);
+
+        cboFocusPosition = new QComboBox(horizontalLayoutWidget);
+        cboFocusPosition->setObjectName(QStringLiteral("cboFocusPosition"));
+
+        gridLayout_7->addWidget(cboFocusPosition, 8, 0, 1, 1);
+
+        spinFocusFraction = new QDoubleSpinBox(horizontalLayoutWidget);
+        spinFocusFraction->setObjectName(QStringLiteral("spinFocusFraction"));
+        spinFocusFraction->setDecimals(2);
+        spinFocusFraction->setMaximum(1);
+        spinFocusFraction->setSingleStep(0.05);
+        spinFocusFraction->setValue(0.1);
+
+        gridLayout_7->addWidget(spinFocusFraction, 5, 1, 1, 1);
+
+        label_118 = new QLabel(horizontalLayoutWidget);
+        label_118->setObjectName(QStringLiteral("label_118"));
+
+        gridLayout_7->addWidget(label_118, 5, 0, 1, 1);
+
+
+        horizontalLayout_14->addLayout(gridLayout_7);
+
+        verticalLayout_26 = new QVBoxLayout();
+        verticalLayout_26->setObjectName(QStringLiteral("verticalLayout_26"));
+        label_119 = new QLabel(horizontalLayoutWidget);
+        label_119->setObjectName(QStringLiteral("label_119"));
+        label_119->setFont(font1);
+        label_119->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_26->addWidget(label_119);
+
+        chkOptimiseFocusRange = new QCheckBox(horizontalLayoutWidget);
+        chkOptimiseFocusRange->setObjectName(QStringLiteral("chkOptimiseFocusRange"));
+        chkOptimiseFocusRange->setLayoutDirection(Qt::RightToLeft);
+        chkOptimiseFocusRange->setChecked(true);
+
+        verticalLayout_26->addWidget(chkOptimiseFocusRange);
+
+        chkInterpolateFocusPosition = new QCheckBox(horizontalLayoutWidget);
+        chkInterpolateFocusPosition->setObjectName(QStringLiteral("chkInterpolateFocusPosition"));
+        chkInterpolateFocusPosition->setLayoutDirection(Qt::RightToLeft);
+        chkInterpolateFocusPosition->setChecked(true);
+
+        verticalLayout_26->addWidget(chkInterpolateFocusPosition);
+
+        chkUseFocusThreshold = new QCheckBox(horizontalLayoutWidget);
+        chkUseFocusThreshold->setObjectName(QStringLiteral("chkUseFocusThreshold"));
+        chkUseFocusThreshold->setLayoutDirection(Qt::RightToLeft);
+        chkUseFocusThreshold->setChecked(true);
+
+        verticalLayout_26->addWidget(chkUseFocusThreshold);
+
+        chkUseCoarseFocusRange = new QCheckBox(horizontalLayoutWidget);
+        chkUseCoarseFocusRange->setObjectName(QStringLiteral("chkUseCoarseFocusRange"));
+        chkUseCoarseFocusRange->setLayoutDirection(Qt::RightToLeft);
+        chkUseCoarseFocusRange->setChecked(true);
+
+        verticalLayout_26->addWidget(chkUseCoarseFocusRange);
+
+        chkUseFineFocusRange = new QCheckBox(horizontalLayoutWidget);
+        chkUseFineFocusRange->setObjectName(QStringLiteral("chkUseFineFocusRange"));
+        chkUseFineFocusRange->setLayoutDirection(Qt::RightToLeft);
+        chkUseFineFocusRange->setChecked(true);
+
+        verticalLayout_26->addWidget(chkUseFineFocusRange);
+
+        chkCenterFocus = new QCheckBox(horizontalLayoutWidget);
+        chkCenterFocus->setObjectName(QStringLiteral("chkCenterFocus"));
+        chkCenterFocus->setLayoutDirection(Qt::RightToLeft);
+        chkCenterFocus->setChecked(true);
+
+        verticalLayout_26->addWidget(chkCenterFocus);
+
+        chkUseRegisteredFocusPoints = new QCheckBox(horizontalLayoutWidget);
+        chkUseRegisteredFocusPoints->setObjectName(QStringLiteral("chkUseRegisteredFocusPoints"));
+        chkUseRegisteredFocusPoints->setLayoutDirection(Qt::RightToLeft);
+        chkUseRegisteredFocusPoints->setChecked(true);
+
+        verticalLayout_26->addWidget(chkUseRegisteredFocusPoints);
+
+        line = new QFrame(horizontalLayoutWidget);
+        line->setObjectName(QStringLiteral("line"));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout_26->addWidget(line);
+
+        label_120 = new QLabel(horizontalLayoutWidget);
+        label_120->setObjectName(QStringLiteral("label_120"));
+        label_120->setFont(font1);
+        label_120->setAlignment(Qt::AlignCenter);
+
+        verticalLayout_26->addWidget(label_120);
+
+        chkShowBestFocusImage = new QCheckBox(horizontalLayoutWidget);
+        chkShowBestFocusImage->setObjectName(QStringLiteral("chkShowBestFocusImage"));
+        chkShowBestFocusImage->setFont(font2);
+        chkShowBestFocusImage->setLayoutDirection(Qt::RightToLeft);
+        chkShowBestFocusImage->setChecked(true);
+
+        verticalLayout_26->addWidget(chkShowBestFocusImage);
+
+        chkDetectTargetsWhileScanning = new QCheckBox(horizontalLayoutWidget);
+        chkDetectTargetsWhileScanning->setObjectName(QStringLiteral("chkDetectTargetsWhileScanning"));
+        chkDetectTargetsWhileScanning->setFont(font2);
+        chkDetectTargetsWhileScanning->setLayoutDirection(Qt::RightToLeft);
+        chkDetectTargetsWhileScanning->setChecked(false);
+
+        verticalLayout_26->addWidget(chkDetectTargetsWhileScanning);
+
+
+        horizontalLayout_14->addLayout(verticalLayout_26);
+
         SettingsTab->addTab(tab, QString());
         FiducialMarksTab = new QWidget();
         FiducialMarksTab->setObjectName(QStringLiteral("FiducialMarksTab"));
         label_8 = new QLabel(FiducialMarksTab);
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setGeometry(QRect(10, 20, 70, 16));
-        label_8->setFont(font);
+        label_8->setFont(font1);
         lblFiducialCheck = new QLabel(FiducialMarksTab);
         lblFiducialCheck->setObjectName(QStringLiteral("lblFiducialCheck"));
         lblFiducialCheck->setGeometry(QRect(10, 340, 231, 20));
@@ -1792,7 +2035,7 @@ public:
 
         label_82 = new QLabel(gridLayoutWidget);
         label_82->setObjectName(QStringLiteral("label_82"));
-        label_82->setFont(font);
+        label_82->setFont(font1);
 
         gridLayout_12->addWidget(label_82, 0, 0, 1, 1);
 
@@ -1808,7 +2051,7 @@ public:
 
         label_95 = new QLabel(gridLayoutWidget);
         label_95->setObjectName(QStringLiteral("label_95"));
-        label_95->setFont(font);
+        label_95->setFont(font1);
 
         gridLayout_12->addWidget(label_95, 5, 0, 1, 1);
 
@@ -1850,7 +2093,7 @@ public:
         verticalLayout_12->setContentsMargins(0, 0, 0, 0);
         label_96 = new QLabel(verticalLayoutWidget_2);
         label_96->setObjectName(QStringLiteral("label_96"));
-        label_96->setFont(font);
+        label_96->setFont(font1);
 
         verticalLayout_12->addWidget(label_96);
 
@@ -1880,7 +2123,7 @@ public:
         verticalLayout_15->setObjectName(QStringLiteral("verticalLayout_15"));
         label_71 = new QLabel(verticalLayoutWidget_3);
         label_71->setObjectName(QStringLiteral("label_71"));
-        label_71->setFont(font);
+        label_71->setFont(font1);
 
         verticalLayout_15->addWidget(label_71);
 
@@ -1943,14 +2186,14 @@ public:
 
         label = new QLabel(TargetSettingsTab);
         label->setObjectName(QStringLiteral("label"));
-        QFont font1;
-        font1.setFamily(QStringLiteral("MS Shell Dlg 2"));
-        font1.setPointSize(8);
-        font1.setBold(false);
-        font1.setItalic(false);
-        font1.setUnderline(true);
-        font1.setWeight(50);
-        label->setFont(font1);
+        QFont font3;
+        font3.setFamily(QStringLiteral("MS Shell Dlg 2"));
+        font3.setPointSize(8);
+        font3.setBold(false);
+        font3.setItalic(false);
+        font3.setUnderline(true);
+        font3.setWeight(50);
+        label->setFont(font3);
         label->setStyleSheet(QStringLiteral(""));
 
         verticalLayout_10->addWidget(label);
@@ -1963,12 +2206,12 @@ public:
         ScoreThreshold->setValue(70);
         ScoreThreshold->setOrientation(Qt::Horizontal);
 
-        gridLayout_20->addWidget(ScoreThreshold, 2, 2, 1, 1);
+        gridLayout_20->addWidget(ScoreThreshold, 3, 2, 1, 1);
 
         label_5 = new QLabel(TargetSettingsTab);
         label_5->setObjectName(QStringLiteral("label_5"));
 
-        gridLayout_20->addWidget(label_5, 3, 0, 1, 1);
+        gridLayout_20->addWidget(label_5, 4, 0, 1, 1);
 
         numClusters = new QSlider(TargetSettingsTab);
         numClusters->setObjectName(QStringLiteral("numClusters"));
@@ -1997,12 +2240,12 @@ public:
         scoreRegionArea->setValue(100);
         scoreRegionArea->setOrientation(Qt::Horizontal);
 
-        gridLayout_20->addWidget(scoreRegionArea, 3, 2, 1, 1);
+        gridLayout_20->addWidget(scoreRegionArea, 4, 2, 1, 1);
 
         label_20 = new QLabel(TargetSettingsTab);
         label_20->setObjectName(QStringLiteral("label_20"));
 
-        gridLayout_20->addWidget(label_20, 2, 0, 1, 1);
+        gridLayout_20->addWidget(label_20, 3, 0, 1, 1);
 
         label_3 = new QLabel(TargetSettingsTab);
         label_3->setObjectName(QStringLiteral("label_3"));
@@ -2023,7 +2266,7 @@ public:
         horizontalLayout_9->addWidget(label_70);
 
 
-        gridLayout_20->addLayout(horizontalLayout_9, 2, 3, 1, 1);
+        gridLayout_20->addLayout(horizontalLayout_9, 3, 3, 1, 1);
 
         horizontalLayout_10 = new QHBoxLayout();
         horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
@@ -2038,7 +2281,7 @@ public:
         horizontalLayout_10->addWidget(label_73);
 
 
-        gridLayout_20->addLayout(horizontalLayout_10, 3, 3, 1, 1);
+        gridLayout_20->addLayout(horizontalLayout_10, 4, 3, 1, 1);
 
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
@@ -2061,33 +2304,104 @@ public:
 
         gridLayout_20->addWidget(labelCluster, 0, 3, 1, 1);
 
+        distanceBinsThreshold = new QSlider(TargetSettingsTab);
+        distanceBinsThreshold->setObjectName(QStringLiteral("distanceBinsThreshold"));
+        distanceBinsThreshold->setMaximum(50);
+        distanceBinsThreshold->setPageStep(5);
+        distanceBinsThreshold->setValue(5);
+        distanceBinsThreshold->setOrientation(Qt::Horizontal);
+
+        gridLayout_20->addWidget(distanceBinsThreshold, 2, 2, 1, 1);
+
+        horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
+        label_distanceBins = new QLabel(TargetSettingsTab);
+        label_distanceBins->setObjectName(QStringLiteral("label_distanceBins"));
+
+        horizontalLayout_15->addWidget(label_distanceBins);
+
+        label_123 = new QLabel(TargetSettingsTab);
+        label_123->setObjectName(QStringLiteral("label_123"));
+
+        horizontalLayout_15->addWidget(label_123);
+
+
+        gridLayout_20->addLayout(horizontalLayout_15, 2, 3, 1, 1);
+
+        label_124 = new QLabel(TargetSettingsTab);
+        label_124->setObjectName(QStringLiteral("label_124"));
+
+        gridLayout_20->addWidget(label_124, 2, 0, 1, 1);
+
 
         verticalLayout_10->addLayout(gridLayout_20);
 
+        gridLayout_21 = new QGridLayout();
+        gridLayout_21->setObjectName(QStringLiteral("gridLayout_21"));
+        spinWaveletLevels = new QSpinBox(TargetSettingsTab);
+        spinWaveletLevels->setObjectName(QStringLiteral("spinWaveletLevels"));
+        spinWaveletLevels->setMinimum(1);
+        spinWaveletLevels->setMaximum(5);
+        spinWaveletLevels->setValue(3);
+
+        gridLayout_21->addWidget(spinWaveletLevels, 0, 1, 1, 1);
+
+        label_122 = new QLabel(TargetSettingsTab);
+        label_122->setObjectName(QStringLiteral("label_122"));
+
+        gridLayout_21->addWidget(label_122, 0, 0, 1, 1);
+
+
+        verticalLayout_10->addLayout(gridLayout_21);
+
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
-        chkTargetImageAsMask = new QCheckBox(TargetSettingsTab);
-        chkTargetImageAsMask->setObjectName(QStringLiteral("chkTargetImageAsMask"));
-        chkTargetImageAsMask->setLayoutDirection(Qt::RightToLeft);
+        chkPaddTargetImage = new QCheckBox(TargetSettingsTab);
+        chkPaddTargetImage->setObjectName(QStringLiteral("chkPaddTargetImage"));
+        chkPaddTargetImage->setLayoutDirection(Qt::RightToLeft);
+        chkPaddTargetImage->setChecked(true);
 
-        horizontalLayout_7->addWidget(chkTargetImageAsMask);
+        horizontalLayout_7->addWidget(chkPaddTargetImage);
 
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        chkProcessGrayscale = new QCheckBox(TargetSettingsTab);
+        chkProcessGrayscale->setObjectName(QStringLiteral("chkProcessGrayscale"));
+        chkProcessGrayscale->setLayoutDirection(Qt::RightToLeft);
+        chkProcessGrayscale->setChecked(true);
 
-        horizontalLayout_7->addItem(horizontalSpacer_4);
+        horizontalLayout_7->addWidget(chkProcessGrayscale);
 
 
         verticalLayout_10->addLayout(horizontalLayout_7);
 
+        chkCorrectBackGround = new QCheckBox(TargetSettingsTab);
+        chkCorrectBackGround->setObjectName(QStringLiteral("chkCorrectBackGround"));
+        chkCorrectBackGround->setLayoutDirection(Qt::RightToLeft);
+        chkCorrectBackGround->setChecked(true);
+
+        verticalLayout_10->addWidget(chkCorrectBackGround);
+
         gridLayout_5 = new QGridLayout();
         gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
-        spinSamplingDistance = new QSpinBox(TargetSettingsTab);
-        spinSamplingDistance->setObjectName(QStringLiteral("spinSamplingDistance"));
-        spinSamplingDistance->setMinimum(1);
-        spinSamplingDistance->setMaximum(100);
-        spinSamplingDistance->setValue(35);
+        spinSamplingDistanceY = new QSpinBox(TargetSettingsTab);
+        spinSamplingDistanceY->setObjectName(QStringLiteral("spinSamplingDistanceY"));
+        spinSamplingDistanceY->setMinimum(1);
+        spinSamplingDistanceY->setMaximum(100);
+        spinSamplingDistanceY->setValue(35);
 
-        gridLayout_5->addWidget(spinSamplingDistance, 1, 1, 1, 1);
+        gridLayout_5->addWidget(spinSamplingDistanceY, 2, 1, 1, 1);
+
+        label_116 = new QLabel(TargetSettingsTab);
+        label_116->setObjectName(QStringLiteral("label_116"));
+
+        gridLayout_5->addWidget(label_116, 2, 0, 1, 1);
+
+        spinSamplingDistanceX = new QSpinBox(TargetSettingsTab);
+        spinSamplingDistanceX->setObjectName(QStringLiteral("spinSamplingDistanceX"));
+        spinSamplingDistanceX->setMinimum(1);
+        spinSamplingDistanceX->setMaximum(100);
+        spinSamplingDistanceX->setValue(35);
+
+        gridLayout_5->addWidget(spinSamplingDistanceX, 1, 1, 1, 1);
 
         cboSamplingType = new QComboBox(TargetSettingsTab);
         cboSamplingType->setObjectName(QStringLiteral("cboSamplingType"));
@@ -2107,14 +2421,26 @@ public:
         label_42 = new QLabel(TargetSettingsTab);
         label_42->setObjectName(QStringLiteral("label_42"));
 
-        gridLayout_5->addWidget(label_42, 2, 0, 1, 1);
+        gridLayout_5->addWidget(label_42, 3, 0, 1, 1);
 
-        spinExclusionDistance = new QSpinBox(TargetSettingsTab);
-        spinExclusionDistance->setObjectName(QStringLiteral("spinExclusionDistance"));
-        spinExclusionDistance->setMaximum(100);
-        spinExclusionDistance->setValue(35);
+        spinSamplingOffsetX = new QSpinBox(TargetSettingsTab);
+        spinSamplingOffsetX->setObjectName(QStringLiteral("spinSamplingOffsetX"));
+        spinSamplingOffsetX->setMaximum(100);
+        spinSamplingOffsetX->setValue(35);
 
-        gridLayout_5->addWidget(spinExclusionDistance, 2, 1, 1, 1);
+        gridLayout_5->addWidget(spinSamplingOffsetX, 3, 1, 1, 1);
+
+        spinSamplingOffsetY = new QSpinBox(TargetSettingsTab);
+        spinSamplingOffsetY->setObjectName(QStringLiteral("spinSamplingOffsetY"));
+        spinSamplingOffsetY->setMaximum(100);
+        spinSamplingOffsetY->setValue(35);
+
+        gridLayout_5->addWidget(spinSamplingOffsetY, 4, 1, 1, 1);
+
+        label_121 = new QLabel(TargetSettingsTab);
+        label_121->setObjectName(QStringLiteral("label_121"));
+
+        gridLayout_5->addWidget(label_121, 4, 0, 1, 1);
 
 
         verticalLayout_10->addLayout(gridLayout_5);
@@ -2123,6 +2449,162 @@ public:
         formLayout_4->setLayout(0, QFormLayout::LabelRole, verticalLayout_10);
 
         SettingsTab->addTab(TargetSettingsTab, QString());
+        ThresholdSettingsTab = new QWidget();
+        ThresholdSettingsTab->setObjectName(QStringLiteral("ThresholdSettingsTab"));
+        verticalLayoutWidget_4 = new QWidget(ThresholdSettingsTab);
+        verticalLayoutWidget_4->setObjectName(QStringLiteral("verticalLayoutWidget_4"));
+        verticalLayoutWidget_4->setGeometry(QRect(20, 30, 641, 301));
+        verticalLayout_11 = new QVBoxLayout(verticalLayoutWidget_4);
+        verticalLayout_11->setObjectName(QStringLiteral("verticalLayout_11"));
+        verticalLayout_11->setContentsMargins(0, 0, 0, 0);
+        gridLayout_18 = new QGridLayout();
+        gridLayout_18->setObjectName(QStringLiteral("gridLayout_18"));
+        NoClustersSlider = new QSlider(verticalLayoutWidget_4);
+        NoClustersSlider->setObjectName(QStringLiteral("NoClustersSlider"));
+        NoClustersSlider->setMinimum(2);
+        NoClustersSlider->setMaximum(255);
+        NoClustersSlider->setPageStep(5);
+        NoClustersSlider->setOrientation(Qt::Horizontal);
+
+        gridLayout_18->addWidget(NoClustersSlider, 4, 1, 1, 1);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        cboThresholdType = new QComboBox(verticalLayoutWidget_4);
+        cboThresholdType->setObjectName(QStringLiteral("cboThresholdType"));
+
+        horizontalLayout_3->addWidget(cboThresholdType);
+
+        horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_10);
+
+
+        gridLayout_18->addLayout(horizontalLayout_3, 3, 1, 1, 1);
+
+        ThresholdMinSlider = new QSlider(verticalLayoutWidget_4);
+        ThresholdMinSlider->setObjectName(QStringLiteral("ThresholdMinSlider"));
+        ThresholdMinSlider->setEnabled(false);
+        ThresholdMinSlider->setMaximum(254);
+        ThresholdMinSlider->setOrientation(Qt::Horizontal);
+
+        gridLayout_18->addWidget(ThresholdMinSlider, 1, 1, 1, 1);
+
+        gridLayout_histogram = new QGridLayout();
+        gridLayout_histogram->setObjectName(QStringLiteral("gridLayout_histogram"));
+        gridLayout_15 = new QGridLayout();
+        gridLayout_15->setObjectName(QStringLiteral("gridLayout_15"));
+        gridLayout_15->setSizeConstraint(QLayout::SetFixedSize);
+        ThresholdMaxLbl = new QLabel(verticalLayoutWidget_4);
+        ThresholdMaxLbl->setObjectName(QStringLiteral("ThresholdMaxLbl"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Maximum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(ThresholdMaxLbl->sizePolicy().hasHeightForWidth());
+        ThresholdMaxLbl->setSizePolicy(sizePolicy2);
+
+        gridLayout_15->addWidget(ThresholdMaxLbl, 0, 2, 1, 1);
+
+        ThresholdMinLbl = new QLabel(verticalLayoutWidget_4);
+        ThresholdMinLbl->setObjectName(QStringLiteral("ThresholdMinLbl"));
+        sizePolicy2.setHeightForWidth(ThresholdMinLbl->sizePolicy().hasHeightForWidth());
+        ThresholdMinLbl->setSizePolicy(sizePolicy2);
+
+        gridLayout_15->addWidget(ThresholdMinLbl, 0, 0, 1, 1);
+
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_15->addItem(horizontalSpacer_7, 0, 1, 1, 1);
+
+
+        gridLayout_histogram->addLayout(gridLayout_15, 1, 0, 1, 1);
+
+        histogram_image = new QLabel(verticalLayoutWidget_4);
+        histogram_image->setObjectName(QStringLiteral("histogram_image"));
+        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(1);
+        sizePolicy3.setHeightForWidth(histogram_image->sizePolicy().hasHeightForWidth());
+        histogram_image->setSizePolicy(sizePolicy3);
+        histogram_image->setFrameShape(QFrame::StyledPanel);
+        histogram_image->setScaledContents(true);
+
+        gridLayout_histogram->addWidget(histogram_image, 0, 0, 1, 1);
+
+
+        gridLayout_18->addLayout(gridLayout_histogram, 0, 1, 1, 1);
+
+        label_92 = new QLabel(verticalLayoutWidget_4);
+        label_92->setObjectName(QStringLiteral("label_92"));
+
+        gridLayout_18->addWidget(label_92, 0, 0, 1, 1);
+
+        label_90 = new QLabel(verticalLayoutWidget_4);
+        label_90->setObjectName(QStringLiteral("label_90"));
+
+        gridLayout_18->addWidget(label_90, 1, 2, 1, 1);
+
+        label_91 = new QLabel(verticalLayoutWidget_4);
+        label_91->setObjectName(QStringLiteral("label_91"));
+
+        gridLayout_18->addWidget(label_91, 2, 2, 1, 1);
+
+        NoClustersLbl = new QLabel(verticalLayoutWidget_4);
+        NoClustersLbl->setObjectName(QStringLiteral("NoClustersLbl"));
+
+        gridLayout_18->addWidget(NoClustersLbl, 4, 2, 1, 1);
+
+        labelThresholdMin = new QLabel(verticalLayoutWidget_4);
+        labelThresholdMin->setObjectName(QStringLiteral("labelThresholdMin"));
+
+        gridLayout_18->addWidget(labelThresholdMin, 1, 0, 1, 1);
+
+        labelThresholdMax = new QLabel(verticalLayoutWidget_4);
+        labelThresholdMax->setObjectName(QStringLiteral("labelThresholdMax"));
+        labelThresholdMax->setStyleSheet(QStringLiteral(""));
+
+        gridLayout_18->addWidget(labelThresholdMax, 2, 0, 1, 1);
+
+        label_28 = new QLabel(verticalLayoutWidget_4);
+        label_28->setObjectName(QStringLiteral("label_28"));
+
+        gridLayout_18->addWidget(label_28, 3, 0, 1, 1);
+
+        ThresholdMaxSlider = new QSlider(verticalLayoutWidget_4);
+        ThresholdMaxSlider->setObjectName(QStringLiteral("ThresholdMaxSlider"));
+        ThresholdMaxSlider->setEnabled(false);
+        ThresholdMaxSlider->setMinimum(1);
+        ThresholdMaxSlider->setMaximum(255);
+        ThresholdMaxSlider->setValue(254);
+        ThresholdMaxSlider->setOrientation(Qt::Horizontal);
+
+        gridLayout_18->addWidget(ThresholdMaxSlider, 2, 1, 1, 1);
+
+        label_12 = new QLabel(verticalLayoutWidget_4);
+        label_12->setObjectName(QStringLiteral("label_12"));
+
+        gridLayout_18->addWidget(label_12, 4, 0, 1, 1);
+
+
+        verticalLayout_11->addLayout(gridLayout_18);
+
+        horizontalLayout_12 = new QHBoxLayout();
+        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
+        chkAutoThreshold = new QCheckBox(verticalLayoutWidget_4);
+        chkAutoThreshold->setObjectName(QStringLiteral("chkAutoThreshold"));
+        chkAutoThreshold->setLayoutDirection(Qt::RightToLeft);
+        chkAutoThreshold->setChecked(true);
+
+        horizontalLayout_12->addWidget(chkAutoThreshold);
+
+        horizontalSpacer_12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_12->addItem(horizontalSpacer_12);
+
+
+        verticalLayout_11->addLayout(horizontalLayout_12);
+
+        SettingsTab->addTab(ThresholdSettingsTab, QString());
         Drawing = new QWidget();
         Drawing->setObjectName(QStringLiteral("Drawing"));
         formLayout_3 = new QFormLayout(Drawing);
@@ -2408,162 +2890,6 @@ public:
         gridLayout_14->addLayout(verticalLayout_3, 3, 1, 1, 1);
 
         SettingsTab->addTab(CalibrationTab, QString());
-        ThresholdSettingsTab = new QWidget();
-        ThresholdSettingsTab->setObjectName(QStringLiteral("ThresholdSettingsTab"));
-        verticalLayoutWidget_4 = new QWidget(ThresholdSettingsTab);
-        verticalLayoutWidget_4->setObjectName(QStringLiteral("verticalLayoutWidget_4"));
-        verticalLayoutWidget_4->setGeometry(QRect(20, 30, 641, 301));
-        verticalLayout_11 = new QVBoxLayout(verticalLayoutWidget_4);
-        verticalLayout_11->setObjectName(QStringLiteral("verticalLayout_11"));
-        verticalLayout_11->setContentsMargins(0, 0, 0, 0);
-        gridLayout_18 = new QGridLayout();
-        gridLayout_18->setObjectName(QStringLiteral("gridLayout_18"));
-        NoClustersSlider = new QSlider(verticalLayoutWidget_4);
-        NoClustersSlider->setObjectName(QStringLiteral("NoClustersSlider"));
-        NoClustersSlider->setMinimum(2);
-        NoClustersSlider->setMaximum(255);
-        NoClustersSlider->setPageStep(5);
-        NoClustersSlider->setOrientation(Qt::Horizontal);
-
-        gridLayout_18->addWidget(NoClustersSlider, 4, 1, 1, 1);
-
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        cboThresholdType = new QComboBox(verticalLayoutWidget_4);
-        cboThresholdType->setObjectName(QStringLiteral("cboThresholdType"));
-
-        horizontalLayout_3->addWidget(cboThresholdType);
-
-        horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer_10);
-
-
-        gridLayout_18->addLayout(horizontalLayout_3, 3, 1, 1, 1);
-
-        ThresholdMinSlider = new QSlider(verticalLayoutWidget_4);
-        ThresholdMinSlider->setObjectName(QStringLiteral("ThresholdMinSlider"));
-        ThresholdMinSlider->setEnabled(false);
-        ThresholdMinSlider->setMaximum(254);
-        ThresholdMinSlider->setOrientation(Qt::Horizontal);
-
-        gridLayout_18->addWidget(ThresholdMinSlider, 1, 1, 1, 1);
-
-        gridLayout_histogram = new QGridLayout();
-        gridLayout_histogram->setObjectName(QStringLiteral("gridLayout_histogram"));
-        gridLayout_15 = new QGridLayout();
-        gridLayout_15->setObjectName(QStringLiteral("gridLayout_15"));
-        gridLayout_15->setSizeConstraint(QLayout::SetFixedSize);
-        ThresholdMaxLbl = new QLabel(verticalLayoutWidget_4);
-        ThresholdMaxLbl->setObjectName(QStringLiteral("ThresholdMaxLbl"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Maximum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(ThresholdMaxLbl->sizePolicy().hasHeightForWidth());
-        ThresholdMaxLbl->setSizePolicy(sizePolicy1);
-
-        gridLayout_15->addWidget(ThresholdMaxLbl, 0, 2, 1, 1);
-
-        ThresholdMinLbl = new QLabel(verticalLayoutWidget_4);
-        ThresholdMinLbl->setObjectName(QStringLiteral("ThresholdMinLbl"));
-        sizePolicy1.setHeightForWidth(ThresholdMinLbl->sizePolicy().hasHeightForWidth());
-        ThresholdMinLbl->setSizePolicy(sizePolicy1);
-
-        gridLayout_15->addWidget(ThresholdMinLbl, 0, 0, 1, 1);
-
-        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_15->addItem(horizontalSpacer_7, 0, 1, 1, 1);
-
-
-        gridLayout_histogram->addLayout(gridLayout_15, 1, 0, 1, 1);
-
-        histogram_image = new QLabel(verticalLayoutWidget_4);
-        histogram_image->setObjectName(QStringLiteral("histogram_image"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(1);
-        sizePolicy2.setHeightForWidth(histogram_image->sizePolicy().hasHeightForWidth());
-        histogram_image->setSizePolicy(sizePolicy2);
-        histogram_image->setFrameShape(QFrame::StyledPanel);
-        histogram_image->setScaledContents(true);
-
-        gridLayout_histogram->addWidget(histogram_image, 0, 0, 1, 1);
-
-
-        gridLayout_18->addLayout(gridLayout_histogram, 0, 1, 1, 1);
-
-        label_92 = new QLabel(verticalLayoutWidget_4);
-        label_92->setObjectName(QStringLiteral("label_92"));
-
-        gridLayout_18->addWidget(label_92, 0, 0, 1, 1);
-
-        label_90 = new QLabel(verticalLayoutWidget_4);
-        label_90->setObjectName(QStringLiteral("label_90"));
-
-        gridLayout_18->addWidget(label_90, 1, 2, 1, 1);
-
-        label_91 = new QLabel(verticalLayoutWidget_4);
-        label_91->setObjectName(QStringLiteral("label_91"));
-
-        gridLayout_18->addWidget(label_91, 2, 2, 1, 1);
-
-        NoClustersLbl = new QLabel(verticalLayoutWidget_4);
-        NoClustersLbl->setObjectName(QStringLiteral("NoClustersLbl"));
-
-        gridLayout_18->addWidget(NoClustersLbl, 4, 2, 1, 1);
-
-        labelThresholdMin = new QLabel(verticalLayoutWidget_4);
-        labelThresholdMin->setObjectName(QStringLiteral("labelThresholdMin"));
-
-        gridLayout_18->addWidget(labelThresholdMin, 1, 0, 1, 1);
-
-        labelThresholdMax = new QLabel(verticalLayoutWidget_4);
-        labelThresholdMax->setObjectName(QStringLiteral("labelThresholdMax"));
-        labelThresholdMax->setStyleSheet(QStringLiteral(""));
-
-        gridLayout_18->addWidget(labelThresholdMax, 2, 0, 1, 1);
-
-        label_28 = new QLabel(verticalLayoutWidget_4);
-        label_28->setObjectName(QStringLiteral("label_28"));
-
-        gridLayout_18->addWidget(label_28, 3, 0, 1, 1);
-
-        ThresholdMaxSlider = new QSlider(verticalLayoutWidget_4);
-        ThresholdMaxSlider->setObjectName(QStringLiteral("ThresholdMaxSlider"));
-        ThresholdMaxSlider->setEnabled(false);
-        ThresholdMaxSlider->setMinimum(1);
-        ThresholdMaxSlider->setMaximum(255);
-        ThresholdMaxSlider->setValue(254);
-        ThresholdMaxSlider->setOrientation(Qt::Horizontal);
-
-        gridLayout_18->addWidget(ThresholdMaxSlider, 2, 1, 1, 1);
-
-        label_12 = new QLabel(verticalLayoutWidget_4);
-        label_12->setObjectName(QStringLiteral("label_12"));
-
-        gridLayout_18->addWidget(label_12, 4, 0, 1, 1);
-
-
-        verticalLayout_11->addLayout(gridLayout_18);
-
-        horizontalLayout_12 = new QHBoxLayout();
-        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
-        chkAutoThreshold = new QCheckBox(verticalLayoutWidget_4);
-        chkAutoThreshold->setObjectName(QStringLiteral("chkAutoThreshold"));
-        chkAutoThreshold->setLayoutDirection(Qt::RightToLeft);
-        chkAutoThreshold->setChecked(true);
-
-        horizontalLayout_12->addWidget(chkAutoThreshold);
-
-        horizontalSpacer_12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_12->addItem(horizontalSpacer_12);
-
-
-        verticalLayout_11->addLayout(horizontalLayout_12);
-
-        SettingsTab->addTab(ThresholdSettingsTab, QString());
         ConnectedComponentsTab = new QWidget();
         ConnectedComponentsTab->setObjectName(QStringLiteral("ConnectedComponentsTab"));
         gridLayout_16 = new QGridLayout(ConnectedComponentsTab);
@@ -2644,22 +2970,22 @@ public:
         verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
         label_47 = new QLabel(gridLayoutWidget_4);
         label_47->setObjectName(QStringLiteral("label_47"));
-        QFont font2;
-        font2.setBold(true);
-        font2.setItalic(false);
-        font2.setUnderline(true);
-        font2.setWeight(75);
-        label_47->setFont(font2);
+        QFont font4;
+        font4.setBold(true);
+        font4.setItalic(false);
+        font4.setUnderline(true);
+        font4.setWeight(75);
+        label_47->setFont(font4);
 
         verticalLayout_8->addWidget(label_47);
 
         label_66 = new QLabel(gridLayoutWidget_4);
         label_66->setObjectName(QStringLiteral("label_66"));
-        QFont font3;
-        font3.setBold(false);
-        font3.setItalic(true);
-        font3.setWeight(50);
-        label_66->setFont(font3);
+        QFont font5;
+        font5.setBold(false);
+        font5.setItalic(true);
+        font5.setWeight(50);
+        label_66->setFont(font5);
 
         verticalLayout_8->addWidget(label_66);
 
@@ -2714,10 +3040,7 @@ public:
 
         label_50 = new QLabel(gridLayoutWidget_4);
         label_50->setObjectName(QStringLiteral("label_50"));
-        QFont font4;
-        font4.setBold(true);
-        font4.setWeight(75);
-        label_50->setFont(font4);
+        label_50->setFont(font2);
 
         gridLayout_22->addWidget(label_50, 1, 0, 1, 1);
 
@@ -2738,12 +3061,12 @@ public:
 
         label_65 = new QLabel(gridLayoutWidget_4);
         label_65->setObjectName(QStringLiteral("label_65"));
-        QFont font5;
-        font5.setBold(false);
-        font5.setItalic(false);
-        font5.setUnderline(false);
-        font5.setWeight(50);
-        label_65->setFont(font5);
+        QFont font6;
+        font6.setBold(false);
+        font6.setItalic(false);
+        font6.setUnderline(false);
+        font6.setWeight(50);
+        label_65->setFont(font6);
 
         gridLayout_22->addWidget(label_65, 7, 0, 1, 1);
 
@@ -2775,17 +3098,17 @@ public:
         verticalLayout_7->addWidget(buttonBox);
 
 #ifndef QT_NO_SHORTCUT
-        label_85->setBuddy(editSampleDescription);
+        label_94->setBuddy(editProjectDirectoryName);
+        label_84->setBuddy(editFilenamePrefix);
+        label_40->setBuddy(editProjectName);
         label_93->setBuddy(editBarcode);
         label_89->setBuddy(editInstitute);
-        label_94->setBuddy(editProjectDirectoryName);
         label_87->setBuddy(projectDate);
-        label_40->setBuddy(editProjectName);
         label_86->setBuddy(editName);
         label_41->setBuddy(editProjectID);
         label_88->setBuddy(editVersion);
         label_83->setBuddy(editDescription);
-        label_84->setBuddy(editFilenamePrefix);
+        label_85->setBuddy(editSampleDescription);
         label_68->setBuddy(sliderBarcodeThreshold);
         label_37->setBuddy(spOverviewLensFocalLength);
         label_36->setBuddy(cboActiveCamera);
@@ -2813,9 +3136,17 @@ public:
         label_2->setBuddy(numClusters);
         label_20->setBuddy(ScoreThreshold);
         label_3->setBuddy(distanceThreshold);
+        label_124->setBuddy(distanceThreshold);
+        label_122->setBuddy(spinSamplingDistanceX);
+        label_116->setBuddy(spinSamplingDistanceX);
         label_9->setBuddy(cboSamplingType);
-        label_43->setBuddy(spinSamplingDistance);
-        label_42->setBuddy(spinExclusionDistance);
+        label_43->setBuddy(spinSamplingDistanceX);
+        label_42->setBuddy(spinSamplingOffsetX);
+        label_121->setBuddy(spinSamplingOffsetX);
+        labelThresholdMin->setBuddy(ThresholdMinSlider);
+        labelThresholdMax->setBuddy(ThresholdMaxSlider);
+        label_28->setBuddy(cboThresholdType);
+        label_12->setBuddy(NoClustersSlider);
         label_31->setBuddy(sliderGridOffsetY);
         label_33->setBuddy(sliderGridSpacingY);
         label_32->setBuddy(sliderGridSpacingX);
@@ -2827,10 +3158,6 @@ public:
         label_24->setBuddy(spinSizeSquare);
         label_25->setBuddy(cboCalibrateAlgorithm);
         label_27->setBuddy(chkCALIB_CB_CLUSTERING);
-        labelThresholdMin->setBuddy(ThresholdMinSlider);
-        labelThresholdMax->setBuddy(ThresholdMaxSlider);
-        label_28->setBuddy(cboThresholdType);
-        label_12->setBuddy(NoClustersSlider);
         label_18->setBuddy(huMomentSimilaritySlider);
         label_29->setBuddy(spinAspectTolerance);
         label_14->setBuddy(sizeToleranceSmallerSpinBox);
@@ -2844,13 +3171,10 @@ public:
 #endif // QT_NO_SHORTCUT
         QWidget::setTabOrder(editName, editInstitute);
         QWidget::setTabOrder(editInstitute, editProjectName);
-        QWidget::setTabOrder(editProjectName, editProjectDirectoryName);
-        QWidget::setTabOrder(editProjectDirectoryName, btnProjectDirectory);
-        QWidget::setTabOrder(btnProjectDirectory, editProjectID);
+        QWidget::setTabOrder(editProjectName, editProjectID);
         QWidget::setTabOrder(editProjectID, editVersion);
         QWidget::setTabOrder(editVersion, editDescription);
-        QWidget::setTabOrder(editDescription, editFilenamePrefix);
-        QWidget::setTabOrder(editFilenamePrefix, editSampleDescription);
+        QWidget::setTabOrder(editDescription, editSampleDescription);
         QWidget::setTabOrder(editSampleDescription, editBarcode);
         QWidget::setTabOrder(editBarcode, projectDate);
         QWidget::setTabOrder(projectDate, spMicroscopeLensFocalLength);
@@ -2879,11 +3203,10 @@ public:
         QWidget::setTabOrder(numClusters, distanceThreshold);
         QWidget::setTabOrder(distanceThreshold, ScoreThreshold);
         QWidget::setTabOrder(ScoreThreshold, scoreRegionArea);
-        QWidget::setTabOrder(scoreRegionArea, chkTargetImageAsMask);
-        QWidget::setTabOrder(chkTargetImageAsMask, cboSamplingType);
-        QWidget::setTabOrder(cboSamplingType, spinSamplingDistance);
-        QWidget::setTabOrder(spinSamplingDistance, spinExclusionDistance);
-        QWidget::setTabOrder(spinExclusionDistance, cboAnnotationColour);
+        QWidget::setTabOrder(scoreRegionArea, cboSamplingType);
+        QWidget::setTabOrder(cboSamplingType, spinSamplingDistanceX);
+        QWidget::setTabOrder(spinSamplingDistanceX, spinSamplingOffsetX);
+        QWidget::setTabOrder(spinSamplingOffsetX, cboAnnotationColour);
         QWidget::setTabOrder(cboAnnotationColour, btnSelectColour);
         QWidget::setTabOrder(btnSelectColour, sliderGridOffsetX);
         QWidget::setTabOrder(sliderGridOffsetX, spinGridOffsetX);
@@ -2944,8 +3267,10 @@ public:
         QObject::connect(spnTopLeft_Overview_Stage_Y, SIGNAL(valueChanged(QString)), label_220, SLOT(setText(QString)));
         QObject::connect(spnTopLeft_Overview_Stage_X, SIGNAL(valueChanged(QString)), label_217, SLOT(setText(QString)));
         QObject::connect(spnTopLeft_Overview_Stage_X, SIGNAL(valueChanged(QString)), label_219, SLOT(setText(QString)));
+        QObject::connect(distanceBinsThreshold, SIGNAL(valueChanged(int)), label_distanceBins, SLOT(setNum(int)));
+        QObject::connect(scoreRegionArea, SIGNAL(valueChanged(int)), lblScoreSizeFactor, SLOT(setNum(int)));
 
-        SettingsTab->setCurrentIndex(0);
+        SettingsTab->setCurrentIndex(4);
 
 
         QMetaObject::connectSlotsByName(SettingsDialog);
@@ -2953,7 +3278,7 @@ public:
 
     void retranslateUi(QDialog *SettingsDialog)
     {
-        SettingsDialog->setWindowTitle(QApplication::translate("SettingsDialog", "Dialog", Q_NULLPTR));
+        SettingsDialog->setWindowTitle(QApplication::translate("SettingsDialog", "Targeter Settings", Q_NULLPTR));
         label_105->setText(QApplication::translate("SettingsDialog", "Backup project settings", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         btnSaveBackup->setToolTip(QApplication::translate("SettingsDialog", "Save all project settings to a backup file", Q_NULLPTR));
@@ -2963,24 +3288,28 @@ public:
         btnRestoreBackup->setToolTip(QApplication::translate("SettingsDialog", "Restore all project settings from a backup file", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         btnRestoreBackup->setText(QApplication::translate("SettingsDialog", "Restore from  BACKUP", Q_NULLPTR));
-        label_85->setText(QApplication::translate("SettingsDialog", "Sample Type", Q_NULLPTR));
-        label_93->setText(QApplication::translate("SettingsDialog", "BarCode", Q_NULLPTR));
-        label_89->setText(QApplication::translate("SettingsDialog", "Name of Institute", Q_NULLPTR));
+        label_287->setText(QApplication::translate("SettingsDialog", "Project File", Q_NULLPTR));
         label_94->setText(QApplication::translate("SettingsDialog", "Project Directory", Q_NULLPTR));
-        label_87->setText(QApplication::translate("SettingsDialog", "Date", Q_NULLPTR));
-        label_40->setText(QApplication::translate("SettingsDialog", "Project Name", Q_NULLPTR));
-        label_86->setText(QApplication::translate("SettingsDialog", "Researcher Name(s)", Q_NULLPTR));
-        label_41->setText(QApplication::translate("SettingsDialog", "Project Reference (ID)", Q_NULLPTR));
-        label_88->setText(QApplication::translate("SettingsDialog", "Version name", Q_NULLPTR));
-        label_83->setText(QApplication::translate("SettingsDialog", "Project Description", Q_NULLPTR));
-        label_84->setText(QApplication::translate("SettingsDialog", "Saved Filename Prefix", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        editProjectDirectoryName->setToolTip(QApplication::translate("SettingsDialog", "name of directory to create", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_TOOLTIP
+        editFilenamePrefix->setToolTip(QApplication::translate("SettingsDialog", "The name will be used when saving files", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        label_84->setText(QApplication::translate("SettingsDialog", "Project Filename (XML)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         btnProjectDirectory->setToolTip(QApplication::translate("SettingsDialog", "Choose directory path", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         btnProjectDirectory->setText(QApplication::translate("SettingsDialog", "Choose Directory Path", Q_NULLPTR));
-#ifndef QT_NO_TOOLTIP
-        editProjectDirectoryName->setToolTip(QApplication::translate("SettingsDialog", "name of directory to create", Q_NULLPTR));
-#endif // QT_NO_TOOLTIP
+        label_288->setText(QApplication::translate("SettingsDialog", "Project Information", Q_NULLPTR));
+        label_40->setText(QApplication::translate("SettingsDialog", "Project Name", Q_NULLPTR));
+        label_93->setText(QApplication::translate("SettingsDialog", "BarCode", Q_NULLPTR));
+        label_89->setText(QApplication::translate("SettingsDialog", "Name of Institute", Q_NULLPTR));
+        label_87->setText(QApplication::translate("SettingsDialog", "Date", Q_NULLPTR));
+        label_86->setText(QApplication::translate("SettingsDialog", "Researcher Name(s)", Q_NULLPTR));
+        label_41->setText(QApplication::translate("SettingsDialog", "Project Reference (ID)", Q_NULLPTR));
+        label_88->setText(QApplication::translate("SettingsDialog", "Version name", Q_NULLPTR));
+        label_83->setText(QApplication::translate("SettingsDialog", "Project Description", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         editName->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>Names of the experiments involved in the project</p></body></html>", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
@@ -3000,9 +3329,6 @@ public:
         editDescription->setToolTip(QApplication::translate("SettingsDialog", "Use this field to describe your experiment", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_TOOLTIP
-        editFilenamePrefix->setToolTip(QApplication::translate("SettingsDialog", "The name will be used when saving files", Q_NULLPTR));
-#endif // QT_NO_TOOLTIP
-#ifndef QT_NO_TOOLTIP
         editSampleDescription->setToolTip(QApplication::translate("SettingsDialog", "Explain more about your sample here", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_TOOLTIP
@@ -3011,7 +3337,10 @@ public:
 #ifndef QT_NO_TOOLTIP
         projectDate->setToolTip(QApplication::translate("SettingsDialog", "This should be the date of the experiment", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
+        label_85->setText(QApplication::translate("SettingsDialog", "Sample Type", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(ProjectSettingsTab), QApplication::translate("SettingsDialog", "Project Settings", Q_NULLPTR));
+        label_289->setText(QApplication::translate("SettingsDialog", "Targeter XML File", Q_NULLPTR));
+        SettingsTab->setTabText(SettingsTab->indexOf(projectData), QApplication::translate("SettingsDialog", "Project Data", Q_NULLPTR));
         spnImageWidthPixels->setSuffix(QApplication::translate("SettingsDialog", " pixels", Q_NULLPTR));
         lineEditOverviewCameraSN->setInputMask(QApplication::translate("SettingsDialog", "00000000", Q_NULLPTR));
         lineEditOverviewCameraSN->setText(QApplication::translate("SettingsDialog", "21799625", Q_NULLPTR));
@@ -3058,7 +3387,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         editPixelSizeMicrons->setToolTip(QApplication::translate("SettingsDialog", "This is the actual experimental value of pixel size and is best measured using a graticule and dividing the unit length by the image distance in pixels", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        editPixelSizeMicrons->setText(QApplication::translate("SettingsDialog", "6.1274509803921568627450980392157", Q_NULLPTR));
+        editPixelSizeMicrons->setText(QApplication::translate("SettingsDialog", "0,00061274", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(CameraSettingsTab), QApplication::translate("SettingsDialog", "Camera Settings", Q_NULLPTR));
         lblPORTZ->setText(QApplication::translate("SettingsDialog", "?", Q_NULLPTR));
         label_44->setText(QApplication::translate("SettingsDialog", "Newport Z Stage", Q_NULLPTR));
@@ -3076,6 +3405,7 @@ public:
         label_53->setText(QApplication::translate("SettingsDialog", "Position Y", Q_NULLPTR));
         label_13->setText(QApplication::translate("SettingsDialog", "Absolute", Q_NULLPTR));
         label_15->setText(QApplication::translate("SettingsDialog", "Relative", Q_NULLPTR));
+        btnMoveOverviewPosition->setText(QApplication::translate("SettingsDialog", "Move to Overview Camera Position", Q_NULLPTR));
         btnMoveAbsoluteXY->setText(QApplication::translate("SettingsDialog", "Move Absolute", Q_NULLPTR));
         btnMoveRelativeXY->setText(QApplication::translate("SettingsDialog", "Move Relative", Q_NULLPTR));
         btnMoveToFiducial->setText(QApplication::translate("SettingsDialog", "Move Stage To Selected Fiducial Position", Q_NULLPTR));
@@ -3104,7 +3434,6 @@ public:
         label_59->setText(QApplication::translate("SettingsDialog", "Connect Stage", Q_NULLPTR));
         btnConnectXY->setText(QApplication::translate("SettingsDialog", "Connect", Q_NULLPTR));
         btnDisconnectXY->setText(QApplication::translate("SettingsDialog", "Disconnect", Q_NULLPTR));
-        chkJoystickOn->setText(QApplication::translate("SettingsDialog", "XY Stage Joystick on", Q_NULLPTR));
         chkKeypadOn->setText(QApplication::translate("SettingsDialog", "Z Axis stage Keypad on", Q_NULLPTR));
         label_100->setText(QApplication::translate("SettingsDialog", "Newport Stage Z Axis  Control", Q_NULLPTR));
         label_101->setText(QApplication::translate("SettingsDialog", "Connect Stage", Q_NULLPTR));
@@ -3123,13 +3452,63 @@ public:
         btnDownZ->setText(QApplication::translate("SettingsDialog", "DOWN", Q_NULLPTR));
         label_112->setText(QApplication::translate("SettingsDialog", "Send Text Command to Stage", Q_NULLPTR));
         btnSendCommandZ->setText(QApplication::translate("SettingsDialog", "Send Command", Q_NULLPTR));
+        chkJoystickOn->setText(QApplication::translate("SettingsDialog", "XY Stage Joystick on", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(StageSettingsTab), QApplication::translate("SettingsDialog", "Translation Stage Control", Q_NULLPTR));
+        label_267->setText(QApplication::translate("SettingsDialog", "Fine forcus range is coarse focus step either side of the best coarse focus position", Q_NULLPTR));
         label_107->setText(QApplication::translate("SettingsDialog", "Algorithm used for focusing", Q_NULLPTR));
         label_114->setText(QApplication::translate("SettingsDialog", "Coarse Focus Step", Q_NULLPTR));
-        label_109->setText(QApplication::translate("SettingsDialog", "Maximum Focus position", Q_NULLPTR));
-        label_113->setText(QApplication::translate("SettingsDialog", "Minimum Focus Position", Q_NULLPTR));
+        label_109->setText(QApplication::translate("SettingsDialog", "Default Focus Position", Q_NULLPTR));
+        label_113->setText(QApplication::translate("SettingsDialog", "Coarse Focus Range", Q_NULLPTR));
         label_115->setText(QApplication::translate("SettingsDialog", "Fine Focus Step", Q_NULLPTR));
-        label_267->setText(QApplication::translate("SettingsDialog", "Fine forcus range is coarse focus step either side of the best coarse focus position", Q_NULLPTR));
+        btnAddFocusPosition->setText(QApplication::translate("SettingsDialog", "Register Focus Point", Q_NULLPTR));
+        label_117->setText(QApplication::translate("SettingsDialog", "Use stage position as focus point", Q_NULLPTR));
+        btnRemoveFocusPosition->setText(QApplication::translate("SettingsDialog", "Remove selected Focus Position", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        spinFocusFraction->setToolTip(QApplication::translate("SettingsDialog", "The focus Threhold fraction is used to determine the focus range in the Best Range focus algorithms", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_TOOLTIP
+        label_118->setToolTip(QApplication::translate("SettingsDialog", "The focus Threhold fraction is used to determine the focus range in the Best Range focus algorithms", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        label_118->setText(QApplication::translate("SettingsDialog", "Focus Threshold Fraction", Q_NULLPTR));
+        label_119->setText(QApplication::translate("SettingsDialog", "Focus Optimisation", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkOptimiseFocusRange->setToolTip(QApplication::translate("SettingsDialog", "The focus range shrinks according to the previous focus values, this speeds up focus tim but may lead to errors", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkOptimiseFocusRange->setText(QApplication::translate("SettingsDialog", "Optimise Focus Range", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkInterpolateFocusPosition->setToolTip(QApplication::translate("SettingsDialog", "The focus position is interpolated from previous position, this can give a more accurate focus starting position.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkInterpolateFocusPosition->setText(QApplication::translate("SettingsDialog", "Interpolate Focus Position", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkUseFocusThreshold->setToolTip(QApplication::translate("SettingsDialog", "If the focus value is greater than a threshold it is accepted as a best focus position. This speeds up processing a lot but can lead to focus errors.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkUseFocusThreshold->setText(QApplication::translate("SettingsDialog", "Use Focus Threshold", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkUseCoarseFocusRange->setToolTip(QApplication::translate("SettingsDialog", "Perform focusing over a the coarse focusing range", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkUseCoarseFocusRange->setText(QApplication::translate("SettingsDialog", "Coarse Focus Range", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkUseFineFocusRange->setToolTip(QApplication::translate("SettingsDialog", "Perform focusing over a the fine focusing range", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkUseFineFocusRange->setText(QApplication::translate("SettingsDialog", "Fine Focus Range", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkCenterFocus->setToolTip(QApplication::translate("SettingsDialog", "Focus range will be centered at the previous best focus position", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkCenterFocus->setText(QApplication::translate("SettingsDialog", "Center coarse Focus Range at Focus Position", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkUseRegisteredFocusPoints->setToolTip(QApplication::translate("SettingsDialog", "The clicked focus points will be used to estimate a good focus starting position and range. One value will be used as the default focus position, multiple registered values will be used as estimate of Coarse Focus Range", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkUseRegisteredFocusPoints->setText(QApplication::translate("SettingsDialog", "Use registered focus points for default values", Q_NULLPTR));
+        label_120->setText(QApplication::translate("SettingsDialog", "Process mosaic images", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkShowBestFocusImage->setToolTip(QApplication::translate("SettingsDialog", "the best focused image will be updated in the targeter GUI", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkShowBestFocusImage->setText(QApplication::translate("SettingsDialog", "Display best focused image", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkDetectTargetsWhileScanning->setToolTip(QApplication::translate("SettingsDialog", "Targets will be detected in images aquired during scanning. \n"
+"* Requires example target image(s) to be created.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkDetectTargetsWhileScanning->setText(QApplication::translate("SettingsDialog", "Detect targets as images scanned", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(tab), QApplication::translate("SettingsDialog", "Focusing", Q_NULLPTR));
         label_8->setText(QApplication::translate("SettingsDialog", "Fuducial Marks", Q_NULLPTR));
         lblFiducialCheck->setText(QString());
@@ -3184,6 +3563,12 @@ public:
 #endif // QT_NO_TOOLTIP
         label_5->setText(QApplication::translate("SettingsDialog", "Score Region \n"
 "Size Factor", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        numClusters->setToolTip(QApplication::translate("SettingsDialog", "The number of greyscale levels used for texture analysis, this has a similar effect on processing speed as distance bins, but not as much as distance. If too few levels are choosen there wont be enough greyscale variation to distinguish different targets.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_TOOLTIP
+        distanceThreshold->setToolTip(QApplication::translate("SettingsDialog", "The maximum spatical distance that pixel statistics will be gathered. A large value choosen here will increase processing time, but it also constitutes most of the texture information.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
         label_2->setText(QApplication::translate("SettingsDialog", "No. Clusters", Q_NULLPTR));
         label_20->setText(QApplication::translate("SettingsDialog", "Score\n"
 "Threshold", Q_NULLPTR));
@@ -3195,11 +3580,57 @@ public:
         label_distance->setText(QApplication::translate("SettingsDialog", "5", Q_NULLPTR));
         label_22->setText(QApplication::translate("SettingsDialog", "%", Q_NULLPTR));
         labelCluster->setText(QApplication::translate("SettingsDialog", "10", Q_NULLPTR));
-        chkTargetImageAsMask->setText(QApplication::translate("SettingsDialog", "Target image as mask", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        distanceBinsThreshold->setToolTip(QApplication::translate("SettingsDialog", "Number of histograms used to represent euclidean distance. Its a good idea to have this greater than the distance value then you have histogram bins for diagonal distances. It slows up processing but not as much as the distance setting.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        label_distanceBins->setText(QApplication::translate("SettingsDialog", "10", Q_NULLPTR));
+        label_123->setText(QApplication::translate("SettingsDialog", "%", Q_NULLPTR));
+        label_124->setText(QApplication::translate("SettingsDialog", "Distance Bins", Q_NULLPTR));
+        label_122->setText(QApplication::translate("SettingsDialog", "Wavelet Decomposition Levels", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkPaddTargetImage->setToolTip(QApplication::translate("SettingsDialog", "If Haar target detection method used then size of selected region should be divisible by 2  for each resolution level of the transform (eg. level 3: if width is 33., new width is 36 eg 36/2=18/2=9). Therefore the mask of the image region will be a bit bigger than you selected.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkPaddTargetImage->setText(QApplication::translate("SettingsDialog", "Padd target to power 2", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkProcessGrayscale->setToolTip(QApplication::translate("SettingsDialog", "Images will be convered to grayscale for processing. This speeds up target detection. If your image has colour and that is a feature of the target it is better to uncheck this button even if analysis takes longer.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkProcessGrayscale->setText(QApplication::translate("SettingsDialog", "Make grayscale", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkCorrectBackGround->setToolTip(QApplication::translate("SettingsDialog", "If Haar target detection method used then size of selected region should be divisible by 2  for each resolution level of the transform (eg. level 3: if width is 33., new width is 36 eg 36/2=18/2=9). Therefore the mask of the image region will be a bit bigger than you selected.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkCorrectBackGround->setText(QApplication::translate("SettingsDialog", "correct for background illumination", Q_NULLPTR));
+        label_116->setText(QApplication::translate("SettingsDialog", "Spacing of sampling grid Y (px)", Q_NULLPTR));
         label_9->setText(QApplication::translate("SettingsDialog", "Type of region sampling", Q_NULLPTR));
-        label_43->setText(QApplication::translate("SettingsDialog", "Spacing of sampling grid (px)", Q_NULLPTR));
-        label_42->setText(QApplication::translate("SettingsDialog", "Distance From edge/center (px) ", Q_NULLPTR));
+        label_43->setText(QApplication::translate("SettingsDialog", "Spacing of sampling grid X (px)", Q_NULLPTR));
+        label_42->setText(QApplication::translate("SettingsDialog", "Offset From edge/center X (px) ", Q_NULLPTR));
+        label_121->setText(QApplication::translate("SettingsDialog", "Offset From edge/center Y (px) ", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(TargetSettingsTab), QApplication::translate("SettingsDialog", "Target Settings", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        NoClustersSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>The image will be posterized into the set number of gray levels. When No. levels = 2, this isthe same as performing a binary threshold.</p></body></html>", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        cboThresholdType->clear();
+        cboThresholdType->insertItems(0, QStringList()
+         << QApplication::translate("SettingsDialog", "Posterize (greyscale clusters)", Q_NULLPTR)
+        );
+#ifndef QT_NO_TOOLTIP
+        ThresholdMinSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>All values <span style=\" font-weight:600;\">above</span> this threshold are white in the image otherwise black</p></body></html>", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        ThresholdMaxLbl->setText(QApplication::translate("SettingsDialog", "255", Q_NULLPTR));
+        ThresholdMinLbl->setText(QApplication::translate("SettingsDialog", "0", Q_NULLPTR));
+        histogram_image->setText(QString());
+        label_92->setText(QApplication::translate("SettingsDialog", "Image Histogram", Q_NULLPTR));
+        label_90->setText(QApplication::translate("SettingsDialog", " 0", Q_NULLPTR));
+        label_91->setText(QApplication::translate("SettingsDialog", "255", Q_NULLPTR));
+        NoClustersLbl->setText(QApplication::translate("SettingsDialog", "2", Q_NULLPTR));
+        labelThresholdMin->setText(QApplication::translate("SettingsDialog", "Threshold Min", Q_NULLPTR));
+        labelThresholdMax->setText(QApplication::translate("SettingsDialog", "Threshold Max", Q_NULLPTR));
+        label_28->setText(QApplication::translate("SettingsDialog", "Threshold Type", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        ThresholdMaxSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>All values <span style=\" font-weight:600;\">below</span> this threshold are white in the image otherwise black</p></body></html>", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        label_12->setText(QApplication::translate("SettingsDialog", "Number of levels", Q_NULLPTR));
+        chkAutoThreshold->setText(QApplication::translate("SettingsDialog", "Automatic Thresholding", Q_NULLPTR));
+        SettingsTab->setTabText(SettingsTab->indexOf(ThresholdSettingsTab), QApplication::translate("SettingsDialog", "Threshold Settings", Q_NULLPTR));
         btnSelectColour->setText(QApplication::translate("SettingsDialog", "Choose Colour", Q_NULLPTR));
         cboAnnotationColour->clear();
         cboAnnotationColour->insertItems(0, QStringList()
@@ -3292,32 +3723,6 @@ public:
 #endif // QT_NO_TOOLTIP
         chkCALIB_CB_CLUSTERING->setText(QApplication::translate("SettingsDialog", "CALIB_CB_CLUSTERING", Q_NULLPTR));
         SettingsTab->setTabText(SettingsTab->indexOf(CalibrationTab), QApplication::translate("SettingsDialog", "Camera Calibration", Q_NULLPTR));
-#ifndef QT_NO_TOOLTIP
-        NoClustersSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>The image will be posterized into the set number of gray levels. When No. levels = 2, this isthe same as performing a binary threshold.</p></body></html>", Q_NULLPTR));
-#endif // QT_NO_TOOLTIP
-        cboThresholdType->clear();
-        cboThresholdType->insertItems(0, QStringList()
-         << QApplication::translate("SettingsDialog", "Posterize (greyscale clusters)", Q_NULLPTR)
-        );
-#ifndef QT_NO_TOOLTIP
-        ThresholdMinSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>All values <span style=\" font-weight:600;\">above</span> this threshold are white in the image otherwise black</p></body></html>", Q_NULLPTR));
-#endif // QT_NO_TOOLTIP
-        ThresholdMaxLbl->setText(QApplication::translate("SettingsDialog", "255", Q_NULLPTR));
-        ThresholdMinLbl->setText(QApplication::translate("SettingsDialog", "0", Q_NULLPTR));
-        histogram_image->setText(QString());
-        label_92->setText(QApplication::translate("SettingsDialog", "Image Histogram", Q_NULLPTR));
-        label_90->setText(QApplication::translate("SettingsDialog", " 0", Q_NULLPTR));
-        label_91->setText(QApplication::translate("SettingsDialog", "255", Q_NULLPTR));
-        NoClustersLbl->setText(QApplication::translate("SettingsDialog", "2", Q_NULLPTR));
-        labelThresholdMin->setText(QApplication::translate("SettingsDialog", "Threshold Min", Q_NULLPTR));
-        labelThresholdMax->setText(QApplication::translate("SettingsDialog", "Threshold Max", Q_NULLPTR));
-        label_28->setText(QApplication::translate("SettingsDialog", "Threshold Type", Q_NULLPTR));
-#ifndef QT_NO_TOOLTIP
-        ThresholdMaxSlider->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>All values <span style=\" font-weight:600;\">below</span> this threshold are white in the image otherwise black</p></body></html>", Q_NULLPTR));
-#endif // QT_NO_TOOLTIP
-        label_12->setText(QApplication::translate("SettingsDialog", "Number of levels", Q_NULLPTR));
-        chkAutoThreshold->setText(QApplication::translate("SettingsDialog", "Automatic Thresholding", Q_NULLPTR));
-        SettingsTab->setTabText(SettingsTab->indexOf(ThresholdSettingsTab), QApplication::translate("SettingsDialog", "Threshold Settings", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         label_18->setToolTip(QApplication::translate("SettingsDialog", "<html><head/><body><p>Hu moments are calculated for the binary shape, these are shape measures. The similarity setting determines how important similar shape of the detected targets are (100% =  shape must be the same, 0% = shape not important).</p></body></html>", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP

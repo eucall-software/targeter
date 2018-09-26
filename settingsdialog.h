@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QHash>
 #include <QDoubleSpinBox>
+#include <QAbstractButton>
 
 
 namespace Ui {
@@ -55,12 +56,16 @@ public:
 
 	void setActiveTab(QString tabName);
 
+	void updateSamplingSpacing();
+
 	~SettingsDialog();
 
 	QSize imageSize;				/// Size of current image
 
 	double m_stage_x;
 	double m_stage_y;
+private:
+	void updateGrid() { emit setGrid(m_Settings->displayGrid, m_Settings->gridOffsetX, m_Settings->gridOffsetY, m_Settings->gridSpacingX, m_Settings->gridSpacingY, m_Settings->objectColours[drawingItems::grid]); };
 private:
 	Ui::SettingsDialog *ui;
 
@@ -78,6 +83,7 @@ public slots:
 private slots:
 	void on_btnCenterGrid_clicked();
 	void on_distanceThreshold_valueChanged(int value);
+	void on_distanceBinsThreshold_valueChanged(int value);
 	void on_numClusters_valueChanged(int value);
 
 	void on_cboThresholdType_currentIndexChanged(int index);
@@ -94,13 +100,19 @@ private slots:
 	void on_sliderBarcodeThreshold_valueChanged(int value);
 	void on_chkAutoBarcodeThreshold_clicked(bool checked);
 
+	void on_chkProcessGrayscale_clicked(bool checked);
+
 	void on_spinGridOffsetX_valueChanged(double value);
 	void on_spinGridOffsetY_valueChanged(double value);
 	void on_spinGridSpacingX_valueChanged(double value);
 	void on_spinGridSpacingY_valueChanged(double value);
 
-	void on_spinSamplingDistance_valueChanged(int value);
-	void on_spinExclusionDistance_valueChanged(int value);
+	void on_editPixelSizeMicrons_textChanged(QString val);
+
+	void on_spinSamplingDistanceX_valueChanged(int value);
+	void on_spinSamplingDistanceY_valueChanged(int value);
+	void on_spinSamplingOffsetX_valueChanged(int value);
+	void on_spinSamplingOffsetY_valueChanged(int value);
 
 	void on_btnDeleteFiducial_clicked();
 	void on_btnLogFeedback_clicked();
@@ -146,10 +158,11 @@ private slots:
 	void on_spnBottomRight_Microscope_Stage_Y_valueChanged(double value);
 	void on_spnBottomRight_Microscope_Stage_Z_valueChanged(double value);
 
-	void on_spinMinFocus_valueChanged(double value);
-	void on_spinMaxFocus_valueChanged(double value);
+	void on_spinFocusRange_valueChanged(double value);
+	void on_spinDefaultFocusPosition_valueChanged(double value);
 	void on_spinCoarseFocusStep_valueChanged(double value);
 	void on_spinFineFocusStep_valueChanged(double value);
+	void on_spinFocusFraction_valueChanged(double value);
 
 	void on_btnCalcTransformationMatrix_clicked();
 
@@ -165,6 +178,10 @@ private slots:
 	void on_btnConnectXY_clicked();
 	void on_btnDisconnectXY_clicked();
 	void on_btnAbortXY_clicked();
+	void on_btnMoveOverviewPosition_clicked();
+
+	void on_btnAddFocusPosition_clicked();
+	void on_btnRemoveFocusPosition_clicked();
 
 	void on_btnMoveAbsoluteZ_clicked();
 	void on_btnMoveRelativeZ_clicked();
@@ -191,6 +208,7 @@ private slots:
 
 	void on_NoClustersSlider_valueChanged(int value);
 	void on_ScoreThreshold_valueChanged(int value);
+	
 
 	void on_AlgoComboBox_currentIndexChanged(int index);
 	void on_chkAutoThreshold_clicked(bool checked);
@@ -212,6 +230,19 @@ private slots:
 	void on_chkIntrinsicGuess_clicked(bool checked);
 	void on_chkFixFocalLength_clicked(bool checked);
 
+	void on_chkOptimiseFocusRange_clicked(bool checked);
+	void on_chkInterpolateFocusPosition_clicked(bool checked);
+	void on_chkUseFocusThreshold_clicked(bool checked);
+	void on_chkUseCoarseFocusRange_clicked(bool checked);
+	void on_chkUseFineFocusRange_clicked(bool checked);
+	void on_chkCenterFocus_clicked(bool checked);
+	void on_chkUseRegisteredFocusPoints_clicked(bool checked);
+	void on_chkShowBestFocusImage_clicked(bool checked);
+	void on_chkDetectTargetsWhileScanning_clicked(bool checked);
+	void on_chkCorrectBackGround_clicked(bool checked);
+
+	void on_spinWaveletLevels_valueChanged(int value);
+
 	void on_spinItemsInRow_valueChanged(int value);
 	void on_spinItemsInColumn_valueChanged(int value);
 	void on_spinSizeSquare_valueChanged(int value);
@@ -220,6 +251,8 @@ private slots:
 	void on_scoreRegionArea_valueChanged(int value);
 
 	void on_chkLockFiducial_clicked(bool checked);
+	void on_chkPaddTargetImage_clicked(bool checked);
+
 	void on_spOverviewLensFocalLength_valueChanged(int value);
 	void on_spMicroscopeLensFocalLength_valueChanged(int value);
 
@@ -247,10 +280,11 @@ private slots:
 	void on_editProjectDirectoryName_textChanged(QString val);
 	void on_lineEditOverviewCameraSN_textChanged(QString val);
 	void on_lineEditMicroscopeCameraSN_textChanged(QString val);
-	void on_editPixelSizeMicrons_textChanged(QString val);
 	
 signals:
 	void sendSettings();
+	void updatePaddTarget(bool bPaddTargetImage, int levels);
+	void setGrid(bool bChecked, double offX, double offY, double spaceX, double spaceY, QColor colour);
 	void logFeedback(int score, QString name, QString email, QString institute, QString desc);
 	void MoveAbsoluteXY(double x, double y, ACTIONS::action act);
 	void MoveRelativeXY(double x, double y, ACTIONS::action act);

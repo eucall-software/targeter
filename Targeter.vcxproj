@@ -60,14 +60,15 @@
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExecutablePath>C:\opencv-build\bin\Release;$(ExecutablePath);C:\ImageMagick-7.0.7-Q16</ExecutablePath>
+    <ExecutablePath>$(ExecutablePath);C:\opencv-build\bin\Release;C:\ImageMagick-Windows\VisualMagick\bin</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExecutablePath>C:\opencv-build\bin\Debug;$(ExecutablePath);C:\ImageMagick-7.0.7-Q16</ExecutablePath>
+    <ExecutablePath>$(ExecutablePath);C:\opencv-build\bin\Debug;C:\Qt\5.8\msvc2015_64\plugins\platforms;C:\ImageMagick-Windows\VisualMagick\bin</ExecutablePath>
+    <ExcludePath>$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;C:\opencv\build\include;C:\Program Files\Basler\pylon 5\Development\include;C:\Program Files\Basler\pylon 5\Development\Samples\C++\include;C:\ImageMagick-Windows\ImageMagick;C:\ImageMagick-Windows\ImageMagick\Magick++\lib;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include;release;$(QTDIR)\mkspecs\win32-msvc2015;.\GeneratedFiles;$(QTDIR)\include\QtXml;$(CudaToolkitIncludeDir);$(QTDIR)\include\QtConcurrent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;C:\opencv\build\include;C:\opencv-latest\opencv\modules\core\include;C:\opencv-latest\opencv\modules\cudaarithm\include;C:\opencv-latest\opencv\modules\cudaimgproc\include;C:\Program Files\Basler\pylon 5\Development\include;C:\Program Files\Basler\pylon 5\Development\Samples\C++\include;C:\ImageMagick-Windows\ImageMagick;C:\ImageMagick-Windows\ImageMagick\Magick++\lib;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include;release;$(QTDIR)\mkspecs\win32-msvc2015;.\GeneratedFiles;$(QTDIR)\include\QtXml;$(CudaToolkitIncludeDir);$(QTDIR)\include\QtConcurrent;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -g -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -76,7 +77,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;ZERO_CONFIGURATION_SUPPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;NDEBUG;QT_XML_LIB;_CUDA_CODE_COMPILE_;QT_CONCURRENT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;ZERO_CONFIGURATION_SUPPORT;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;NDEBUG;QT_XML_LIB;QT_CONCURRENT_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -86,8 +87,8 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>cudart.lib;libzbar64-0.lib;$(QTDIR)\lib\qtmain.lib;shell32.lib;opencv_shape320.lib;opencv_stitching320.lib;opencv_objdetect320.lib;opencv_superres320.lib;opencv_videostab320.lib;opencv_calib3d320.lib;opencv_features2d320.lib;opencv_highgui320.lib;opencv_videoio320.lib;opencv_video320.lib;opencv_photo320.lib;opencv_ml320.lib;opencv_imgproc320.lib;opencv_flann320.lib;opencv_core320.lib;opencv_imgcodecs320.lib;$(QTDIR)\lib\Qt5Widgets.lib;$(QTDIR)\lib\Qt5Gui.lib;$(QTDIR)\lib\Qt5Core.lib;CORE_RL_MagickCore_.lib;CORE_RL_Magick++_.lib;CORE_RL_MagickWand_.lib;Qt5Xml.lib;Qt5Concurrent.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\ImageMagick-Windows\ImageMagick\config;C:\ImageMagick-Windows\VisualMagick\bin;C:\ImageMagick-Windows\VisualMagick\lib;$(QTDIR)\lib;C:\utils\postgresql\pgsql\lib;C:\utils\my_sql\my_sql\lib;C:\ImageMagick-7.0.7-Q16\lib;C:\Program Files\Basler\pylon 5\Development\lib\x64;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\lib;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\libiconv\lib_x64;C:\opencv-build\lib\Release;C:\opencv-build\bin\Release;$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;$(QTDIR)\lib\Qt5Widgets.lib;$(QTDIR)\lib\Qt5Gui.lib;$(QTDIR)\lib\Qt5Core.lib;$(QTDIR)\lib\Qt5Xml.lib;$(QTDIR)\lib\Qt5Concurrent.lib;$(QTDIR)\lib\Qt5WebEngineWidgets.lib;Qt5WebEngine.lib;Qt5WebEngineCore.lib;Qt5WebEngineWidgets.lib;libzbar64-0.lib;shell32.lib;opencv_world320.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\ImageMagick-Windows\VisualMagick\bin;C:\ImageMagick-Windows\VisualMagick\lib;$(QTDIR)\lib;C:\utils\postgresql\pgsql\lib;C:\utils\my_sql\my_sql\lib;C:\Program Files\Basler\pylon 5\Development\lib\x64;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\lib;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\libiconv\lib_x64;C:\opencv-build\lib\Release;C:\opencv-build\bin\Release;$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" /VERBOSE %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -109,9 +110,10 @@
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
       <CodeGeneration>compute_61,sm_61</CodeGeneration>
+      <FastMath>true</FastMath>
     </CudaCompile>
     <PostBuildEvent>
-      <Command>XCOPY "C:\ImageMagick-Windows\VisualMagick\bin\*_RL_*.DLL" "$(TargetDir)" /D /K /Y</Command>
+      <Command>IF EXIST "C:\ImageMagick-Windows" XCOPY "C:\ImageMagick-Windows\VisualMagick\bin\*_RL_*.DLL" "$(TargetDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy imagemagick dlls to exe folder</Message>
@@ -119,7 +121,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;C:\opencv\build\include;C:\Program Files\Basler\pylon 5\Development\include;C:\Program Files\Basler\pylon 5\Development\Samples\C++\include;C:\ImageMagick-Windows\ImageMagick;C:\ImageMagick-Windows\ImageMagick\Magick++\lib;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include;debug;$(QTDIR)\mkspecs\win32-msvc2015;.\GeneratedFiles;$(QTDIR)\include\QtXml;$(CudaToolkitIncludeDir);$(QTDIR)\include\QtConcurrent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;C:\opencv\build\include;C:\opencv-latest\opencv\modules\core\include;C:\opencv-latest\opencv\modules\cudaarithm\include;C:\opencv-latest\opencv\modules\cudaimgproc\include;C:\Program Files\Basler\pylon 5\Development\include;C:\Program Files\Basler\pylon 5\Development\Samples\C++\include;C:\ImageMagick-Windows\ImageMagick;C:\ImageMagick-Windows\ImageMagick\Magick++\lib;$(QTDIR)\include;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtCore;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include;debug;$(QTDIR)\mkspecs\win32-msvc2015;.\GeneratedFiles;$(QTDIR)\include\QtXml;$(CudaToolkitIncludeDir);$(QTDIR)\include\QtConcurrent;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -128,7 +130,7 @@
       <ExceptionHandling>Async</ExceptionHandling>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;ZERO_CONFIGURATION_SUPPORT;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_XML_LIB;_CUDA_CODE_COMPILE_;QT_CONCURRENT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;ZERO_CONFIGURATION_SUPPORT;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_XML_LIB;QT_CONCURRENT_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -138,8 +140,8 @@
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>cudart.lib;libzbar64-0.lib;$(QTDIR)\lib\qtmaind.lib;shell32.lib;opencv_shape320d.lib;opencv_stitching320d.lib;opencv_objdetect320d.lib;opencv_superres320d.lib;opencv_videostab320d.lib;opencv_calib3d320d.lib;opencv_features2d320d.lib;opencv_highgui320d.lib;opencv_videoio320d.lib;opencv_imgcodecs320d.lib;opencv_video320d.lib;opencv_photo320d.lib;opencv_ml320d.lib;opencv_imgproc320d.lib;opencv_flann320d.lib;opencv_core320d.lib;$(QTDIR)\lib\Qt5Widgetsd.lib;$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Cored.lib;$(QTDIR)\lib\Qt5Concurrentd.lib;CORE_DB_MagickCore_.lib;CORE_DB_Magick++_.lib;CORE_DB_MagickWand_.lib;Qt5Xmld.lib;Qt5Concurrentd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\ImageMagick-Windows\ImageMagick\config;C:\ImageMagick-Windows\VisualMagick\bin;C:\ImageMagick-Windows\VisualMagick\lib;$(QTDIR)\lib;C:\utils\postgresql\pgsql\lib;C:\utils\my_sql\my_sql\lib;C:\ImageMagick-Windows\VisualMagick\lib;C:\Program Files\Basler\pylon 5\Development\lib\x64;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\lib;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\libiconv\lib_x64;C:\opencv-build\lib\Debug;C:\opencv-build\bin\Debug;$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;$(QTDIR)\lib\Qt5Widgetsd.lib;$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Cored.lib;$(QTDIR)\lib\Qt5Concurrentd.lib;$(QTDIR)\lib\Qt5Xmld.lib;$(QTDIR)\lib\Qt5WebEngineWidgetsd.lib;libzbar64-0.lib;Qt5WebEngined.lib;Qt5WebEngineCored.lib;Qt5WebEngineWidgetsd.lib;shell32.lib;opencv_world320d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\ImageMagick-Windows\VisualMagick\bin;C:\ImageMagick-Windows\VisualMagick\lib;$(QTDIR)\lib;C:\utils\postgresql\pgsql\lib;C:\utils\my_sql\my_sql\lib;C:\Program Files\Basler\pylon 5\Development\lib\x64;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\lib;H:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\libiconv\lib_x64;C:\opencv-build\lib\Debug;C:\opencv-build\bin\Debug;$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -161,9 +163,11 @@
     <CudaCompile>
       <CodeGeneration>compute_61,sm_61</CodeGeneration>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <GPUDebugInfo>false</GPUDebugInfo>
+      <FastMath>true</FastMath>
     </CudaCompile>
     <PostBuildEvent>
-      <Command>XCOPY "C:\ImageMagick-Windows\VisualMagick\bin\*_DB_*.DLL" "$(TargetDir)" /D /K /Y</Command>
+      <Command>IF EXIST "C:\ImageMagick-Windows" XCOPY "C:\ImageMagick-Windows\VisualMagick\bin\*_DB_*.DLL" "$(TargetDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy imagemagick dlls to exe folder</Message>
@@ -177,13 +181,10 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Debug\moc_BaslerCamera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Debug\moc_drawingObjects.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="Debug\moc_findtargets.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -197,10 +198,6 @@
     <ClCompile Include="Debug\moc_mainwindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Debug\moc_MultiWatcher.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-    </ClCompile>
     <ClCompile Include="Debug\moc_paintqlabel.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
@@ -208,6 +205,9 @@
     <ClCompile Include="Debug\moc_settingsdialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_shapeannotation.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Debug\moc_stageControlXY.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -222,11 +222,12 @@
     </ClCompile>
     <ClCompile Include="drawingObjects.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
-    </ClCompile>
-    <ClCompile Include="ExperimentalData.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
     </ClCompile>
+    <CudaCompile Include="focusingCUDA.cu">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <FileType>CppCode</FileType>
+    </CudaCompile>
     <ClCompile Include="FocusStack.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
@@ -262,39 +263,28 @@
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="NewportController.cpp" />
-    <ClCompile Include="Release\moc_BaslerCamera.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Release\moc_drawingObjects.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Release\moc_BaslerCamera.cpp" />
     <ClCompile Include="Release\moc_findtargets.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Release\moc_imageprocessing.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Release\moc_ImageReadWrite.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Release\moc_ImageReadWrite.cpp" />
     <ClCompile Include="Release\moc_mainwindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Release\moc_MultiWatcher.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Release\moc_settingsdialog.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Release\moc_stageControlXY.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Release\moc_stageControlZ.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Release\moc_paintqlabel.cpp" />
+    <ClCompile Include="Release\moc_settingsdialog.cpp" />
+    <ClCompile Include="Release\moc_shapeannotation.cpp" />
+    <ClCompile Include="Release\moc_stageControlXY.cpp" />
+    <ClCompile Include="Release\moc_stageControlZ.cpp" />
     <ClCompile Include="Release\moc_XMLWriter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="shapeannotation.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="stageControlXY.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</CompileAsManaged>
@@ -302,6 +292,7 @@
     </ClCompile>
     <ClCompile Include="Settings.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="settingsdialog.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -331,14 +322,19 @@
     </ClCompile>
     <ClCompile Include="TANGO DLL C++ Header Files\Tango.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="TargeterApplication.cpp" />
+    <ClCompile Include="TargeterApplication.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+    </ClCompile>
     <ClCompile Include="targeterimage.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="TextureAnalysis.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
     <ClCompile Include="XMLWriter.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
@@ -347,66 +343,75 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="drawingObjects.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing drawingObjects.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing drawingObjects.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Command>
     </CustomBuild>
     <ClInclude Include="ExperimentalData.h" />
     <CustomBuild Include="stageControlXY.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <CustomBuild Include="ImageReadWrite.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
-    <CustomBuild Include="MultiWatcher.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+    <CustomBuild Include="focusingCUDA.h">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </Command>
     </CustomBuild>
+    <ClInclude Include="GeneratedFiles\ui_shapeannotation.h" />
     <ClInclude Include="settings2xml.hpp" />
     <CustomBuild Include="settingsdialog.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <CustomBuild Include="stageControlZ.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <CustomBuild Include="TargeterApplication.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -422,27 +427,37 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </Command>
     </CustomBuild>
+    <CustomBuild Include="shapeannotation.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
+    </CustomBuild>
     <ClInclude Include="targetDetectionGPU.h" />
     <ClInclude Include="TextureAnalysis.h" />
     <CustomBuild Include="XMLWriter.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing XMLWriter.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing XMLWriter.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <CustomBuild Include="BaslerCamera.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing BaslerCamera.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing BaslerCamera.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FocusStack.h" />
@@ -454,21 +469,21 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing findtargets.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing findtargets.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <CustomBuild Include="imageprocessing.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing imageprocessing.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing imageprocessing.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
     </CustomBuild>
     <ClInclude Include="imagesContainer.h" />
     <ClInclude Include="MarzController.h" />
@@ -480,9 +495,9 @@
     <ClInclude Include="targeterimage.h" />
     <ClInclude Include="globals.h" />
     <CustomBuild Include="mainwindow.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing mainwindow.h...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing mainwindow.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
@@ -492,21 +507,15 @@
     <ClInclude Include="openCVtrilateralFilter.h" />
     <ClInclude Include="opencvtoqt.h" />
     <CustomBuild Include="paintqlabel.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DNDEBUG -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\release" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing paintqlabel.h...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -D_CUDA_CODE_COMPILE_ -DQT_CONCURRENT_LIB  "-I." "-IC:\opencv\build\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o "$(ConfigurationName)\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DWIN64 -DZERO_CONFIGURATION_SUPPORT -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_XML_LIB -DQT_CONCURRENT_LIB -DQT_WEBENGINE_LIB -DQT_WEBENGINECORE_LIB -DQT_WEBENGINEWIDGETS_LIB  "-I." "-IC:\opencv\build\include" "-IC:\opencv-latest\opencv\modules\core\include" "-IC:\opencv-latest\opencv\modules\cudaarithm\include" "-IC:\opencv-latest\opencv\modules\cudaimgproc\include" "-IC:\Program Files\Basler\pylon 5\Development\include" "-IC:\Program Files\Basler\pylon 5\Development\Samples\C++\include" "-IC:\ImageMagick-Windows\ImageMagick" "-IC:\ImageMagick-Windows\ImageMagick\Magick++\lib" "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtANGLE" "-I$(QTDIR)\include\QtCore" "-IH:\CodeProjects\QTProjects\targeterMicroscope\targeter\zbar64\include" "-I.\debug" "-I$(QTDIR)\mkspecs\win32-msvc2015" "-I.\GeneratedFiles" "-I$(QTDIR)\include\QtXml" "-I$(CudaToolkitIncludeDir)\." "-I$(QTDIR)\include\QtConcurrent" "-I$(QTDIR)\include\QtWebEngine" "-I$(QTDIR)\include\QtWebEngineCore" "-I$(QTDIR)\include\QtWebEngineWidgets"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing paintqlabel.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Release\moc_paintqlabel.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.ui">
@@ -593,6 +602,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <CustomBuild Include="shapeannotation.ui">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Uic%27ing %(Identity)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Targeter1.rc" />

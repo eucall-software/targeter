@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'paintqlabel.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.7.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -9,18 +9,21 @@
 #include "../paintqlabel.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
+#include <QtCore/QSharedPointer>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'paintqlabel.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.7.1. It"
+#error "This file was generated using the moc from 5.8.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PaintQLabel_t {
-    QByteArrayData data[32];
-    char stringdata0[374];
+    QByteArrayData data[45];
+    char stringdata0[517];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,47 +36,63 @@ QT_MOC_LITERAL(0, 0, 11), // "PaintQLabel"
 QT_MOC_LITERAL(1, 12, 16), // "disablePanButton"
 QT_MOC_LITERAL(2, 29, 0), // ""
 QT_MOC_LITERAL(3, 30, 13), // "setTargetArea"
-QT_MOC_LITERAL(4, 44, 12), // "drawingShape"
-QT_MOC_LITERAL(5, 57, 5), // "shape"
-QT_MOC_LITERAL(6, 63, 19), // "unsetDrawingButtons"
-QT_MOC_LITERAL(7, 83, 8), // "QAction*"
-QT_MOC_LITERAL(8, 92, 4), // "pAct"
-QT_MOC_LITERAL(9, 97, 16), // "StatusBarMessage"
-QT_MOC_LITERAL(10, 114, 3), // "msg"
-QT_MOC_LITERAL(11, 118, 15), // "addFiducialMark"
-QT_MOC_LITERAL(12, 134, 18), // "FIDUCIAL::position"
-QT_MOC_LITERAL(13, 153, 3), // "pos"
-QT_MOC_LITERAL(14, 157, 1), // "p"
-QT_MOC_LITERAL(15, 159, 13), // "moveObjective"
-QT_MOC_LITERAL(16, 173, 19), // "setFiducialPosition"
-QT_MOC_LITERAL(17, 193, 8), // "position"
-QT_MOC_LITERAL(18, 202, 10), // "enterEvent"
-QT_MOC_LITERAL(19, 213, 7), // "QEvent*"
-QT_MOC_LITERAL(20, 221, 5), // "event"
-QT_MOC_LITERAL(21, 227, 10), // "leaveEvent"
-QT_MOC_LITERAL(22, 238, 14), // "mouseMoveEvent"
-QT_MOC_LITERAL(23, 253, 12), // "QMouseEvent*"
-QT_MOC_LITERAL(24, 266, 15), // "mousePressEvent"
-QT_MOC_LITERAL(25, 282, 17), // "mouseReleaseEvent"
-QT_MOC_LITERAL(26, 300, 10), // "wheelEvent"
-QT_MOC_LITERAL(27, 311, 12), // "QWheelEvent*"
-QT_MOC_LITERAL(28, 324, 10), // "paintEvent"
-QT_MOC_LITERAL(29, 335, 12), // "QPaintEvent*"
-QT_MOC_LITERAL(30, 348, 11), // "resizeEvent"
-QT_MOC_LITERAL(31, 360, 13) // "QResizeEvent*"
+QT_MOC_LITERAL(4, 44, 28), // "QSharedPointer<drawingShape>"
+QT_MOC_LITERAL(5, 73, 5), // "shape"
+QT_MOC_LITERAL(6, 79, 19), // "unsetDrawingButtons"
+QT_MOC_LITERAL(7, 99, 8), // "QAction*"
+QT_MOC_LITERAL(8, 108, 4), // "pAct"
+QT_MOC_LITERAL(9, 113, 16), // "StatusBarMessage"
+QT_MOC_LITERAL(10, 130, 3), // "msg"
+QT_MOC_LITERAL(11, 134, 15), // "addFiducialMark"
+QT_MOC_LITERAL(12, 150, 18), // "FIDUCIAL::position"
+QT_MOC_LITERAL(13, 169, 3), // "pos"
+QT_MOC_LITERAL(14, 173, 1), // "p"
+QT_MOC_LITERAL(15, 175, 13), // "moveObjective"
+QT_MOC_LITERAL(16, 189, 19), // "setSamplingDistance"
+QT_MOC_LITERAL(17, 209, 24), // "QSharedPointer<QPolygon>"
+QT_MOC_LITERAL(18, 234, 4), // "poly"
+QT_MOC_LITERAL(19, 239, 19), // "setFiducialPosition"
+QT_MOC_LITERAL(20, 259, 8), // "position"
+QT_MOC_LITERAL(21, 268, 16), // "updatePaddTarget"
+QT_MOC_LITERAL(22, 285, 4), // "padd"
+QT_MOC_LITERAL(23, 290, 6), // "levels"
+QT_MOC_LITERAL(24, 297, 7), // "setGrid"
+QT_MOC_LITERAL(25, 305, 8), // "bChecked"
+QT_MOC_LITERAL(26, 314, 4), // "offX"
+QT_MOC_LITERAL(27, 319, 4), // "offY"
+QT_MOC_LITERAL(28, 324, 6), // "spaceX"
+QT_MOC_LITERAL(29, 331, 6), // "spaceY"
+QT_MOC_LITERAL(30, 338, 6), // "colour"
+QT_MOC_LITERAL(31, 345, 10), // "enterEvent"
+QT_MOC_LITERAL(32, 356, 7), // "QEvent*"
+QT_MOC_LITERAL(33, 364, 5), // "event"
+QT_MOC_LITERAL(34, 370, 10), // "leaveEvent"
+QT_MOC_LITERAL(35, 381, 14), // "mouseMoveEvent"
+QT_MOC_LITERAL(36, 396, 12), // "QMouseEvent*"
+QT_MOC_LITERAL(37, 409, 15), // "mousePressEvent"
+QT_MOC_LITERAL(38, 425, 17), // "mouseReleaseEvent"
+QT_MOC_LITERAL(39, 443, 10), // "wheelEvent"
+QT_MOC_LITERAL(40, 454, 12), // "QWheelEvent*"
+QT_MOC_LITERAL(41, 467, 10), // "paintEvent"
+QT_MOC_LITERAL(42, 478, 12), // "QPaintEvent*"
+QT_MOC_LITERAL(43, 491, 11), // "resizeEvent"
+QT_MOC_LITERAL(44, 503, 13) // "QResizeEvent*"
 
     },
     "PaintQLabel\0disablePanButton\0\0"
-    "setTargetArea\0drawingShape\0shape\0"
-    "unsetDrawingButtons\0QAction*\0pAct\0"
-    "StatusBarMessage\0msg\0addFiducialMark\0"
+    "setTargetArea\0QSharedPointer<drawingShape>\0"
+    "shape\0unsetDrawingButtons\0QAction*\0"
+    "pAct\0StatusBarMessage\0msg\0addFiducialMark\0"
     "FIDUCIAL::position\0pos\0p\0moveObjective\0"
-    "setFiducialPosition\0position\0enterEvent\0"
-    "QEvent*\0event\0leaveEvent\0mouseMoveEvent\0"
-    "QMouseEvent*\0mousePressEvent\0"
-    "mouseReleaseEvent\0wheelEvent\0QWheelEvent*\0"
-    "paintEvent\0QPaintEvent*\0resizeEvent\0"
-    "QResizeEvent*"
+    "setSamplingDistance\0QSharedPointer<QPolygon>\0"
+    "poly\0setFiducialPosition\0position\0"
+    "updatePaddTarget\0padd\0levels\0setGrid\0"
+    "bChecked\0offX\0offY\0spaceX\0spaceY\0"
+    "colour\0enterEvent\0QEvent*\0event\0"
+    "leaveEvent\0mouseMoveEvent\0QMouseEvent*\0"
+    "mousePressEvent\0mouseReleaseEvent\0"
+    "wheelEvent\0QWheelEvent*\0paintEvent\0"
+    "QPaintEvent*\0resizeEvent\0QResizeEvent*"
 };
 #undef QT_MOC_LITERAL
 
@@ -83,31 +102,34 @@ static const uint qt_meta_data_PaintQLabel[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       6,       // signalCount
+       7,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   89,    2, 0x06 /* Public */,
-       3,    1,   90,    2, 0x06 /* Public */,
-       6,    1,   93,    2, 0x06 /* Public */,
-       9,    1,   96,    2, 0x06 /* Public */,
-      11,    2,   99,    2, 0x06 /* Public */,
-      15,    1,  104,    2, 0x06 /* Public */,
+       1,    0,  104,    2, 0x06 /* Public */,
+       3,    1,  105,    2, 0x06 /* Public */,
+       6,    1,  108,    2, 0x06 /* Public */,
+       9,    1,  111,    2, 0x06 /* Public */,
+      11,    2,  114,    2, 0x06 /* Public */,
+      15,    1,  119,    2, 0x06 /* Public */,
+      16,    1,  122,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      16,    1,  107,    2, 0x0a /* Public */,
-      18,    1,  110,    2, 0x09 /* Protected */,
-      21,    1,  113,    2, 0x09 /* Protected */,
-      22,    1,  116,    2, 0x09 /* Protected */,
-      24,    1,  119,    2, 0x09 /* Protected */,
-      25,    1,  122,    2, 0x09 /* Protected */,
-      26,    1,  125,    2, 0x09 /* Protected */,
-      28,    1,  128,    2, 0x09 /* Protected */,
-      30,    1,  131,    2, 0x09 /* Protected */,
+      19,    1,  125,    2, 0x0a /* Public */,
+      21,    2,  128,    2, 0x0a /* Public */,
+      24,    6,  133,    2, 0x0a /* Public */,
+      31,    1,  146,    2, 0x09 /* Protected */,
+      34,    1,  149,    2, 0x09 /* Protected */,
+      35,    1,  152,    2, 0x09 /* Protected */,
+      37,    1,  155,    2, 0x09 /* Protected */,
+      38,    1,  158,    2, 0x09 /* Protected */,
+      39,    1,  161,    2, 0x09 /* Protected */,
+      41,    1,  164,    2, 0x09 /* Protected */,
+      43,    1,  167,    2, 0x09 /* Protected */,
 
  // signals: parameters
     QMetaType::Void,
@@ -116,17 +138,20 @@ static const uint qt_meta_data_PaintQLabel[] = {
     QMetaType::Void, QMetaType::QString,   10,
     QMetaType::Void, 0x80000000 | 12, QMetaType::QPoint,   13,   14,
     QMetaType::Void, QMetaType::QPoint,   14,
+    QMetaType::Void, 0x80000000 | 17,   18,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 12,   17,
-    QMetaType::Void, 0x80000000 | 19,   20,
-    QMetaType::Void, 0x80000000 | 19,   20,
-    QMetaType::Void, 0x80000000 | 23,   20,
-    QMetaType::Void, 0x80000000 | 23,   20,
-    QMetaType::Void, 0x80000000 | 23,   20,
-    QMetaType::Void, 0x80000000 | 27,   20,
-    QMetaType::Void, 0x80000000 | 29,   20,
-    QMetaType::Void, 0x80000000 | 31,   20,
+    QMetaType::Void, 0x80000000 | 12,   20,
+    QMetaType::Void, QMetaType::Bool, QMetaType::Int,   22,   23,
+    QMetaType::Void, QMetaType::Bool, QMetaType::Double, QMetaType::Double, QMetaType::Double, QMetaType::Double, QMetaType::QColor,   25,   26,   27,   28,   29,   30,
+    QMetaType::Void, 0x80000000 | 32,   33,
+    QMetaType::Void, 0x80000000 | 32,   33,
+    QMetaType::Void, 0x80000000 | 36,   33,
+    QMetaType::Void, 0x80000000 | 36,   33,
+    QMetaType::Void, 0x80000000 | 36,   33,
+    QMetaType::Void, 0x80000000 | 40,   33,
+    QMetaType::Void, 0x80000000 | 42,   33,
+    QMetaType::Void, 0x80000000 | 44,   33,
 
        0        // eod
 };
@@ -138,20 +163,23 @@ void PaintQLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->disablePanButton(); break;
-        case 1: _t->setTargetArea((*reinterpret_cast< drawingShape(*)>(_a[1]))); break;
+        case 1: _t->setTargetArea((*reinterpret_cast< QSharedPointer<drawingShape>(*)>(_a[1]))); break;
         case 2: _t->unsetDrawingButtons((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
         case 3: _t->StatusBarMessage((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 4: _t->addFiducialMark((*reinterpret_cast< FIDUCIAL::position(*)>(_a[1])),(*reinterpret_cast< QPoint(*)>(_a[2]))); break;
         case 5: _t->moveObjective((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
-        case 6: _t->setFiducialPosition((*reinterpret_cast< FIDUCIAL::position(*)>(_a[1]))); break;
-        case 7: _t->enterEvent((*reinterpret_cast< QEvent*(*)>(_a[1]))); break;
-        case 8: _t->leaveEvent((*reinterpret_cast< QEvent*(*)>(_a[1]))); break;
-        case 9: _t->mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 10: _t->mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 11: _t->mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 12: _t->wheelEvent((*reinterpret_cast< QWheelEvent*(*)>(_a[1]))); break;
-        case 13: _t->paintEvent((*reinterpret_cast< QPaintEvent*(*)>(_a[1]))); break;
-        case 14: _t->resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
+        case 6: _t->setSamplingDistance((*reinterpret_cast< QSharedPointer<QPolygon>(*)>(_a[1]))); break;
+        case 7: _t->setFiducialPosition((*reinterpret_cast< FIDUCIAL::position(*)>(_a[1]))); break;
+        case 8: _t->updatePaddTarget((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 9: _t->setGrid((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2])),(*reinterpret_cast< double(*)>(_a[3])),(*reinterpret_cast< double(*)>(_a[4])),(*reinterpret_cast< double(*)>(_a[5])),(*reinterpret_cast< QColor(*)>(_a[6]))); break;
+        case 10: _t->enterEvent((*reinterpret_cast< QEvent*(*)>(_a[1]))); break;
+        case 11: _t->leaveEvent((*reinterpret_cast< QEvent*(*)>(_a[1]))); break;
+        case 12: _t->mouseMoveEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 13: _t->mousePressEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 14: _t->mouseReleaseEvent((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 15: _t->wheelEvent((*reinterpret_cast< QWheelEvent*(*)>(_a[1]))); break;
+        case 16: _t->paintEvent((*reinterpret_cast< QPaintEvent*(*)>(_a[1]))); break;
+        case 17: _t->resizeEvent((*reinterpret_cast< QResizeEvent*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -165,7 +193,7 @@ void PaintQLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (PaintQLabel::*_t)(drawingShape );
+            typedef void (PaintQLabel::*_t)(QSharedPointer<drawingShape> );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&PaintQLabel::setTargetArea)) {
                 *result = 1;
                 return;
@@ -199,6 +227,13 @@ void PaintQLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
                 return;
             }
         }
+        {
+            typedef void (PaintQLabel::*_t)(QSharedPointer<QPolygon> );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&PaintQLabel::setSamplingDistance)) {
+                *result = 6;
+                return;
+            }
+        }
     }
 }
 
@@ -227,13 +262,13 @@ int PaintQLabel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 15)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 15)
+        if (_id < 18)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 15;
+        _id -= 18;
     }
     return _id;
 }
@@ -245,7 +280,7 @@ void PaintQLabel::disablePanButton()
 }
 
 // SIGNAL 1
-void PaintQLabel::setTargetArea(drawingShape _t1)
+void PaintQLabel::setTargetArea(QSharedPointer<drawingShape> _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
@@ -278,4 +313,12 @@ void PaintQLabel::moveObjective(QPoint _t1)
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
+
+// SIGNAL 6
+void PaintQLabel::setSamplingDistance(QSharedPointer<QPolygon> _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 6, _a);
+}
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

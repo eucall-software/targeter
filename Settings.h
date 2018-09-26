@@ -9,8 +9,6 @@
 #include "globals.h"
 #include "Camera.h"
 
-
-
 /**
 * structure defining setting values (settings values serialised to file and used in settings dialog)
 */
@@ -40,6 +38,8 @@ public:
 	// clustering settings & used in thresholding
 	int cluster;				/// number of clusters 
 	int distance;				/// number of distance pixels
+	int distanceBins;			/// number of bins in distance histogram
+
 								// threshold settings
 	bool autoThreshold;			/// whether to auto threshold
 	
@@ -88,14 +88,27 @@ public:
 	QIntColorMap objectColours;		// colours to be used for current image drawing (eg. grid, hough lines etc)
 
 	QInt3DMap fiducial_marks_stage;
+	QInt3DMap fiducial_marks_stageAndImage;
 	QIntPointMap fiducial_marks_image;
 	QPointF overviewStagePosition;
+	QVector3Dlist focusPoints;
 
-	double micronsPerPixel;
+	// target training data
+
+	// cooc histogram
+	QScopedPointer<COOCMatrix> coocMatrix;
+	// laws texture method
+	QVector<cv::Mat> lawsHistTarget;
+	QVector<float> lawsHistBiases;
+
+	double mmPerPixel;
 	int imageWidth;
 	int imageHeight;
 
 	int mosaicImageCols;
+
+	bool bPaddTargetImage;
+	int numWaveletLevels;
 
 	QTransform m_coordinateTransform;
 	QMatrix4x4 m_transformationMatrix, m_invTransformationMatrix;
@@ -111,9 +124,9 @@ public:
 	int overviewCameraSN;	/// Serial number address for overview camera
 	int microscopeCameraSN;	/// Serial number address for microscope camera
 
-	int samplingSpacing;
-	int samplingOffset;
-
+	QPoint samplingSpacing;
+	QPoint samplingOffset;
+	
 	double XPositionAbsoluteXY;
 	double YPositionAbsoluteXY;
 	double XPositionRelativeXY;
@@ -130,13 +143,16 @@ public:
 	double m_image_position_XY_Y;
 	double m_stage_position_Z;
 
-	double m_MinFocus;
-	double m_MaxFocus;
+	double m_FocusRange;
+	double m_DefaultFocusPosition;
 	double m_CoarseFocusStep;
 	double m_FineFocusStep;
+	double m_FocusThresholdFraction;
 
 	int BarcodeThreshold;
 	bool BarcodeAutoThreshold;
+	bool bProcessGrayscale;
+	bool bCorrectBackGround;
 
 	QString s_CommandTextXY;
 	QString s_CommandTextZ;
@@ -147,6 +163,16 @@ public:
 	SAMPLINGTYPE::type samplingType;
 
 	FOCUSALGO::algo FocusAlgorithm;
+
+	bool m_bOptimiseFocusRange;
+	bool m_bInterpolateFocusPosition;
+	bool m_bUseFocusThreshold;
+	bool m_bUseCoarseFocusRange;
+	bool m_bUseFineFocusRange;
+	bool m_bCenterFocus;
+	bool m_bUseRegisteredFocusPoints;
+	bool m_bShowBestFocusImage;
+	bool m_bDetectTargetsWhileScanning;
 
 	Camera calibrationDataOverview;	/// class for camera calibration data
 	Camera calibrationDataMicroscope;	/// class for camera calibration data

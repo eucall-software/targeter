@@ -9,27 +9,6 @@
 
 class MarzController;
 
-template<typename T>
-class StageState
-{
-public:
-	StageState() { currentPosition = placeToMove.begin(); };
-	~StageState() { placeToMove.clear(); };
-	void removeAll() { placeToMove.clear(); resetPosition(); }
-	void resetPosition() { currentPosition = placeToMove.begin(); };
-	void moveNext() { currentPosition++; };
-	T moveGetValue() { moveNext(); if (okToMove()) return getValue(); else throw "no more positions in list"; };
-
-	bool isEmpty() { return placeToMove.isEmpty(); };
-	bool okToMove() { return (currentPosition != placeToMove.end()); };
-
-	T getValue() { return *currentPosition; };
-	void addValue(T val) { placeToMove.append(val); };
-private:
-	QList<T> placeToMove;
-	typename QList<T>::iterator currentPosition;
-};
-
 class StageControlXY : public QObject
 {
 	Q_OBJECT

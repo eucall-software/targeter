@@ -11,7 +11,7 @@ bool readSettingsXml(QIODevice &device, QMap<QString, QVariant> &map);
 bool writeSettingsXml(QIODevice &device, const QMap<QString, QVariant> &map);
 
 static const QSettings::Format xmlFormat = QSettings::registerFormat("xml", &readSettingsXml, &writeSettingsXml);
-static const QString rootName = "config";
+static const QString rootName = "frame";
 
 
 //the following code is all used to save QSettings in xml. reading is accomplished

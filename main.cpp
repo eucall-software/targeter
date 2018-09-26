@@ -32,17 +32,22 @@ void customHandler(QtMsgType type, const char* msg) {
 */
 int main(int argc, char *argv[]) 
 {
-    TargeterApplication a(argc, argv);
+	QApplication a(argc, argv);
 #ifdef _HAVE_IMAGEMAGICK
 	Magick::InitializeMagick(*argv);
 #endif
+
+#ifdef _DEBUG	
+	cv::setBreakOnError(true);
+#endif
+
     a.setOrganizationName("European XFEL");
 	a.setOrganizationDomain("xfel.eu");
     a.setApplicationName("Targeter");
 
     MainWindow w;
 
-	a.setMainWindow(&w);
+	//a.setMainWindow(&w);
     w.show();
 
     return a.exec();

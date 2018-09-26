@@ -13,11 +13,4 @@
 // data has to be read into targeterImage class and images created
 
 
-ExperimentalData::ExperimentalData()
-{
-}
 
-
-ExperimentalData::~ExperimentalData()
-{
-}

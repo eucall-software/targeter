@@ -18,10 +18,6 @@
 #include "opencv/highgui.h"
 
 // cuda gpu functions
-#ifdef _CUDA_CODE_COMPILE_
-#include "targetDetectionGPU.h"
-#endif
-
 using namespace cv;
 
 int FocusStack::getBestFocusImage(QVector<cv::Mat> imageStack, QVector<double>& focusValues, FOCUSALGO::algo Algorithm)
@@ -54,15 +50,8 @@ double FocusStack::getFocusImage(cv::Mat& m, FOCUSALGO::algo Algorithm)
 
 	if (Algorithm == FOCUSALGO::DXDY)
 	{
-		/*
-#ifdef _CUDA_CODE_COMPILE_
-		energy = getFocusScore(HelperFunctions::getCImage(m), m.rows, m.cols);
-#else  
-*/
 		energy = simpleDerivativeEnergy(m, true);	// horizontal 
 		energy += simpleDerivativeEnergy(m, false);			// vertical
-//#endif
-
 	}
 	else if (Algorithm == FOCUSALGO::GLVN)
 		energy = normalizedGraylevelVariance(m);
@@ -119,11 +108,11 @@ double FocusStack::getImageFocusLevel(cv::Mat& m)
 }
 
 
-double FocusStack::getImageFocusLevel(targeterImage& image)
+double FocusStack::getImageFocusLevel(QExplicitlySharedDataPointer<targeterImage> image)
 {
 	fname();
 
-	cv::Mat& im = image.getImage();
+	cv::Mat& im = image->getImage();
 
 	if (im.rows > 0 && im.cols > 0)
 		return getImageFocusLevel(im);
@@ -147,7 +136,7 @@ double FocusStack::getImageFocusLevel(targeterImage& image)
 * @return    cv::Mat*
 * Access     public 
 */
-Mat* FocusStack::processImageStack(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
+Mat* FocusStack::processImageStack(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
 {
     fname();
 
@@ -161,7 +150,7 @@ Mat* FocusStack::processImageStack(std::vector<targeterImage>& imageStack, std::
 
     foreach(int item, imageIndexes)
     {
-        m = imageStack[item].getImage();
+        m = imageStack[item]->getImage();
 
         cv::cvtColor(m, im, CV_BGR2GRAY,1);
         im.convertTo(im, CV_64FC1);
@@ -277,7 +266,7 @@ Mat* FocusStack::processImageStack(std::vector<targeterImage>& imageStack, std::
 * @return    cv::Mat*
 * Access     public 
 */
-cv::Mat* FocusStack::processImageStack3(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
+cv::Mat* FocusStack::processImageStack3(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
 {
     fname();
 
@@ -294,7 +283,7 @@ cv::Mat* FocusStack::processImageStack3(std::vector<targeterImage>& imageStack, 
 
     foreach(int item, imageIndexes)
     {
-        m = imageStack[item].getImage();
+        m = imageStack[item]->getImage();
 
         cv::cvtColor(m, im, CV_BGR2GRAY,1);
         im.convertTo(im, CV_64FC1);
@@ -321,7 +310,7 @@ cv::Mat* FocusStack::processImageStack3(std::vector<targeterImage>& imageStack, 
 
     cv::Mat levelImage = cv::Mat(h, w, CV_8SC1, cv::Scalar(0));
 
-    std::cout << "image is " <<  HelperFunctions::type2str(levelImage.type()) << std::endl;
+    std::cout << "image is " <<  HelperFunctions::type2str(levelImage.type()).toLocal8Bit().data() << std::endl;
 
     // get best levels from images -  image still wavelet image here!
     for(i=0; i<w; i++)
@@ -546,7 +535,7 @@ double*** FocusStack::getEnergyProbabilityImage(QMap<int, Mat>& arrWE, double** 
 
 
 
-cv::Mat FocusStack::processImageStack4(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
+cv::Mat FocusStack::processImageStack4(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
 {
 	fname();
 
@@ -561,7 +550,7 @@ cv::Mat FocusStack::processImageStack4(std::vector<targeterImage>& imageStack, s
 
 	foreach(int item, imageIndexes)
 	{
-		m = imageStack[item].getImage();
+		m = imageStack[item]->getImage();
 
 		if (arrWE.empty())
 		{
@@ -678,7 +667,7 @@ cv::Mat FocusStack::processImageStack4(std::vector<targeterImage>& imageStack, s
 			int level = out.ptr<int>(j)[i];
 
 			if (level >= 0)
-				levelImage.ptr<Vec3b>(j)[i] = imageStack[level].getImage().ptr<Vec3b>(j)[i];//Vec3b(255 * level / N, 255 * level / N, 255 * level / N); // 
+				levelImage.ptr<Vec3b>(j)[i] = imageStack[level]->getImage().ptr<Vec3b>(j)[i];//Vec3b(255 * level / N, 255 * level / N, 255 * level / N); // 
 			else
 				levelImage.ptr<Vec3b>(j)[i] = Vec3b(0, 0, 0);
 		}
@@ -714,7 +703,7 @@ cv::Mat FocusStack::processImageStack4(std::vector<targeterImage>& imageStack, s
 * @return    cv::Mat*
 * Access     public 
 */
-cv::Mat* FocusStack::processImageStack2(std::vector<targeterImage>& imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
+cv::Mat* FocusStack::processImageStack2(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, std::vector<int>& imageIndexes, MainWindow* pMainWindow)
 {
     fname();
 
@@ -732,7 +721,7 @@ cv::Mat* FocusStack::processImageStack2(std::vector<targeterImage>& imageStack, 
 
     foreach(int item, imageIndexes)
     {
-        m = imageStack[item].getImage();
+        m = imageStack[item]->getImage();
 
         if(bHaar)
         {
@@ -832,7 +821,7 @@ cv::Mat* FocusStack::processImageStack2(std::vector<targeterImage>& imageStack, 
 * @return    cv::Mat*
 * Access     public 
 */
-Mat* FocusStack::mergeImageStack(std::vector<targeterImage>& imageStack, Mat indexImage, int w, int h)
+Mat* FocusStack::mergeImageStack(QVector<QExplicitlySharedDataPointer<targeterImage>> imageStack, Mat indexImage, int w, int h)
 {
     fname();
 
@@ -846,7 +835,7 @@ Mat* FocusStack::mergeImageStack(std::vector<targeterImage>& imageStack, Mat ind
 
             if(val>=0 && val<s)
             {
-                pIm = &imageStack[val].getImage();
+                pIm = &imageStack[val]->getImage();
 
                 pMat->ptr<Vec3b>(j)[i] = pIm->ptr<Vec3b>(j)[i];
             }

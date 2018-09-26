@@ -35,8 +35,24 @@ SettingsDialog::SettingsDialog(SettingsValues* v, QWidget *parent):
 	imageSize = QSize(128, 128);
 
     ui->setupUi(this);
-}
 
+
+	//connect(ui->SettingsTab, &QTabWidget::setCurrentIndex, this, &SettingsDialog::onTabIndexChanged);
+}
+/*
+void SettingsDialog::on_SettingsTab_setCurrentIndex(int index)
+{
+	QString tab = ui->SettingsTab->tabText(index);
+
+	if(tab == "projectData")
+	{
+		// update QDom structure
+		//refresh the display
+
+	}
+
+}
+*/
 /**
 *
 * class constructor 
@@ -178,10 +194,13 @@ void SettingsDialog::initControls()
 	m_stage_y = 0;
 
 	ui->numClusters->setValue(m_Settings->cluster);
-	ui->distanceThreshold->setValue(m_Settings->distance);
-
-	ui->label_distance->setText(QString::number(m_Settings->distance));
 	ui->labelCluster->setText(QString::number(m_Settings->cluster));
+
+	ui->distanceThreshold->setValue(m_Settings->distance);
+	ui->label_distance->setText(QString::number(m_Settings->distance));
+
+	ui->distanceBinsThreshold->setValue(m_Settings->distanceBins);
+	ui->label_distanceBins->setText(QString::number(m_Settings->distanceBins));
 
 	ui->ThresholdMaxSlider->setValue(m_Settings->threshold_max);
 	ui->ThresholdMinSlider->setValue(m_Settings->threshold_min);
@@ -214,6 +233,8 @@ void SettingsDialog::initControls()
 	ui->chkFixPrincipalPointCenter->setChecked(m_Settings->FixPrincipalPointCenter);
 	ui->chkZeroDistortion->setChecked(m_Settings->ZeroDistortion);
 
+	ui->chkProcessGrayscale->setChecked(m_Settings->bProcessGrayscale);
+
 	ui->spinSizeSquare->setValue(m_Settings->SizeOfSquare);
 	ui->spinItemsInRow->setValue(m_Settings->calibrateNoRows);
 	ui->spinItemsInColumn->setValue(m_Settings->calibrateNoRows);
@@ -224,13 +245,12 @@ void SettingsDialog::initControls()
 	ui->spinGridSpacingY->setValue(m_Settings->gridSpacingY);
 	ui->chkDisplayGrid->setChecked(m_Settings->displayGrid);
 
-	ui->spinMaxFocus->setValue(m_Settings->m_MaxFocus);
-	ui->spinMinFocus->setValue(m_Settings->m_MinFocus);
+	ui->spinDefaultFocusPosition->setValue(m_Settings->m_DefaultFocusPosition);
+	ui->spinFocusRange->setValue(m_Settings->m_FocusRange);
 	ui->spinCoarseFocusStep->setValue(m_Settings->m_CoarseFocusStep);
 	ui->spinFineFocusStep->setValue(m_Settings->m_FineFocusStep);
 
-	ui->spinSamplingDistance->setValue(m_Settings->samplingSpacing);
-	ui->spinExclusionDistance->setValue(m_Settings->samplingOffset);
+	updateSamplingSpacing();
 
 	ui->spOverviewLensFocalLength->setValue(m_Settings->focalDistanceOverviewCamera);
 	ui->spMicroscopeLensFocalLength->setValue(m_Settings->focalDistanceMicroscopeCamera);
@@ -239,6 +259,19 @@ void SettingsDialog::initControls()
 	ui->chkFixFocalLength->setChecked(m_Settings->FixFocalLength);
 
 	ui->chkLockFiducial->setChecked(m_Settings->bLockFiducial);
+	ui->chkPaddTargetImage->setChecked(m_Settings->bPaddTargetImage);
+	ui->spinWaveletLevels->setValue(m_Settings->numWaveletLevels);
+
+	ui->chkOptimiseFocusRange->setChecked(m_Settings->m_bOptimiseFocusRange);
+	ui->chkInterpolateFocusPosition->setChecked(m_Settings->m_bInterpolateFocusPosition);
+	ui->chkUseFocusThreshold->setChecked(m_Settings->m_bUseFocusThreshold);
+	ui->chkUseCoarseFocusRange->setChecked(m_Settings->m_bUseCoarseFocusRange);
+	ui->chkUseFineFocusRange->setChecked(m_Settings->m_bUseFineFocusRange);
+	ui->chkCenterFocus->setChecked(m_Settings->m_bCenterFocus);
+	ui->chkUseRegisteredFocusPoints->setChecked(m_Settings->m_bUseRegisteredFocusPoints);
+	ui->chkShowBestFocusImage->setChecked(m_Settings->m_bShowBestFocusImage);
+	ui->chkDetectTargetsWhileScanning->setChecked(m_Settings->m_bDetectTargetsWhileScanning);
+	ui->chkCorrectBackGround->setChecked(m_Settings->bCorrectBackGround);
 
 	enableFiducial(m_Settings->bLockFiducial);
 
@@ -256,13 +289,13 @@ void SettingsDialog::initControls()
 	ui->lbl_barCode_W->setText(QString::number(m_Settings->s_BarCodeImageRect.width()));
 	ui->lbl_barCode_H->setText(QString::number(m_Settings->s_BarCodeImageRect.height()));
 
-	ui->editPixelSizeMicrons->setText(QString::number(m_Settings->micronsPerPixel));
+	ui->editPixelSizeMicrons->setText(QString::number(m_Settings->mmPerPixel));
 
 	ui->spnImageWidthPixels->setValue(m_Settings->imageWidth);
 	ui->spnImageHeightPixels->setValue(m_Settings->imageHeight);
 
-	ui->lblImageWidthMicrons->setText(QString::number(m_Settings->micronsPerPixel*double(m_Settings->imageWidth)));
-	ui->lblImageHeightMicrons->setText(QString::number(m_Settings->micronsPerPixel*double(m_Settings->imageHeight)));
+	ui->lblImageWidthMicrons->setText(QString::number(m_Settings->mmPerPixel*double(m_Settings->imageWidth)));
+	ui->lblImageHeightMicrons->setText(QString::number(m_Settings->mmPerPixel*double(m_Settings->imageHeight)));
 
 	int index = m_Settings->algorithmType;
 
@@ -281,6 +314,14 @@ void SettingsDialog::initControls()
 		ui->cboFocusAlgorithm->addItem(FOCUS_ALGO_STRINGS(i));
 
 	ui->cboFocusAlgorithm->setCurrentIndex(index);
+
+	ui->cboFocusPosition->clear();
+
+	for (int i = 0; i < m_Settings->focusPoints.length(); i++)
+	{
+		QVector3D pos = m_Settings->focusPoints[i];
+		ui->cboFocusPosition->addItem("{x: " + QString::number(pos.x()) + ", y: " + QString::number(pos.y()) + ", z: " + QString::number(pos.z()) + "}");
+	}
 
 	int cameraType = m_Settings->activeCamera;
 
@@ -341,6 +382,8 @@ void SettingsDialog::initControls()
 	ui->spinYPositionAbsoluteXY->setValue(m_Settings->YPositionAbsoluteXY);
 	ui->spinPositionAbsoluteZ->setValue(m_Settings->PositionAbsoluteZ);
 	ui->spinPositionRelativeZ->setValue(m_Settings->PositionRelativeZ);
+
+	ui->spinFocusFraction->setValue(m_Settings->m_FocusThresholdFraction);
 
 	ui->spinVelocityXY->setValue(m_Settings->VelocityXY);
 	ui->cboBaudXY->setCurrentIndex(3);
@@ -603,6 +646,12 @@ void SettingsDialog::on_chkLockFiducial_clicked(bool clicked)
 	enableFiducial(clicked);
 }
 
+void SettingsDialog::on_chkPaddTargetImage_clicked(bool checked)
+{
+	m_Settings->bPaddTargetImage = checked;
+	emit updatePaddTarget(m_Settings->bPaddTargetImage, m_Settings->numWaveletLevels);
+}
+
 void SettingsDialog::enableFiducial(bool lock)
 {
 	if (lock)
@@ -815,6 +864,11 @@ void SettingsDialog::on_distanceThreshold_valueChanged(int value)
 	m_Settings->distance = value;
 }
 
+void SettingsDialog::on_distanceBinsThreshold_valueChanged
+(int value)
+{
+	m_Settings->distanceBins = value;
+}
 /**
 *
 *  slot for ui->numClusters changed
@@ -1116,6 +1170,49 @@ void SettingsDialog::on_chkCV_CALIB_CB_NORMALIZE_IMAGE_clicked(bool checked)
 	m_Settings->bCV_CALIB_CB_NORMALIZE_IMAGE = checked;
 }
 
+void SettingsDialog::on_chkOptimiseFocusRange_clicked(bool checked)
+{
+	m_Settings->m_bOptimiseFocusRange = checked;
+}
+void SettingsDialog::on_chkInterpolateFocusPosition_clicked(bool checked)
+{
+	m_Settings->m_bInterpolateFocusPosition = checked;
+}
+void SettingsDialog::on_chkUseFocusThreshold_clicked(bool checked)
+{
+	m_Settings->m_bUseFocusThreshold = checked;
+}
+void SettingsDialog::on_chkUseCoarseFocusRange_clicked(bool checked)
+{
+	m_Settings->m_bUseCoarseFocusRange = checked;
+}
+void SettingsDialog::on_chkUseFineFocusRange_clicked(bool checked)
+{
+	m_Settings->m_bUseFineFocusRange = checked;
+}
+void SettingsDialog::on_chkCenterFocus_clicked(bool checked)
+{
+	m_Settings->m_bCenterFocus = checked;
+}
+void SettingsDialog::on_chkUseRegisteredFocusPoints_clicked(bool checked)
+{
+	m_Settings->m_bUseRegisteredFocusPoints = checked;
+}
+void SettingsDialog::on_chkShowBestFocusImage_clicked(bool checked)
+{
+	m_Settings->m_bShowBestFocusImage = checked;
+}
+
+void SettingsDialog::on_chkDetectTargetsWhileScanning_clicked(bool checked)
+{
+	m_Settings->m_bDetectTargetsWhileScanning = checked;
+}
+
+void SettingsDialog::on_chkCorrectBackGround_clicked(bool checked)
+{
+	m_Settings->bCorrectBackGround = checked;
+}
+
 void SettingsDialog::on_chkCV_CALIB_CB_FILTER_QUADS_clicked(bool checked)
 {
 	m_Settings->bCV_CALIB_CB_FILTER_QUADS = checked;
@@ -1151,6 +1248,11 @@ void SettingsDialog::on_chkIntrinsicGuess_clicked(bool checked)
 void SettingsDialog::on_chkFixFocalLength_clicked(bool checked)
 {
 	m_Settings->FixFocalLength = checked;
+}
+
+void SettingsDialog::on_chkProcessGrayscale_clicked(bool checked)
+{
+	m_Settings->bProcessGrayscale = checked;
 }
 
 void SettingsDialog::on_spinItemsInRow_valueChanged(int value)
@@ -1199,13 +1301,17 @@ void SettingsDialog::on_spinVelocityXY_valueChanged(double value)
 	m_Settings->VelocityXY = value;
 }
 
-void SettingsDialog::on_spinMinFocus_valueChanged(double value)
+void SettingsDialog::on_spinDefaultFocusPosition_valueChanged(double value)
 {
-	m_Settings->m_MinFocus = value;
+	m_Settings->m_DefaultFocusPosition = value;
 }
-void SettingsDialog::on_spinMaxFocus_valueChanged(double value)
+void SettingsDialog::on_spinFocusRange_valueChanged(double value)
 {
-	m_Settings->m_MaxFocus = value;
+	m_Settings->m_FocusRange = value;
+}
+void SettingsDialog::on_spinFocusFraction_valueChanged(double value)
+{
+	m_Settings->m_FocusThresholdFraction = value;
 }
 void SettingsDialog::on_spinCoarseFocusStep_valueChanged(double value)
 {
@@ -1214,6 +1320,12 @@ void SettingsDialog::on_spinCoarseFocusStep_valueChanged(double value)
 void SettingsDialog::on_spinFineFocusStep_valueChanged(double value)
 {
 	m_Settings->m_FineFocusStep = value;
+}
+
+void SettingsDialog::on_spinWaveletLevels_valueChanged(int value)
+{
+	m_Settings->numWaveletLevels = value;
+	emit updatePaddTarget(m_Settings->bPaddTargetImage, m_Settings->numWaveletLevels);
 }
 
 void SettingsDialog::on_btnMoveAbsoluteXY_clicked()
@@ -1268,6 +1380,45 @@ void SettingsDialog::on_btnConnectZ_clicked(){
 }
 void SettingsDialog::on_btnDisconnectZ_clicked(){
 	emit DisconnectZ();
+}
+
+void SettingsDialog::on_btnAddFocusPosition_clicked()
+{
+	QVector3D pos = QVector3D(m_Settings->m_stage_position_XY_X, m_Settings->m_stage_position_XY_Y, m_Settings->m_stage_position_Z);
+
+	m_Settings->focusPoints.append(pos);
+
+	// optimise focus range based on values
+
+	if(m_Settings->focusPoints.size()==1)
+	{
+		m_Settings->m_DefaultFocusPosition = m_Settings->focusPoints.at(0).z();
+		ui->spinDefaultFocusPosition->setValue(m_Settings->focusPoints.at(0).z());
+	}
+	else if(m_Settings->focusPoints.size()>1)
+	{
+		double maxZ = m_Settings->focusPoints.at(0).z();
+		double minZ = maxZ;
+
+		for (int i = 1; i < m_Settings->focusPoints.size(); i++)
+		{
+			if(m_Settings->focusPoints.at(i).z() > maxZ)
+				maxZ = m_Settings->focusPoints.at(i).z();
+			if (m_Settings->focusPoints.at(i).z() < minZ)
+				minZ = m_Settings->focusPoints.at(i).z();
+		}
+		ui->spinFocusRange->setValue(maxZ-minZ);
+
+		m_Settings->m_FocusRange = maxZ - minZ;
+	}
+
+	ui->cboFocusPosition->addItem("{x: " + QString::number(pos.x()) + ", y: " + QString::number(pos.y()) + ", z: " + QString::number(pos.z()) + "}");
+}
+
+void SettingsDialog::on_btnRemoveFocusPosition_clicked()
+{
+	m_Settings->focusPoints.removeAt(ui->cboFocusPosition->currentIndex());
+	ui->cboFocusPosition->removeItem(ui->cboFocusPosition->currentIndex());
 }
 
 void SettingsDialog::updateCONNECTPORT(bool XY, QString port)
@@ -1372,6 +1523,12 @@ void SettingsDialog::on_btnDisconnectXY_clicked()
 	emit DisconnectXY();
 }
 
+void SettingsDialog::on_btnMoveOverviewPosition_clicked()
+{
+	// move to bottom left for overview image
+	emit MoveAbsoluteXY(0, 155, ACTIONS::action::nothing);
+}
+
 void SettingsDialog::on_cboBaudXY_currentIndexChanged(int value)
 {
 	m_Settings->BaudXY = ui->cboBaudXY->itemData(value).toInt();
@@ -1381,6 +1538,7 @@ void SettingsDialog::on_cboFocusAlgorithm_currentIndexChanged(int value)
 {
 	m_Settings->FocusAlgorithm = (FOCUSALGO::algo) value;
 }
+
 
 void SettingsDialog::on_huMomentSimilaritySlider_valueChanged(int value)
 {
@@ -1395,26 +1553,52 @@ void SettingsDialog::on_spinAspectTolerance_valueChanged(double value)
 void SettingsDialog::on_sliderGridOffsetX_valueChanged(int value){
 	m_Settings->gridOffsetX = value;
 	ui->spinGridOffsetX->setValue((double)value);
+	emit updateGrid();
 }
 
 void SettingsDialog::on_sliderGridOffsetY_valueChanged(int value){
 	m_Settings->gridOffsetY = value;
 	ui->spinGridOffsetY->setValue((double)value);
+	emit updateGrid();
 }
 
 void SettingsDialog::on_sliderGridSpacingX_valueChanged(int value){
 	m_Settings->gridSpacingX = value;
 	ui->spinGridSpacingX->setValue((double)value);
+	emit updateGrid();
 }
 void SettingsDialog::on_sliderGridSpacingY_valueChanged(int value){
 	m_Settings->gridSpacingY = value;
 	ui->spinGridSpacingY->setValue((double)value);
+	emit updateGrid();
 }
 
 void SettingsDialog::on_spinGridOffsetX_valueChanged(double value)
 {
 	m_Settings->gridOffsetX = value;
 	ui->sliderGridOffsetX->setValue((int)value);
+	emit updateGrid();
+}
+
+void SettingsDialog::on_spinGridOffsetY_valueChanged(double value)
+{
+	m_Settings->gridOffsetY = value;
+	ui->sliderGridOffsetY->setValue((int)value);
+	emit updateGrid();
+}
+
+void SettingsDialog::on_spinGridSpacingX_valueChanged(double value)
+{
+	m_Settings->gridSpacingX = value;
+	ui->sliderGridSpacingX->setValue((int)value);
+	emit updateGrid();
+}
+
+void SettingsDialog::on_spinGridSpacingY_valueChanged(double value)
+{
+	m_Settings->gridSpacingY = value;
+	ui->sliderGridSpacingY->setValue((int)value);
+	emit updateGrid();
 }
 
 void SettingsDialog::on_sliderBarcodeThreshold_valueChanged(int value)
@@ -1427,37 +1611,39 @@ void SettingsDialog::on_chkAutoBarcodeThreshold_clicked(bool checked)
 	m_Settings->BarcodeAutoThreshold = checked;
 }
 
-void SettingsDialog::on_spinGridOffsetY_valueChanged(double value)
+void SettingsDialog::on_spinSamplingDistanceX_valueChanged(int value)
 {
-	m_Settings->gridOffsetY = value;
-	ui->sliderGridOffsetY->setValue((int)value);
+	m_Settings->samplingSpacing.setX(value);
 }
 
-void SettingsDialog::on_spinGridSpacingX_valueChanged(double value)
+void SettingsDialog::on_spinSamplingDistanceY_valueChanged(int value)
 {
-	m_Settings->gridSpacingX = value;
-	ui->sliderGridSpacingX->setValue((int)value);
+	m_Settings->samplingSpacing.setY(value);
 }
 
-void SettingsDialog::on_spinGridSpacingY_valueChanged(double value)
+void SettingsDialog::on_spinSamplingOffsetX_valueChanged(int value)
 {
-	m_Settings->gridSpacingY = value;
-	ui->sliderGridSpacingY->setValue((int)value);
+	m_Settings->samplingOffset.setX(value);
 }
 
-void SettingsDialog::on_spinSamplingDistance_valueChanged(int value)
+void SettingsDialog::on_spinSamplingOffsetY_valueChanged(int value)
 {
-	m_Settings->samplingSpacing = value;
+	m_Settings->samplingOffset.setY(value);
 }
-void SettingsDialog::on_spinExclusionDistance_valueChanged(int value)
+
+void SettingsDialog::updateSamplingSpacing()
 {
-	m_Settings->samplingOffset = value;
+	ui->spinSamplingDistanceX->setValue(m_Settings->samplingSpacing.x());
+	ui->spinSamplingOffsetX->setValue(m_Settings->samplingOffset.x());
+	ui->spinSamplingDistanceY->setValue(m_Settings->samplingSpacing.y());
+	ui->spinSamplingOffsetY->setValue(m_Settings->samplingOffset.y());
 }
 
 void SettingsDialog::on_spMicroscopeLensFocalLength_valueChanged(int value)
 {
 	m_Settings->focalDistanceMicroscopeCamera = value;
 }
+
 void SettingsDialog::on_spOverviewLensFocalLength_valueChanged(int value)
 {
 	m_Settings->focalDistanceOverviewCamera = value;
@@ -1531,10 +1717,6 @@ void SettingsDialog::on_lineEditOverviewCameraSN_textChanged(QString val) {
 void SettingsDialog::on_lineEditMicroscopeCameraSN_textChanged(QString val) {
 	m_Settings->microscopeCameraSN = atoi(val.toLocal8Bit().data());
 };
-void SettingsDialog::on_editPixelSizeMicrons_textChanged(QString val) {
-	m_Settings->micronsPerPixel = atof(val.toLocal8Bit().data());
-};
-
 
 void SettingsDialog::on_btnRestoreBackup_clicked()
 {
@@ -1543,4 +1725,8 @@ void SettingsDialog::on_btnRestoreBackup_clicked()
 void SettingsDialog::on_btnSaveBackup_clicked()
 {
 	emit saveBackup(false);
+}
+
+void SettingsDialog::on_editPixelSizeMicrons_textChanged(QString val){
+	m_Settings->mmPerPixel = val.replace(",", ".").toDouble();
 }

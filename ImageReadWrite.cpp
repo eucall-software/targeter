@@ -1,4 +1,5 @@
 #include "ImageReadWrite.h"
+#include "HelperFunctions.h"
 #ifdef _HAVE_IMAGEMAGICK
 
 #include <Magick++.h>
@@ -31,7 +32,8 @@ cv::Mat ImageReadWrite::readImage(QString filename, QString& jsondata)
 
 		jsondata = QString::fromStdString(im.comment());
 
-		emit LOGCONSOLE("image data: " + jsondata);
+		if(jsondata != "")
+			emit LOGCONSOLE("image data: " + jsondata);
 	
 		int w = im.columns();
 		int h = im.rows();
@@ -42,6 +44,9 @@ cv::Mat ImageReadWrite::readImage(QString filename, QString& jsondata)
 		im.write(0, 0, w, h, "BGRA", Magick::CharPixel, opencvImage.data);
 
 		cvtColor(opencvImage, outputMat, CV_BGRA2BGR);
+
+		DBOUT("opencvImage type " << HelperFunctions::type2str(opencvImage.type()).toLocal8Bit().data());
+		DBOUT("outputMat type " <<  HelperFunctions::type2str(outputMat.type()).toLocal8Bit().data());
 
 		return outputMat;
 	}

@@ -2,8 +2,8 @@
 
 
 # Visual Studio Files
-Debug
-Release
+# Debug
+# Release
 *.suo
 *.csproj.user
 *.vbproj.user
@@ -32,8 +32,6 @@ object_script.*.Debug
 *.qbs.user
 *.qbs.user.*
 *.moc
-moc_*.cpp
-moc_*.h
 qrc_*.cpp
 ui_*.h
 *.qmlc
@@ -68,9 +66,9 @@ CMakeLists.txt.user*
 *.userprefs
 
 # Build results
-[Dd]ebug/
+# [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+# [Rr]elease/
 [Rr]eleases/
 [Xx]64/
 [Xx]86/

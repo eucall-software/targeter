@@ -38,6 +38,8 @@ public:
 	bool openCamera(cameraType::camera cameraType);
 	Pylon::CInstantCamera*  getCamera(cameraType::camera cameraType);
 
+	void loadSettingsOverview();
+
 	cv::Mat grabImage(cameraType::camera cameraType = cameraType::overview, bool bCalledInLoop = false);
 	void setCameras(QString overviewSerialNumber, QString microscopeSerialNumber);
 
@@ -71,9 +73,7 @@ public:
 
 		fc.Convert(image, ptrGrabResult);
 
-		cv::Mat cv_img = cv::Mat(ptrGrabResult->GetHeight(), ptrGrabResult->GetWidth(), CV_8UC3, (uint8_t*)image.GetBuffer());
-
-		pParent->sendImage(cv_img.clone());
+		pParent->sendImage(cv::Mat(ptrGrabResult->GetHeight(), ptrGrabResult->GetWidth(), CV_8UC3, (uint8_t*)image.GetBuffer()).clone());
 	}
 };
 

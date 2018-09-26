@@ -32,6 +32,8 @@
 targeterImage::targeterImage(ImagesContainer* pImages) : targeterImage()
 { 
 	this->m_ImagesContainer = pImages;
+	cv_im = cv::Mat();
+	isNull = false;
 }
 
 /**
@@ -51,6 +53,8 @@ targeterImage::targeterImage()
 	pImage = nullptr;
 	pMask = nullptr;
 	pHue = nullptr;
+	isNull = false;
+	m_imageIndex = QPoint(-1, -1);
 	imageFunction = imageType::display;
 	filepathname = "";
 	name = "";
@@ -58,8 +62,41 @@ targeterImage::targeterImage()
 	cameraType = cameraType::none;
 	maskType = drawingMode::none;
 	isDisplayed = false;
+	cv_im = cv::Mat();
 	UID = QUuid::createUuid();
-	m_FriendIDs.push_back(UID);
+}
+
+targeterImage::targeterImage(QExplicitlySharedDataPointer<targeterImage> tar) 
+{
+	drawingObjects = tar->drawingObjects;		
+	imageFunction = tar->imageFunction;		
+	maskType = tar->maskType;		
+	filepathname = tar->filepathname;	
+	name = tar->name;          
+	m_ImageOffset = tar->m_ImageOffset;		
+	m_ImageFocusPosition = tar->m_ImageFocusPosition;	
+	m_ImagesContainer = tar->m_ImagesContainer;
+	m_imageIndex = tar->m_imageIndex;
+	m_positionFiducial = tar->m_positionFiducial;
+	m_positionStage = tar->m_positionStage;
+	m_FrameID = tar->m_FrameID;		
+	m_SubFrameID = tar->m_SubFrameID;		
+	m_subRegionID = tar->m_subRegionID;	
+	m_patternRegion = tar->m_patternRegion;	    
+	qt_im = tar->qt_im;				
+	cv_im = tar->cv_im;			
+	pImage = tar->pImage;			
+	pMask = tar->pMask;		
+	pHue = tar->pHue;
+	tooltip = tar->tooltip;
+	isDisplayed = tar->isDisplayed;
+	cameraType = tar->cameraType;
+	labels = tar->labels;			
+	stats = tar->stats;	
+	centroids = tar->centroids;
+	imagePosition = tar->imagePosition; 
+	UID = tar->UID;
+	isNull = tar->isNULL();
 }
 
 /**
@@ -74,8 +111,59 @@ targeterImage::targeterImage()
 * @return    
 * Access     public 
 */
-targeterImage::~targeterImage() {
-	//free1DImages(); 
+targeterImage::~targeterImage() 
+{
+	free1DImages();
+}
+
+void targeterImage::addJSONDATA(QJsonObject obj)
+{
+	if(!obj.isEmpty())
+	{
+		if(obj.contains("index"))
+		{
+			QJsonObject pos = obj["index"].toObject();
+			int x=0, y=0;
+
+			if (pos.contains("x"))
+				x = pos["x"].toInt();
+			if (pos.contains("y"))
+				y = pos["y"].toInt();
+		
+			m_imageIndex = QPoint(x, y);
+		}
+
+		if (obj.contains("stage"))
+		{
+			QJsonObject pos = obj["stage"].toObject();
+
+			double x = 0, y = 0, z = 0;
+
+			if (pos.contains("x"))
+				x = pos["x"].toDouble();
+			if (pos.contains("y"))
+				y = pos["y"].toDouble();
+			if (pos.contains("z"))
+				z = pos["z"].toDouble();
+
+			m_positionStage = QVector3D(x, y, z);
+		}
+		if (obj.contains("fiducial"))
+		{
+			QJsonObject pos = obj["fiducial"].toObject();
+
+			double x=0, y=0, z=0;
+
+			if (pos.contains("x"))
+				x = pos["x"].toDouble();
+			if (pos.contains("y"))
+				y = pos["y"].toDouble();
+			if (pos.contains("z"))
+				z = pos["z"].toDouble();
+
+			m_positionFiducial= QVector3D(x, y, z);
+		}
+	}
 }
 
 /**
@@ -135,7 +223,8 @@ void targeterImage::set1DImage(int* im, imageType::imageType type) {
 * @return    void
 * Access     public 
 */
-void targeterImage::free1DImages() {
+void targeterImage::free1DImages() 
+{
 	if (pImage)
 	{
 		delete[] pImage;
@@ -147,8 +236,6 @@ void targeterImage::free1DImages() {
 		pMask = nullptr;
 	}
 };
-
-
 
 /**
 *
@@ -162,12 +249,10 @@ void targeterImage::free1DImages() {
 * @return    QT_NAMESPACE::QImage
 * Access     public
 */
-QImage& targeterImage::getQTImage()
+QImage targeterImage::getQTImage()
 { 
 	return qt_im; 
 };
-
-
 
 /**
 *
@@ -279,18 +364,25 @@ void targeterImage::addImageFromFile(std::string filename, imageType::imageType 
 */
 void targeterImage::addImageEx(cv::Mat im, QUuid UIDParent, imageType::imageType type, std::string descriptiveName, std::string tooltip, std::string filename)
 {
-	this->name = descriptiveName;
-	this->imageFunction = type;
-	this->filepathname = filename;
+	// check valid image
+	if(im.rows>0 && im.cols>0)
+	{
+		this->name = descriptiveName;
+		this->imageFunction = type;
+		this->filepathname = filename;
 
-	// stores image
-	addImage(im);
+		// stores image
+		addImage(im);
 
-	if (descriptiveName == "")
-		this->name = getDefaultName();
+		if (descriptiveName == "")
+			this->name = getDefaultName();
 
-	if(tooltip == "")
-		this->tooltip = this->name;
+		if(tooltip == "")
+			this->tooltip = this->name;
+
+		// set image valid
+		isNull = false;
+	}
 }
 
 /**
@@ -349,58 +441,13 @@ void targeterImage::addImage(cv::Mat im)
 	createQTImage(true);
 }
 
-/**
-*
-*  remove associated image given its ID
-*
-* @author    David Watts
-* @since     2017/03/17
-* 
-* FullName   targeterImage::removeFriendIndex
-* Qualifier 
-* @param     QUuid ID 
-* @return    void
-* Access     public 
-*/
-bool targeterImage::removeFriendID(QUuid ID) 
-{
-	bool bFound = false;
-	
-	std::vector<QUuid>::iterator iter = std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID);
-
-	if (iter == m_FriendIDs.end())
-	{
-		bFound = true;
-		m_FriendIDs.erase(iter);
-	}
-	return bFound;
-}
-
-/**
-*
-*  remove associated images given their ID's
-*
-* @author    David Watts
-* @since     2017/03/17
-* 
-* FullName   targeterImage::removeFriendIndexes
-* Qualifier 
-* @param     const std::vector<QUuid> & to_remove 
-* @return    void
-* Access     public 
-*/
-void targeterImage::removeFriendIDs(const std::vector<QUuid>& to_remove)
-{
-	for (std::vector<QUuid>::iterator iter = m_FriendIDs.begin(); iter < m_FriendIDs.end(); iter++)
-		removeFriendID(*iter);
-}
-
 QString targeterImage::toString()
 {
 	//QString type = IMAGETYPESTRINGS(tim.imageFunction);
 
 	QString strTooltip = "<b>name:</b> " + QString::fromStdString(this->name) + "<br><b>filename:</b> "
 		+ QString::fromStdString(filepathname) + "<br><b>type:</b> "
+		+ "<b>width:</b> " + QString::number(Cols()) + ", <b>height:</b> " + QString::number(Rows()) + "<br>"
 		+ IMAGETYPESTRINGS(imageFunction) + "<br>";
 
 	QString masktype = DRAWINGMODESTRINGS(maskType);
@@ -419,6 +466,10 @@ QString targeterImage::toString()
 	if (cam != cameraType::none)
 		strTooltip += "<b>from camera:</b> " + s + "<br>";
 
+	if (m_imageIndex.x() >= 0 && m_imageIndex.y() >= 0)
+		strTooltip += "<b>image index position:</b> x:" + QString::number(m_imageIndex.x()) +
+		" y:" + QString::number(m_imageIndex.y()) + "<br>";
+
 	if(m_positionFiducial.x() >= 0 && m_positionFiducial.y() >= 0 && m_positionFiducial.z() >= 0)
 		strTooltip += "<b>fiducial position:</b> x:" + QString::number(m_positionFiducial.x()) + 
 		" y:"+  QString::number(m_positionFiducial.y()) + 
@@ -429,64 +480,13 @@ QString targeterImage::toString()
 		" y:" + QString::number(m_positionStage.y()) +
 		" z:" + QString::number(m_positionStage.z()) + "<br>";
 
+	
 	return strTooltip;
 }
 
-/**
-*
-*  check if object has friend image of a given ID
-*
-* @author    David Watts
-* @since     2017/03/23
-* 
-* FullName   targeterImage::hasFriendID
-* Qualifier 
-* @param     QUuid ID 
-* @return    bool
-* Access     public 
-*/
-bool targeterImage::hasFriendID(QUuid ID)
-{
-	return std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID) == m_FriendIDs.end();
-}
-
-targeterImage& targeterImage::getGlobalImage(int index) {
+QExplicitlySharedDataPointer<targeterImage> targeterImage::getGlobalImage(int index) {
 	if (index >= 0 && index < m_ImagesContainer->getNumImages())
 		return m_ImagesContainer->getImageAt(index);
 };
 
-std::vector<QUuid>::iterator targeterImage::getFriend(QUuid ID){ return std::find(m_FriendIDs.begin(), m_FriendIDs.end(), ID); }
 
-
-/**
-*
-*  gets global image array (m_ImagesContainer) index of friend image of a certain imageType
-*
-* @author    David Watts
-* @since     2017/03/23
-* 
-* FullName   targeterImage::getFriendIndexOfType
-* Qualifier 
-* @param     imageType::imageType imageFunction 
-* @return    int
-* Access     public 
-*/
-int targeterImage::getFriendArrayIndexOfType(imageType::imageType imageFunction)
-{
-	int ret = -1;
-
-	for (std::vector<QUuid>::iterator iter = m_FriendIDs.begin(); iter < m_FriendIDs.end(); iter++)
-	{
-		for (int i = 0; i < m_ImagesContainer->getImages().size(); i++)
-		{
-			targeterImage& t = m_ImagesContainer->getImageAt(i);
-
-			if (t.getUID() == *iter &&  t.getImageFunction() == imageFunction)
-			{	
-				ret =  i;
-				break;
-			}
-		}
-	}
-	return ret;
-}

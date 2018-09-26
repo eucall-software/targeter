@@ -7,6 +7,7 @@
 #include <limits>
 #include <QDebug>
 #include <vector>
+#include <QSharedPointer>
 #include "opencv2/opencv.hpp"
 #include "opencv/highgui.h"
 
@@ -15,11 +16,15 @@
 #include "imageprocessing.h"
 #include "mainwindow.h"
 #include "findtargets.h"
+#include "Haar.h"
 
 
 
 // cuda gpu functions
 #ifdef _CUDA_CODE_COMPILE_
+#include <opencv2/core/cuda.hpp>
+#include <opencv2/cudaarithm.hpp>
+#include <opencv2/cudaimgproc.hpp>
 #include "targetDetectionGPU.h"
 #endif
 
@@ -28,8 +33,6 @@ using namespace cv;
 typedef std::numeric_limits< float > dbl;
 
 using namespace std;
-
-
 
 template<typename T>
 void FindTargets::printVector(const T& t) {
@@ -54,9 +57,9 @@ void FindTargets::printVector(const T& t) {
 */
 
 template<typename T>
-void FindTargets::printClusterVector(std::vector<T> cluster)
+void FindTargets::printClusterVector(QVector<T> cluster)
 {
-	std::vector<T>::iterator iI;
+	QVector<T>::iterator iI;
 
 	int i = 0;
 	for (iI = cluster.begin(); iI != cluster.end(); iI++)
@@ -141,7 +144,7 @@ void FindTargets::printCoocuranceHistogram(T* hist, int dim1, int dim2, int dim3
 * @return    cv::Mat
 * Access     public
 */
-cv::Mat FindTargets::LaplacianFindObject(std::vector<targeterImage>& trainingImages, targeterImage& detectionImage, int distance, int NoClusters)
+cv::Mat FindTargets::LaplacianFindObject(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages, QExplicitlySharedDataPointer<targeterImage> detectionImage, int distance, int NoClusters)
 {
 	cv::Mat im;
 
@@ -149,15 +152,741 @@ cv::Mat FindTargets::LaplacianFindObject(std::vector<targeterImage>& trainingIma
 	int maxDim = 0;
 
 	for (int i = 0; i < trainingImages.size(); i++)
-		maxDim = MIN(maxDim, MAX(trainingImages[0].Cols(), trainingImages[0].Rows()));
+		maxDim = MIN(maxDim, MAX(trainingImages[0]->Cols(), trainingImages[0]->Rows()));
 
 	int NextPow = round(pow(2, ceil(log2(maxDim))));
 
 	return im;
 }
 
+/*
+Steerable filters wavelet or laplacian filter->N orientations at each freq,
+joint pdf for each orientation pair -> n pdf's * frequency levels,
+or difference in orientation,
+detection is by cooc comparison.
+Can also do shrinkage to make pdf sparse to a list can be used instead.
+Can find shrinkage for target by increasing threshold and looking at reconstruction error function of threshold.
+Then apply best threshold to entire transform.
+*/
+
+//************************************
+// Method:    FindTargetsHaar
+// FullName:  FindTargets::FindTargetsHaar
+// Access:    public 
+// Returns:   bool
+// Qualifier:
+// Parameter: QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages
+// Parameter: QExplicitlySharedDataPointer<targeterImage> detectionImage
+// Parameter: int levels
+//************************************
+bool FindTargets::FindTargetsHaar(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages, 
+	QExplicitlySharedDataPointer<targeterImage> detectionImage, int levels)
+{
+	// perform transform of target images
+	for(int i=0; i<trainingImages.size();i++)
+	{
+		cv::Mat im;
+
+		cv::cvtColor(trainingImages[i]->getImage(), im, CV_BGR2GRAY, 1);
+		im.convertTo(im, CV_64FC1);
+
+		double minVal = 0, maxVal = 0;
+
+		cv::minMaxLoc(im, &minVal, &maxVal);
+
+		Haar::Haar2(im, levels);
+
+		// shrinkage of target transforms by threshold -> store threshold
+		cv::Mat coocImage;
+
+		// collect statistics on target images - orientation vs magnitude cooc matrix
+		Haar::getHaarCooc(im, coocImage, im.cols, im.rows, levels, (float)maxVal);
+
+		return true;
+	}
+
+	// compare with regions of detect image
+
+	return true;
+}
+
+/**
+*
+*  Finds template image (trainingImages) in detectionImage using OpenCV matchTemplate method
+*
+* @author    David Watts
+* @since     2017/03/07
+*
+* FullName   CVMatching
+* Qualifier
+* @param     std::vector<targeterImage> & trainingImages
+* @param     targeterImage & detectionImage
+* @param     algoType matchType
+* @param     MainWindow * pMainWindow
+* @return    void	* Access     public
+*/
+cv::Mat FindTargets::CVMatching(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages, QExplicitlySharedDataPointer<targeterImage> detectionImage, algoType::algoType matchType, bool bCorrectBackground)
+{
+#ifdef DEBUGPRINT
+	DBOUT("Function Name: " << Q_FUNC_INFO << std::endl);
+#endif
+	bool bExpandImageBoundaries = false;
+
+	/// Create the result matrix
+	int w = trainingImages[0]->Cols();
+	int h = trainingImages[0]->Rows();
+
+	cv::Size dstSize;
+	cv::Mat dst, dst_border;
+	
+	dstSize = detectionImage->Size();
+	dst = detectionImage->getImage();
+
+	copyMakeBorder(dst, dst, h/2, h/2, w/2, w/2, BORDER_REPLICATE);
+
+	if (bCorrectBackground)
+	{
+		cv::Mat out;
+		ImageProcessing ip;
+		dst = ip.subtractBackground(dst, out);
+	}
+
+	int dw = dst.cols;
+	int dh = dst.rows;
+
+	cv::Mat detect = trainingImages[0]->getImage();
+
+	cv::Mat result((dw - w + 1), (dh - h + 1), CV_32FC1);
+
+	DBOUT("dst type " << HelperFunctions::type2str(dst.type()).toLocal8Bit().data());
+	DBOUT("detect type " << HelperFunctions::type2str(detect.type()).toLocal8Bit().data());
+
+	/// Do the Matching and Normalize
+	cv::matchTemplate(dst, detect, result, matchType);
+
+	cv::Mat sim = HelperFunctions::convertFloatToGreyscaleMat(result);
+
+	cv::Mat fullSizeImage(dstSize.height, dstSize.width, dst.type());
+
+	sim.copyTo(fullSizeImage(cv::Rect(w/2, h/2, sim.cols, sim.rows)));
+
+	return fullSizeImage;
+}
 
 
+////////////////////////////// laws method /////////////////////////////////////////////////////////
+
+//************************************
+// Method:    sepConvolve
+// FullName:  FindTargets::sepConvolve
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: const cv::Mat spImage
+// Parameter: cv::Mat & spResult
+// Parameter: const float Kernel[]
+// Parameter: int KernelLen
+// Parameter: bool bRow
+//************************************
+void FindTargets::sepConvolve(const cv::Mat spImage, cv::Mat& spResult, const float Kernel[/* KernelLen */], int KernelLen, bool bRow)
+{
+	int r= spImage.rows, c= spImage.cols;
+	
+	if(bRow)
+	{
+		for (int j = 0; j < r; j++)
+		{
+			for (int i = 0; i < c; i++)
+			{
+				spResult.at<float>(j, i) = 0;
+
+				for (int k = 0; k < KernelLen; k++)
+				{
+					int ind = i - k;
+
+					//mirror
+					if (ind > c - 1)
+						ind = c - (ind - c);
+					else if (ind < 0)
+						ind = -ind;
+
+					spResult.at<float>(j, i) = spResult.at<float>(j, i) + spImage.at<float>(j, ind) * Kernel[k];    // convolve: multiply and accumulate
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < c; i++)
+		{
+			for (int j = 0; j < r; j++)
+			{
+				spResult.at<float>(j, i) = 0;
+
+				for (int k = 0; k < KernelLen; k++)
+				{
+					int ind = j - k;
+					
+					//mirror
+					if (ind > r - 1)
+						ind = r - (ind - r);
+					else if (ind < 0)
+						ind = -ind;
+					
+					spResult.at<float>(j, i) = spResult.at<float>(j, i) + spImage.at<float>(ind, i) * Kernel[k];    // convolve: multiply and accumulate
+				}
+			}
+		}
+	}
+}
+
+//************************************
+// Method:    addHistogram
+// FullName:  FindTargets::addHistogram
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: cv::Mat & hist
+// Parameter: cv::Mat aim
+// Parameter: cv::Mat bim
+// Parameter: cv::Mat cim
+// Parameter: cv::Mat dim
+// Parameter: int noBins
+// Parameter: int histrange
+// Parameter: bool append
+//************************************
+void FindTargets::addHistogram(cv::Mat& hist, cv::Mat aim, cv::Mat bim, cv::Mat cim, cv::Mat dim, int noBins, int histrange, bool append)
+{
+	float range[] = { -histrange, histrange };
+	const float* histRange = { range };
+	bool uniform = true;
+
+	if(!aim.empty())
+		getHistogram(aim, hist, noBins, histrange, append);
+	if(!bim.empty())
+		getHistogram(bim, hist, noBins, histrange, true);
+	if(!cim.empty())
+		getHistogram(cim, hist, noBins, histrange, true);
+	if(!dim.empty())
+		getHistogram(dim, hist, noBins, histrange, true);
+
+	hist.at<float>(noBins>>1, 0) = 0;
+}
+
+void FindTargets::getHistogram(cv::Mat input, cv::Mat& histogram, int noBins, int histrange, bool append)
+{
+	
+	
+	// cuda histogram on deals with uchar/short types!
+	/*
+#ifdef _CUDA_CODE_COMPILE_
+	cv::cuda::GpuMat hist(1, noBins, CV_32S);
+	cv::cuda::GpuMat  inImage;
+	inImage.upload(input);
+	cv::cuda::histEven(inImage, hist, noBins, -histrange, histrange);
+	cv::Mat result_host;
+	hist.download(histogram);
+#else
+*/
+	float range[] = { -histrange, histrange };
+	const float* histRange = { range };
+	cv::calcHist(&input, 1, 0, cv::Mat(), histogram, 1, &noBins, &histRange, true, append);
+	/*
+#endif
+*/
+}
+
+//************************************
+// Method:    scoreLawsHistogram
+// FullName:  FindTargets::scoreLawsHistogram
+// Access:    public 
+// Returns:   double
+// Qualifier:
+// Parameter: QVector<cv::Mat> lawsMapDetect
+// Parameter: QVector<cv::Mat> lawsHistTarget
+// Parameter: QVector<float> biases
+//************************************
+double FindTargets::scoreLawsHistogram(QVector<cv::Mat> lawsMapDetect, QVector<cv::Mat> lawsHistTarget, QVector<float> biases)
+{
+	float score = 0;
+
+	for (int i = 0; i < lawsHistTarget.length(); i++)
+	{
+		float bias = 1.0/float(lawsHistTarget.length());
+
+		if (biases.length() >= i && biases[i] >= 0 && biases[i] <= 1)
+			bias = biases[i];
+
+		// should bias the histogram with the strongest response in the test images
+ 		score += compareHist(lawsHistTarget[i], lawsMapDetect[i], cv::HISTCMP_CHISQR) * bias;
+	}
+	return score;
+}
+
+
+//************************************
+// Method:    getLawFilteredImages
+// FullName:  FindTargets::getLawFilteredImages
+// Access:    public 
+// Returns:   QT_NAMESPACE::QMap<QT_NAMESPACE::QString, cv::Mat>
+// Qualifier:
+// Parameter: cv::Mat im
+//************************************
+QMap<QString, cv::Mat> FindTargets::getLawFilteredImages(cv::Mat im)
+{
+	QMap<QString, cv::Mat> lawsMapTarget;
+
+	float L[5] = { 1, 4, 6, 4, 1 };
+	float E[5] = { -1, -2, 0, 2, 1 };
+	float ER[5] = { 1, 2, 0, -2, -1 };
+	float S[5] = { -1, 0, 2, 0, -1 };
+	float R[5] = { 1, -4, 6, -4, 1 };
+	//float W5[5] = { -1, 2, 0, -2, 1};
+
+	int r = im.rows, c = im.cols, t = im.type();
+
+	cv::Mat tempIm = cv::Mat(r, c, t);
+
+	// first 1D filter on X
+	sepConvolve(im, tempIm, L, 5, true);
+	cv::Mat temp1 = tempIm.clone();
+	lawsMapTarget["im_L"] = temp1;
+	sepConvolve(im, tempIm, E, 5, true);
+	lawsMapTarget["im_E"] = tempIm.clone();
+	sepConvolve(im, tempIm, ER, 5, true);
+	lawsMapTarget["im_ER"] = tempIm.clone();
+	sepConvolve(im, tempIm, S, 5, true);
+	lawsMapTarget["im_S"] = tempIm.clone();
+	sepConvolve(im, tempIm, R, 5, true);
+	lawsMapTarget["im_R"] = tempIm.clone();
+	// other filtered images filtered in Y
+
+	// filtered images
+
+	// completely symmetric
+	sepConvolve(lawsMapTarget["im_S"], tempIm, S, 5, false);
+	lawsMapTarget["im_SS"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_R"], tempIm, R, 5, false);
+	lawsMapTarget["im_RR"] = tempIm.clone();
+	// 180 degree rotationally symmetric
+
+	//cv::Mat LSSL = (sepConvolve(im_L, S, 5, false) + sepConvolve(im_S, L, 5, false)) / 2.0;
+	 sepConvolve(lawsMapTarget["im_L"], tempIm, S, 5, false);
+	lawsMapTarget["im_LS"] = tempIm.clone();
+
+	sepConvolve(lawsMapTarget["im_S"], tempIm, L, 5, false);
+	lawsMapTarget["im_SL"] = tempIm.clone();
+	
+
+	//cv::Mat SRRS = (sepConvolve(im_S, R, 5, false) + sepConvolve(im_R, S, 5, false)) / 2.0;
+	sepConvolve(lawsMapTarget["im_S"], tempIm, R, 5, false);
+	lawsMapTarget["im_SR"] = tempIm.clone();
+	
+	 sepConvolve(lawsMapTarget["im_R"], tempIm, S, 5, false);
+	lawsMapTarget["im_RS"] = tempIm.clone();
+	
+
+	//cv::Mat LRRL = (sepConvolve(im_L, R, 5, false) + sepConvolve(im_R, L, 5, false)) / 2.0;
+	 sepConvolve(lawsMapTarget["im_E"], tempIm, E, 5, false);
+	lawsMapTarget["im_EE"] = tempIm.clone();
+	
+	sepConvolve(lawsMapTarget["im_E"], tempIm, ER, 5, false);
+	lawsMapTarget["im_EER"] = tempIm.clone();
+
+	// 90 Degree rotationally symmetric - Anything with E and another type of filter!
+
+	// either average like below or add to same histogram for filter type
+
+	/*
+	//cv::Mat LEEL = (sepConvolve(im_L, E, 5, false) + sepConvolve(im_E, L, 5, false)) / 2.0;
+	cv::Mat EL_LE_LER_ERL = (sepConvolve(im_E, L, 5, false) +
+	sepConvolve(im_L, E, 5, false) +
+	sepConvolve(im_L, ER, 5, false) +
+	sepConvolve(im_ER, L, 5, false)) / 4.0;
+	*/
+
+	sepConvolve(lawsMapTarget["im_E"], tempIm, L, 5, false);
+	lawsMapTarget["im_EL"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_L"], tempIm, E, 5, false);
+	lawsMapTarget["im_LE"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_L"], tempIm, ER, 5, false);
+	lawsMapTarget["im_LER"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_ER"], tempIm, L, 5, false);
+	lawsMapTarget["im_ERL"] = tempIm.clone();
+
+	/*
+	//cv::Mat ESSE =	(sepConvolve(im_E, S, 5, false) + sepConvolve(im_S, E, 5, false)) / 2.0;
+	cv::Mat ES_SE_SER_ERS = (sepConvolve(im_E, S, 5, false) +
+	sepConvolve(im_S, E, 5, false) +
+	sepConvolve(im_S, ER, 5, false) +
+	sepConvolve(im_ER, S, 5, false)) / 4.0;
+	*/
+	 
+	sepConvolve(lawsMapTarget["im_E"], tempIm, S, 5, false);
+	lawsMapTarget["im_ES"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_S"], tempIm, E, 5, false);
+	lawsMapTarget["im_SE"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_S"], tempIm, ER, 5, false);
+	lawsMapTarget["im_SER"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_ER"], tempIm, S, 5, false);
+	lawsMapTarget["im_ERS"] = tempIm.clone();
+
+	/*
+	//cv::Mat ERRE = (sepConvolve(im_E, R, 5, false) + sepConvolve(im_R, E, 5, false)) / 2.0;
+	cv::Mat ER_RE_RER_ERR = (sepConvolve(im_E, R, 5, false) +
+	sepConvolve(im_R, E, 5, false) +
+	sepConvolve(im_R, ER, 5, false) +
+	sepConvolve(im_ER, R, 5, false)) / 4.0;
+	*/
+	 
+	sepConvolve(lawsMapTarget["im_E"], tempIm, R, 5, false);
+	lawsMapTarget["im_ER"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_R"], tempIm, E, 5, false);
+	lawsMapTarget["im_RE"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_R"], tempIm, ER, 5, false);
+	lawsMapTarget["im_RER"] = tempIm.clone();
+	sepConvolve(lawsMapTarget["im_ER"], tempIm, R, 5, false);
+	lawsMapTarget["im_ERR"] = tempIm.clone();
+
+	return lawsMapTarget;
+}
+
+//************************************
+// Method:    getLawFilterHistograms
+// FullName:  FindTargets::getLawFilterHistograms
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: cv::Mat im
+// Parameter: QVector<cv::Mat> & lawsHistTarget
+// Parameter: int histSize
+// Parameter: int histRange
+// Parameter: bool bAccumulateHistograms
+//************************************
+void FindTargets::getLawFilterHistograms(cv::Mat im, QVector<cv::Mat>& lawsHistTarget, int histSize, int histRange, bool bAccumulateHistograms)
+{
+	cv::cvtColor(im, im, CV_BGR2GRAY, 1);
+
+	im.convertTo(im, CV_32FC1);
+
+	QMap<QString, cv::Mat> lawsMapTarget = getLawFilteredImages(im);
+
+	if(bAccumulateHistograms == false || lawsHistTarget.length() == 0 )
+	{
+		for (int c = 0; c < 8; c++)
+			lawsHistTarget.append(cv::Mat());
+	}
+
+	getLawFilterHistograms(lawsHistTarget, lawsMapTarget, cv::Rect(), histSize, histRange, bAccumulateHistograms);
+}
+
+void FindTargets::getLawFilterHistograms(QVector<cv::Mat>& lawsHist, QMap<QString, cv::Mat> lawsMap, cv::Rect roi, int histSize, int histRange, bool bAccumulateHistograms)
+{
+	if(roi.x >= 0 && roi.y >= 0 && roi.width > 0 && roi.height > 0)
+	{
+		addHistogram(lawsHist[0], lawsMap["im_SS"](roi), cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[1], lawsMap["im_RR"](roi), cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[2], lawsMap["im_LS"](roi), lawsMap["im_SL"](roi), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[3], lawsMap["im_SR"](roi), lawsMap["im_RS"](roi), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[4], lawsMap["im_EE"](roi), lawsMap["im_EER"](roi), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[5], lawsMap["im_EL"](roi), lawsMap["im_LE"](roi), lawsMap["im_LER"](roi), lawsMap["im_ERL"](roi), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[6], lawsMap["im_ES"](roi), lawsMap["im_SE"](roi), lawsMap["im_SER"](roi), lawsMap["im_ERS"](roi), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[7], lawsMap["im_ER"](roi), lawsMap["im_RE"](roi), lawsMap["im_RER"](roi), lawsMap["im_ERR"](roi), histSize, histRange, bAccumulateHistograms);
+	}
+	else
+	{
+		addHistogram(lawsHist[0], lawsMap["im_SS"], cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[1], lawsMap["im_RR"], cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[2], lawsMap["im_LS"], lawsMap["im_SL"], cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[3], lawsMap["im_SR"], lawsMap["im_RS"], cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[4], lawsMap["im_EE"], lawsMap["im_EER"], cv::Mat(), cv::Mat(), histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[5], lawsMap["im_EL"], lawsMap["im_LE"], lawsMap["im_LER"], lawsMap["im_ERL"], histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[6], lawsMap["im_ES"], lawsMap["im_SE"], lawsMap["im_SER"], lawsMap["im_ERS"], histSize, histRange, bAccumulateHistograms);
+		addHistogram(lawsHist[7], lawsMap["im_ER"], lawsMap["im_RE"], lawsMap["im_RER"], lawsMap["im_ERR"], histSize, histRange, bAccumulateHistograms);
+	}
+}
+
+//************************************
+// Method:    getHistogramWeights
+// FullName:  FindTargets::getHistogramWeights
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: QVector<cv::Mat> hists
+// Parameter: QVector<float> & biases
+//************************************
+void FindTargets::getHistogramWeights(QVector<cv::Mat> hists, QVector<float>& biases)
+{
+	biases = QVector<float>(hists.length());
+	double bsum = 0;
+
+	// get sum of histogram to use in an importance measure
+	for (int i = 0; i < hists.length(); i++)
+	{
+		biases[i] = cv::sum(hists[i])[0];	// or entropy?
+		bsum += biases[i];
+	}
+
+	//normalise
+	for (int i = 0; i < hists.length(); i++)
+		biases[i] /= bsum;
+}
+
+//************************************
+// Method:    detectLawsTextureFeatures
+// FullName:  FindTargets::detectLawsTextureFeatures
+// Access:    public 
+// Returns:   cv::Mat
+// Qualifier:
+// Parameter: cv::Mat detectionImage
+// Parameter: QVector<cv::Mat> lawsHistTarget
+// Parameter: QVector<float> biases
+//************************************
+cv::Mat FindTargets::detectLawsTextureFeatures(cv::Mat detectionImage, QVector<cv::Mat> lawsHistTarget, QVector<float> biases, bool bCorrectBackground)
+{
+	#ifdef _CUDA_CODE_COMPILE_
+		int inc = 1;
+	#else
+		int inc = 10;
+	#endif
+	int regionSize = 15;
+	int histRange = 128;
+	int histSize = 10;
+
+	// now get detection 
+	cv::Mat im, scoreImage(detectionImage.rows, detectionImage.cols, CV_32FC1);
+
+	// now filter detect image and compare histograms of regions of the image
+	cv::cvtColor(detectionImage, im, CV_BGR2GRAY, 1);
+
+	if (bCorrectBackground)
+	{
+		cv::Mat out;
+		ImageProcessing ip;
+		im = ip.subtractBackground(im, out);
+	}
+
+	im.convertTo(im, CV_32FC1);
+
+	QMap<QString, cv::Mat> lawsMapDetect = getLawFilteredImages(im);
+
+	QVector<cv::Mat> lawsHistDetect;
+
+	for (int c = 0; c < 8; c++)
+		lawsHistDetect.append(cv::Mat());
+
+	// but this has to be on regions of the detection image
+	for (int i = 0; i < im.cols; i += inc)
+		for (int j = 0; j < im.rows; j += inc)
+		{
+			int regionSizeI = regionSize;
+			int regionSizeJ = regionSize;
+
+			if (i + regionSize >= im.cols)
+				regionSizeI = im.cols - i;
+			if (j + regionSize >= im.rows)
+				regionSizeJ = im.rows - j;
+
+			// get histograms in this region of the image
+			cv::Rect roi(i, j, regionSizeI, regionSizeJ);
+
+			getLawFilterHistograms(lawsHistDetect, lawsMapDetect, roi, histSize, histRange, false);
+
+			//score detect region using target histogram	
+			float s = scoreLawsHistogram(lawsHistDetect, lawsHistTarget, biases);
+
+			for (int k = i; k < i + inc; k++)
+				for (int l = j; l < j + inc; l++)
+					scoreImage.at<float>(l, k) = s;
+		}
+
+	// create greyscale image of score
+	cv::Mat sim = HelperFunctions::convertFloatToGreyscaleMat(scoreImage);
+
+	return sim;
+}
+
+//************************************
+// Method:    lawsTextureFeatures
+// FullName:  FindTargets::lawsTextureFeatures
+// Access:    public 
+// Returns:   cv::Mat
+// Qualifier:
+// Parameter: QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages
+// Parameter: QExplicitlySharedDataPointer<targeterImage> detectionImage
+//************************************
+cv::Mat FindTargets::lawsTextureFeatures(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages,
+	QExplicitlySharedDataPointer<targeterImage> detectionImage, bool bCorrectBackground)
+{
+	int histRange = 128;
+	int histSize = 10;
+	
+	QVector<cv::Mat> lawsHistTarget;
+
+	for (int i = 0, hs = 0; i < trainingImages.size(); i++)
+		getLawFilterHistograms(trainingImages[i]->getImage(), lawsHistTarget, histSize, histRange, true);
+
+	//return HelperFunctions::displayHistogram(lawsHistTarget[7], histSize);
+
+	// get vector of filter weights
+	QVector<float> biases;
+	getHistogramWeights(lawsHistTarget, biases);
+
+	return detectLawsTextureFeatures(detectionImage->getImage(), lawsHistTarget, biases, bCorrectBackground);
+}
+
+void FindTargets::trainLawsTextureFeatures(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages, QVector<cv::Mat>& lawsHistTarget, QVector<float>& lawsHistBiases)
+{
+	int histRange = 128;
+	int histSize = 10;
+	
+	lawsHistTarget.clear();
+
+	for (int i = 0, hs = 0; i < trainingImages.size(); i++)
+		getLawFilterHistograms(trainingImages[i]->getImage(), lawsHistTarget, histSize, histRange, true);
+
+	//return HelperFunctions::displayHistogram(lawsHistTarget[7], histSize);
+
+	// get vector of filter weights
+	getHistogramWeights(lawsHistTarget, lawsHistBiases);
+}
+
+cv::Mat FindTargets::HaarHistogram(QVector<QExplicitlySharedDataPointer<targeterImage>> trainingImages, QExplicitlySharedDataPointer<targeterImage> detectionImage, int distance, int NoClusters, bool bProcessGrayscale)
+{
+	cv::Mat sim = cv::Mat();
+
+	return sim;
+}
+
+
+/////////////////////////// cooc target detection ////////////////////////////////////////////////////////////////
+void FindTargets::trainColourOccuranceHistogram(QVector<QExplicitlySharedDataPointer<targeterImage>>& trainingImages,
+											  QExplicitlySharedDataPointer<targeterImage>& detectionImage, COOCMatrix* coocTraining,
+											  int regionDistance, int distanceBins, int NoClusters, bool bCrossEntropy, 
+											  bool bProcessGrayscale, bool bFASTCOOC)
+{
+#ifdef DEBUGPRINT
+	DBOUT("Function Name: " << Q_FUNC_INFO << std::endl);
+#endif
+	// training phase ////
+
+	if(trainingImages.length()<=0)
+		return;
+
+	int histSizeIntensity = 256;
+	int histSizeHue = 180;
+
+	int* clusterHistIntensity = new int[histSizeIntensity];
+	int* clusterHistHue = new int[histSizeHue];
+	int* clusterImageIntensity = nullptr;
+	int* clusterImageHue = nullptr;
+
+	// should be taken out of here and produced when the target image is created
+
+	// cluster intensity and hue of images
+	bool isColour = HelperFunctions::isGrayImage(detectionImage->getImage());
+
+	int maxw = trainingImages[0]->Rows();
+	int maxh = trainingImages[0]->Cols();
+
+	for (int i = 0; i < trainingImages.length(); i++)
+	{
+		maxw = MAX(maxw, trainingImages[i]->Cols());
+		maxh = MAX(maxh, trainingImages[i]->Rows());
+	}
+
+	initialiseCOOCMatrix(coocTraining, maxw, maxh, regionDistance, distanceBins, NoClusters, bFASTCOOC);
+		
+	for(int i=0; i<trainingImages.length(); i++)
+	{
+		int w = trainingImages[i]->Cols();
+		int h = trainingImages[i]->Rows();
+
+		clusterImageIntensity = new int[w*h];
+		clusterImageHue = new int[w*h];
+
+		HistogramClustering(trainingImages[i]->getImage(), coocTraining, clusterImageIntensity, clusterImageHue,
+							histSizeIntensity, histSizeHue, NoClusters, bProcessGrayscale, isColour);
+
+		// generate concurrence matrices from training images
+		getCoocuranceHistogram(clusterImageIntensity, clusterImageHue, trainingImages[i]->get1DImage(imageType::mask), trainingImages[i]->getMaskType(), 
+								w, h, coocTraining, bProcessGrayscale, HelperFunctions::isGrayImage(trainingImages[i]->getImage()), bFASTCOOC);
+
+		if (clusterImageIntensity != nullptr)
+			delete[] clusterImageIntensity;
+		if (clusterImageHue != nullptr)
+			delete[] clusterImageHue;
+	}
+
+	if (clusterHistIntensity != nullptr)
+		delete[] clusterHistIntensity;
+	if (clusterHistHue != nullptr)
+		delete[] clusterHistHue;
+}
+
+/**
+*
+*  Uses histogram cluster merging method to posterise grayscale image into NoCluster number of levels
+*
+* @author    David Watts
+* @since     2017/03/07
+*
+* FullName   HistogramClusteringGray
+* Qualifier
+* @param     targeterImage & detectionImage
+* @param     std::vector<targeterImage> & TrainImages
+* @param     int NoClusters
+* @param     MainWindow * pMainWindow
+* @return    void
+* Access     public
+*/
+void FindTargets::HistogramClustering(cv::Mat im, COOCMatrix* cooc, int* clusterImageIntensity, int* clusterImageHue,
+									  int histSizeIntensity, int histSizeHue, int NoClusters, bool bProcessGrayscale, bool imageIsGray)
+{
+	std::vector<cv::Mat> hsv_planes;
+	cv::Mat image1_gray;
+	cv::Scalar mean, stdev;
+
+	if (imageIsGray)
+	{
+		DBOUT("greyscale image" << std::endl);
+
+		if (bProcessGrayscale)
+		{
+			cv::cvtColor(im, image1_gray, CV_BGR2GRAY);
+			cooc->averageIntensity = HistogramClusterImage(cooc->intensityHist, &image1_gray, clusterImageIntensity, histSizeIntensity, NoClusters);
+		}
+		else
+		{
+			split(im, hsv_planes);
+
+#ifdef DEBUGIMAGES
+			imshow("gray", hsv_planes[0]);                   // Show our image inside it.
+#endif
+			cooc->averageIntensity = HistogramClusterImage(cooc->intensityHist, &hsv_planes[1], clusterImageIntensity, histSizeIntensity, NoClusters);
+		}
+	}
+	else
+	{
+		cv::Mat hsvImage;
+		std::vector<cv::Mat> hsv_planes;
+
+		DBOUT("colour image" << std::endl);
+
+		cv::cvtColor(im, hsvImage, CV_BGR2HLS);
+
+		split(hsvImage, hsv_planes);
+
+#ifdef DEBUGIMAGES
+		cv::String s = "hue ";
+
+		namedWindow(s, WINDOW_AUTOSIZE);// Create a window for display.
+		imshow(s, hsv_planes[0]);                   // Show our image inside it.
+#endif
+		cooc->averageIntensity = HistogramClusterImage(cooc->intensityHist, &hsv_planes[1], clusterImageIntensity, histSizeIntensity, NoClusters);
+		cooc->averageHue = HistogramClusterImage(cooc->hueHist, &hsv_planes[0], clusterImageHue, histSizeHue, NoClusters);
+	}
+}
 
 /**
 *
@@ -176,390 +905,240 @@ cv::Mat FindTargets::LaplacianFindObject(std::vector<targeterImage>& trainingIma
 * @return    void
 * Access     public
 */
-cv::Mat FindTargets::ColourOccuranceHistogram(std::vector<targeterImage>& trainingImages, targeterImage& detectionImage, int distance, int NoClusters, bool bCrossEntropy)
+cv::Mat FindTargets::ColourOccuranceHistogram(QVector<QExplicitlySharedDataPointer<targeterImage>>& trainingImages,
+											  QExplicitlySharedDataPointer<targeterImage>& detectionImage,
+											  COOCMatrix* coocTraining, int regionDistance, int distanceBins, 
+											  int NoClusters, bool bCrossEntropy, bool bProcessGrayscale, bool bFASTCOOC, 
+											  bool bCorrectBackground)
 {
 #ifdef DEBUGPRINT
 	DBOUT("Function Name: " << Q_FUNC_INFO << std::endl);
 #endif
-	int w_t = trainingImages[0].getImage().cols;
-	int h_t = trainingImages[0].getImage().rows;
+	// training phase ////
 
-	int w_d = detectionImage.getImage().cols;
-	int h_d = detectionImage.getImage().rows;
+	trainColourOccuranceHistogram(trainingImages, detectionImage, coocTraining, regionDistance, distanceBins,  NoClusters,  
+								bCrossEntropy, bProcessGrayscale, bFASTCOOC);
 
-	int regionWidth = w_t;
-	int regionHeight = h_t;
+	// cluster detect image
+
+	// testing phase
+	cv::Mat score = detectCOOCHistogram(detectionImage->getImage(), coocTraining, bCrossEntropy, bProcessGrayscale, bFASTCOOC, bCorrectBackground);
+
+	// clean up
+	if (coocTraining->coMatrixHue != nullptr)
+		delete[] coocTraining->coMatrixHue;
+	if (coocTraining->coMatrixIntensity != nullptr)
+		delete[] coocTraining->coMatrixIntensity;
+
+	return score;
+}
+
+void FindTargets::initialiseCOOCMatrix(COOCMatrix* cooc, int w, int h, int regionDistance, int distanceBins, int NoClusters, bool bFASTCOOC)
+{
+	int regionWidth = w;
+	int regionHeight = h;
 
 	bool bSuccess = true;
 
 #ifdef _CUDA_CODE_COMPILE_
-	distance = MIN(32, distance);
+	// limit it to warp size
+	regionDistance = MIN(32, regionDistance);
 	int optiDist = 16;
 #endif
-
-	regionWidth = MIN(distance, regionWidth);
-	regionHeight = MIN(distance, regionHeight);
-
+	// limit it to maximum size of region
+	regionWidth = MIN(regionDistance, regionWidth);
+	regionHeight = MIN(regionDistance, regionHeight);
 #ifdef _CUDA_CODE_COMPILE_
-	int inc_W = 1;// regionWidth / 2;
-	int inc_H = 1;// regionHeight / 2;
+	int inc_W = 1;
+	int inc_H = 1;
 #else
-	int regionWidth / 2;
-	int regionHeight / 2;
+if(bFASTCOOC)
+{
+	int inc_W = 1;
+	int inc_H = 1; 
+}
+else
+{
+	int inc_W = regionWidth / 2;
+	int inc_H = regionHeight / 2;
+}
 #endif
 
 	// distance should not be more than 32 as should sizes for CUDA
-	distance = MAX(regionWidth, regionHeight);
+	regionDistance = MAX(regionWidth, regionHeight);
 
 	// make distance divisible by 2
 	//distance = (distance >> 1) << 1;
 
-	// allocate matrix
-	float* coMatrix_TargetIntensity = nullptr;
-	float* coMatrix_TargetHue = nullptr;
-	float* scoreImage = nullptr;
+	int rw = regionWidth - 1;
+	int rh = regionHeight - 1;
+	float maxDist = ceil(sqrt(rw*rw + rh*rh));
 
 	// clusters test and training images for RGB values
-
-	int CoocSize = NoClusters*NoClusters*distance;
-
-	coMatrix_TargetIntensity = new float[CoocSize];
-
-	for (int i = 0; i < CoocSize; i++)
-		coMatrix_TargetIntensity[i] = 0.0;
-
-	// cluster intensity and hue of images
-	if (HelperFunctions::isGrayImage(detectionImage.getImage()))
+	cooc->coMatrixHue = nullptr;
+	cooc->coMatrixIntensity = nullptr;
+	
+	if(bFASTCOOC)
 	{
-		int* pClusterHistIntensity;
-
-		// grayscale
-		HistogramClusteringGray(detectionImage, NoClusters, &pClusterHistIntensity);
-
-		// label training images using clustered image
-		labelTrainingImagesGray(trainingImages, pClusterHistIntensity);
-
-		delete[] pClusterHistIntensity;
-
-		for (int i = 0; i < trainingImages.size(); i++)
-		{
-			// generate coocurrence matrices from training images
-			getCoocuranceHistogram(trainingImages[i], coMatrix_TargetIntensity, nullptr, regionWidth, regionHeight, inc_W, inc_H, NoClusters, NoClusters, distance);
-		}
+		cooc->coDIMX = NoClusters*2;
+		cooc->coDIMY = distanceBins;
 	}
 	else
 	{
-		// colour
-		int *pClusterHistHue, *pClusterHistIntensity;
-
-		HistogramClusteringHSV(detectionImage, NoClusters, &pClusterHistHue, &pClusterHistIntensity);
-
-		// label training images using clustered image
-		labelTrainingImagesHSV(trainingImages, pClusterHistHue, pClusterHistIntensity);
-
-		delete[] pClusterHistHue;
-		delete[] pClusterHistIntensity;
-
-		coMatrix_TargetHue = new float[CoocSize];
-
-		for (int i = 0; i < CoocSize; i++)
-			coMatrix_TargetHue[i] = 0.0;
-		
-		for (int i = 0; i < trainingImages.size(); i++)
-		{
-			// generate concurrence matrices from training images
-			getCoocuranceHistogram(trainingImages[i], coMatrix_TargetIntensity, coMatrix_TargetHue, regionWidth, regionHeight, inc_W, inc_H, NoClusters, NoClusters, distance);
-		}
+		cooc->coDIMX = NoClusters;
+		cooc->coDIMY = NoClusters;
 	}
 
+	cooc->coDIMZ = distanceBins;
+	cooc->regionHeight = regionHeight;
+	cooc->regionWidth = regionWidth;
+	cooc->maxDist = maxDist;
+	cooc->incrementWidth = inc_W;
+	cooc->incrementHeight = inc_H;
+
+	int CoocSize = cooc->coDIMX*cooc->coDIMY*cooc->coDIMZ;
+
+	cooc->coMatrixIntensity = new float[CoocSize];
+	cooc->coMatrixHue = new float[CoocSize];
+
+	for (int i = 0; i < CoocSize; i++)
+	{
+		cooc->coMatrixIntensity[i] = 0.0;
+		cooc->coMatrixHue[i] = 0.0;
+	}	
+}
+
+cv::Mat FindTargets::detectCOOCHistogram( cv::Mat detectionImage, COOCMatrix* coocTraining, bool bCrossEntropy, 
+										bool bProcessGrayscale, bool bFASTCOOC, bool bCorrectBackground)
+{
+	if(coocTraining->coDIMX == 0 || coocTraining->coDIMY == 0 || coocTraining->coDIMZ ==0)
+		return cv::Mat();
+	
+
+	int w_d = detectionImage.cols;
+	int h_d = detectionImage.rows;
+
+	bool bSuccess = true;
+
+	// allocate matrix
+	float* scoreImage = nullptr;
+
+	int CoocSize = coocTraining->coDIMX*coocTraining->coDIMY*coocTraining->coDIMZ;
 
 #ifdef DEBUGIMAGES
-	imshow("training", HelperFunctions::putImageScale(trainingImages[0].get1DImage(), trainingImages[0].Cols(), trainingImages[0].Rows()));                   // Show our image inside it.
-	imshow("test", HelperFunctions::putImageScale(detectionImage.get1DImage(), detectionImage.Cols(), detectionImage.Rows()));                   // Show our image inside it.
+	imshow("training", HelperFunctions::putImageScale(trainingImages[0]->get1DImage(), trainingImages[0].Cols(), trainingImages[0].Rows()));                   // Show our image inside it.
+	imshow("test", HelperFunctions::putImageScale(detectionImage->get1DImage(), detectionImage.Cols(), detectionImage.Rows()));                   // Show our image inside it.
 #endif
 	freopen("CONOUT$", "wb", stdout);
-	
+
 	//int* testing = kMeansRGB(detectionImage, NoClusters, 1000);
+	int histSizeIntensity = 256;
+	int histSizeHue = 180;
+
+	int* clusterImageIntensity = new int[w_d*h_d];
+	int* clusterImageHue = new int[w_d*h_d];
+
+	if(bCorrectBackground)
+	{
+		cv::Mat out;
+		ImageProcessing ip;
+		detectionImage = ip.subtractBackground(detectionImage, out);
+	}
+
+	HistogramClustering(detectionImage, coocTraining, clusterImageIntensity, clusterImageHue,
+						histSizeIntensity, histSizeHue, coocTraining->coDIMX, bProcessGrayscale, 
+						HelperFunctions::isGrayImage(detectionImage));
 
 	// scan test image calculate intersection value save value to image
 	//float* result = findTargets(detectionImage, coMatrixTrain, NoClusters, distance, bCrossEntropy);
 
-#ifdef _CUDA_CODE_COMPILE_
-	cudaScore cudaS(w_d, h_d, CoocSize);
-
 	scoreImage = new float[w_d*h_d];
 
 	for (int i = 0; i < w_d*h_d; i++)
-		scoreImage[i] =0.0;
+		scoreImage[i] = 0.0;
 
-	cudaS.FindTargets(detectionImage.get1DImage(imageType::display), scoreImage, w_d, h_d, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetIntensity, NoClusters, NoClusters, distance, false);
+#ifdef _CUDA_CODE_COMPILE_
+	//printCoocuranceHistogram(coMatrix_TargetIntensity, CoocSize, CoocSize, 0, 2);
 
-	if (!HelperFunctions::isGrayImage(detectionImage.getImage()))
+	// create the cuda class object
+	cudaScore cudaS(w_d, h_d, CoocSize);
+
+	bSuccess = cudaS.FindTargets(clusterImageIntensity, scoreImage, w_d, h_d, coocTraining, true, bCrossEntropy, bFASTCOOC);
+
+	if (!HelperFunctions::isGrayImage(detectionImage) && !bProcessGrayscale)
 	{
-		bSuccess = cudaS.FindTargets(detectionImage.get1DImage(imageType::hue), scoreImage, w_d, h_d, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetHue, NoClusters, NoClusters, distance, false);
+		bSuccess = cudaS.FindTargets(clusterImageHue, scoreImage, w_d, h_d, coocTraining, false, bCrossEntropy, bFASTCOOC);
 	}
 #else  
-	scoreImage = FindTargets::findTargets(detectionImage, regionWidth, regionHeight, inc_W, inc_H, coMatrix_TargetIntensity, coMatrix_TargetHue, NoClusters, distance, bCrossEntropy);
+	FindTargets::findTargets(clusterImageIntensity, clusterImageHue, scoreImage, w_d, h_d, coocTraining, bCrossEntropy, 
+										  HelperFunctions::isGrayImage(detectionImage->getImage()) || bProcessGrayscale);
 #endif
 
-	if (coMatrix_TargetHue != nullptr)
-		delete[] coMatrix_TargetHue;
-
-	if (coMatrix_TargetIntensity != nullptr)
-		delete[] coMatrix_TargetIntensity;
+	delete [] clusterImageIntensity;
+	delete [] clusterImageHue;
 
 	cv::Mat sim;
 
-	if(bSuccess)
-	{
+	if (bSuccess)
 		sim = HelperFunctions::putImageScale<float>(scoreImage, w_d, h_d);
-	}
 	else
-	{
 		sim = cv::Mat();
-	}
-	
+
 	if (scoreImage != nullptr)
 		delete[] scoreImage;
 
 	return sim;
 }
 
-/**
-*
-*  Finds template image (trainingImages) in detectionImage using OpenCV matchTemplate method
-*
-* @author    David Watts
-* @since     2017/03/07
-*
-* FullName   CVMatching
-* Qualifier
-* @param     std::vector<targeterImage> & trainingImages
-* @param     targeterImage & detectionImage
-* @param     algoType matchType
-* @param     MainWindow * pMainWindow
-* @return    void
-* Access     public
-*/
-cv::Mat FindTargets::CVMatching(std::vector<targeterImage>& trainingImages, targeterImage& detectionImage, algoType::algoType matchType)
+
+
+//************************************
+// Method:    HSVHist
+// FullName:  FindTargets::HSVHist
+// Access:    public 
+// Returns:   int*
+// Qualifier:
+// Parameter: QExplicitlySharedDataPointer<targeterImage> detectionImage
+// Parameter: const cv::Mat * pchannel
+// Parameter: int NoClusters
+// Parameter: imageType::imageType imType
+//************************************
+int FindTargets::HistogramClusterImage(cv::Mat hist, const cv::Mat* pchannel, int* pClusterImage, int histSize, int NoClusters)
 {
-#ifdef DEBUGPRINT
-	DBOUT("Function Name: " << Q_FUNC_INFO << std::endl);
-#endif
-	bool bExpandImageBoundaries = false;
+	int w = pchannel->cols;
+	int h = pchannel->rows;
+	int val, sum=0;
 
-	/// Create the result matrix
-	cv::Mat result(detectionImage.Size(), CV_32FC1);
+	int* pClusterIndexImage = new int[w*h];
 
-	int w = trainingImages[0].Cols();
-	int h = trainingImages[0].Rows();
-
-	cv::Size dstSize;
-	cv::Mat dst;
-
-	if (bExpandImageBoundaries)
-	{
-		detectionImage.Size() + trainingImages[0].Size() - cv::Size(1, 1);
-		dst = cv::Mat(dstSize, detectionImage.Type(), cv::Scalar(0, 0, 0));
-
-		detectionImage.getImage().copyTo(dst(cv::Rect(w >> 1, h >> 1, detectionImage.Cols(), detectionImage.Rows())));
-	}
-	else
-	{
-		dstSize = detectionImage.Size();
-		dst = detectionImage.getImage();
-	}
-
-	/// Do the Matching and Normalize
-	matchTemplate(dst, trainingImages[0].getImage(), result, matchType);
-
-	cv::Mat out;
-
-	normalize(result, result, 0, 255, NORM_MINMAX, -1, Mat());
-
-	DBOUT(HelperFunctions::type2str(result.type()).data());
-
-	result.convertTo(result, CV_8UC1);
-
-	if (!bExpandImageBoundaries)
-	{
-		out = cv::Mat(detectionImage.Size(), CV_8UC1, cv::Scalar(0, 0, 0));
-
-		result.copyTo(out(cv::Rect(w >> 1, h >> 1, result.cols, result.rows)));
-	}
-	else
-	{
-		out = result;
-	}
-
-	//cvtColor(result, dst, CV_GRAY2RGB);
-
-	cv::Mat in[] = { out, out, out };
-	cv::merge(in, 3, dst);
-
-	return dst;
-
-	// threshold values greater than threshold mask test image with crosshair centered on this image
-}
-
-/**
-*
-* posterize image based on the equal binning of image histogram
-*
-* @author    David Watts
-* @since     2017/03/07
-*
-* FullName   histClusterEqual
-* Qualifier
-* @param     cv::Mat hueHist
-* @param     int histSize
-* @param     int NoClusters
-* @return    int*
-* Access     public
-*/
-int* FindTargets::histClusterEqual(cv::Mat hueHist, int histSize, int NoClusters)
-{
-	int sum, i;
-	int* pClusterHist = new int[histSize];
-	float Sum = 0;
-
-	for (i = 0; i<histSize; i++)
-	{
-		Sum += hueHist.at<float>(i);
-	}
-
-	Sum /= ((float)NoClusters);
-
-	// label histogram with cluster ID
-	for (i = 0, sum = 0.0; i < histSize; i++)
-		pClusterHist[i] = 0;
-
-	float ct = 0;
-	int cl = 0;
-
-	// 3) now go through clusters and label image
-	for (i = 0; i<histSize; i++)
-	{
-		pClusterHist[i] = cl;
-
-		ct += hueHist.at<float>(i);;
-
-		if (ct > Sum)
-		{
-			ct = 0;
-			cl++;
-		}
-	}
-
-	return pClusterHist;
-}
-
-
-
-/**
-*
-*  Uses histogram cluster merging method to posterise grayscale image into NoCluster number of levels
-*
-* @author    David Watts
-* @since     2017/03/07
-*
-* FullName   HistogramClusteringGray
-* Qualifier
-* @param     targeterImage & detectionImage
-* @param     std::vector<targeterImage> & TrainImages
-* @param     int NoClusters
-* @param     MainWindow * pMainWindow
-* @return    void
-* Access     public
-*/
-void FindTargets::HistogramClusteringGray(targeterImage& detectionImage, int NoClusters, int** clusterHist)
-{
-	std::vector<cv::Mat> hsv_planes;
-	cv::Mat image1_gray;
-
-	DBOUT("greyscale image" << std::endl);
-
-	//cv::cvtColor(detectionImage.getImage(), image1_gray, CV_BGR2GRAY);
-	split(detectionImage.getImage(), hsv_planes);
-
-#ifdef DEBUGIMAGES
-	cv::String s = "gray ";
-
-	namedWindow(s, WINDOW_AUTOSIZE);// Create a window for display.
-	imshow(s, hsv_planes[0]);                   // Show our image inside it.
-#endif
-	(*clusterHist) = HSVHist(detectionImage, &hsv_planes[0], NoClusters, imageType::display);
-}
-
-
-/**
-*
-*  Uses histogram cluster merging method to posterise RGB image into NoCluster number of levels (Hue and Value)
-*
-* @author    David Watts
-* @since     2017/04/05
-*
-* FullName   HistogramClusteringHSV
-* Qualifier
-* @param     targeterImage & detectionImage
-* @param     std::vector<targeterImage> & TrainImages
-* @param     int NoClusters
-* @param     MainWindow * pMainWindow
-* @return    void
-* Access     public
-*/
-void FindTargets::HistogramClusteringHSV(targeterImage& detectionImage, int NoClusters, int** clusterHistHue, int** clusterHistIntensity)
-{
-	cv::Mat hsvImage;
-	std::vector<cv::Mat> hsv_planes;
-
-	DBOUT("colour image" << std::endl);
-
-	cv::cvtColor(detectionImage.getImage(), hsvImage, CV_BGR2HSV);
-
-	split(hsvImage, hsv_planes);
-
-#ifdef DEBUGIMAGES
-	cv::String s = "hue ";
-
-	namedWindow(s, WINDOW_AUTOSIZE);// Create a window for display.
-	imshow(s, hsv_planes[0]);                   // Show our image inside it.
-#endif
-
-	(*clusterHistHue) = HSVHist(detectionImage, &hsv_planes[2], NoClusters, imageType::display);
-	(*clusterHistIntensity) = HSVHist(detectionImage, &hsv_planes[0], NoClusters, imageType::hue);
-}
-
-int* FindTargets::HSVHist(targeterImage& detectionImage, const cv::Mat* pchannel, int NoClusters, imageType::imageType imType)
-{
 	// //////////////////////////////////////////////////////////////////
-	int i, w1 = detectionImage.Cols(), h1 = detectionImage.Rows();
-	int histSize = 256;
-
-	if (imType == imageType::hue)
-		histSize = 180;
-
-	float range[] = { 0, histSize };
-
-	bool uniform = true;
-	bool accumulate = false;
-
-	const float* histRange = { range };
-	cv::Mat hist;
-
-	cv::calcHist(pchannel, 1, 0, Mat(), hist, 1, &histSize, &histRange, uniform, accumulate);
-
 	// here we cluster image based on its hue histogram /////////////////
 	ImageProcessing ip;
-	int* pClusterHist = ip.histClusterRGBImage(hist, histSize, NoClusters);
+	
+	// takes an histogram and provides an index into a clusters for each greyscale
+	ip.histClusterRGBImage(hist, pClusterIndexImage, histSize, NoClusters);
 
-	// assign clusters to test image
-	int* pImage = new int[h1*w1];
+	// relabel image with cluster
+	for (int i = 0; i < w; i++)
+		for (int j = 0; j < h; j++)
+		{
+			int index = cvFloor(pchannel->at<uchar>(j, i));
 
-	// label image with cluster
-	for (i = 0; i < w1; i++)
-		for (int j = 0; j < h1; j++)
-			pImage[i + j*w1] = pClusterHist[cvFloor(pchannel->at<uchar>(j, i))];
+			if(index<w*h)
+			{
+				val = pClusterIndexImage[index];
+			}
+			else
+			{
+				val = NoClusters-1;
+				DBOUT("error index out of bounds " << Q_FUNC_INFO << index << " vs. " << w*h << std::endl);
+			}
+
+			sum += val;
+			pClusterImage[i + j*w] = val;
+		}
+
+	delete [] pClusterIndexImage;
 
 #ifdef DEBUGIMAGES
 	cv::Mat histimage = HelperFunctions::displayHistogram(hist, histSize, 500, 500);
@@ -571,12 +1150,19 @@ int* FindTargets::HSVHist(targeterImage& detectionImage, const cv::Mat* pchannel
 	imshow(s, histimage);                   // Show our image inside it.
 #endif // endif
 
-	detectionImage.set1DImage(pImage, imType);
-
-	return pClusterHist;
+	return sum/(w*h);
 }
 
-void FindTargets::labelTrainingImagesGray(std::vector<targeterImage>& TrainImages, int* pClusterHist)
+//************************************
+// Method:    labelTrainingImagesGray
+// FullName:  FindTargets::labelTrainingImagesGray
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: QVector<QExplicitlySharedDataPointer<targeterImage>> TrainImages
+// Parameter: int * pClusterHist
+//************************************
+void FindTargets::labelTrainingImagesGray(const QVector<QExplicitlySharedDataPointer<targeterImage>>& TrainImages, int* pClusterHist)
 {
 	int w, h, i;
 	cv::Mat image1_gray;
@@ -587,17 +1173,17 @@ void FindTargets::labelTrainingImagesGray(std::vector<targeterImage>& TrainImage
 	// assign clusters to training images
 	for (int k = 0; k < TrainImages.size(); k++)
 	{
-		w = TrainImages[k].Cols(), h = TrainImages[k].Rows();
+		w = TrainImages[k]->Cols(), h = TrainImages[k]->Rows();
 
 		pImage = new int[w*h];
 
-		if (TrainImages[k].getImage().channels() > 1)
+		if (TrainImages[k]->getImage().channels() > 1)
 		{
-			cv::cvtColor(TrainImages[k].getImage(), image1_gray, cv::COLOR_BGR2GRAY);
+			cv::cvtColor(TrainImages[k]->getImage(), image1_gray, cv::COLOR_BGR2GRAY);
 		}
 		else
 		{
-			image1_gray = TrainImages[k].getImage();
+			image1_gray = TrainImages[k]->getImage();
 		}
 
 		// label image with cluster
@@ -605,11 +1191,21 @@ void FindTargets::labelTrainingImagesGray(std::vector<targeterImage>& TrainImage
 			for (int j = 0; j < h; j++)
 				pImage[i + j*w] = pClusterHist[cvFloor(image1_gray.at<uchar>(j, i))];
 
-		TrainImages[k].set1DImage(pImage);
+		TrainImages[k]->set1DImage(pImage);
 	}
 }
 
-void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages, int* pClusterHistHue, int* pClusterHistIntensity)
+//************************************
+// Method:    labelTrainingImagesHSV
+// FullName:  FindTargets::labelTrainingImagesHSV
+// Access:    public 
+// Returns:   void
+// Qualifier:
+// Parameter: QVector<QExplicitlySharedDataPointer<targeterImage>> TrainImages
+// Parameter: int * pClusterHistHue
+// Parameter: int * pClusterHistIntensity
+//************************************
+void FindTargets::labelTrainingImagesHSV(const QVector<QExplicitlySharedDataPointer<targeterImage>>& TrainImages, int* pClusterHistHue, int* pClusterHistIntensity)
 {
 	int w, h, i;
 	cv::Mat image1_gray;
@@ -620,10 +1216,10 @@ void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages
 	// assign clusters to training images
 	for (int k = 0; k < TrainImages.size(); k++)
 	{
-		w = TrainImages[k].Cols(), h = TrainImages[k].Rows();
+		w = TrainImages[k]->Cols(), h = TrainImages[k]->Rows();
 
 		// get float image for 360 degrees
-		cvtColor(TrainImages[k].getImage(), hsvImage, CV_BGR2HSV);
+		cvtColor(TrainImages[k]->getImage(), hsvImage, CV_BGR2HLS);
 
 		split(hsvImage, hsv_planes);
 
@@ -633,10 +1229,10 @@ void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages
 		for (i = 0; i < w; i++)
 			for (int j = 0; j < h; j++)
 			{
-				pImage[i + j*w] = pClusterHistHue[cvFloor(hsv_planes[2].at<uchar>(j, i))];
+				pImage[i + j*w] = pClusterHistHue[cvFloor(hsv_planes[0].at<uchar>(j, i))];
 			}
 
-		TrainImages[k].set1DImage(pImage, imageType::display);
+		TrainImages[k]->set1DImage(pImage, imageType::display);
 
 		pImage = new int[w*h];
 
@@ -644,13 +1240,12 @@ void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages
 		for (i = 0; i < w; i++)
 			for (int j = 0; j < h; j++)
 			{
-				pImage[i + j*w] = pClusterHistIntensity[cvFloor(hsv_planes[0].at<uchar>(j, i))];
+				pImage[i + j*w] = pClusterHistIntensity[cvFloor(hsv_planes[1].at<uchar>(j, i))];
 			}
 
-		TrainImages[k].set1DImage(pImage, imageType::hue);
+		TrainImages[k]->set1DImage(pImage, imageType::hue);
 	}
 }
-
 
 /**
 *
@@ -673,14 +1268,13 @@ void FindTargets::labelTrainingImagesHSV(std::vector<targeterImage>& TrainImages
 * @return    float
 * Access     public
 */
-float FindTargets::getCoocMatrixGray(targeterImage& m, int* pMask, drawingMode::drawingMode maskType, int startX, int startY, int regionWidth, int regionHeight, 
-	float* coMatrixF, int coDIMX, int coDIMY, int coDIMZ)
+float FindTargets::getCoocMatrixGray(int* pImage, int w, int h, int* pMask, drawingMode::drawingMode maskType, 
+										int startX, int startY, COOCMatrix* cooc, bool bFASTCOOC)
 {
 	int i, j, c1, c2, x, y, ind, nextIndex, nextI, nextJ;
 	float sum = 0;
-
-	int w = m.Cols(), h = m.Rows();
-	int* pImage = m.get1DImage(imageType::display);
+	int regionWidth = cooc->regionWidth;
+	int regionHeight = cooc->regionHeight;
 
 	bool bHasMask = (pMask != nullptr && (maskType == drawingMode::circle || maskType == drawingMode::poly));
 
@@ -688,43 +1282,66 @@ float FindTargets::getCoocMatrixGray(targeterImage& m, int* pMask, drawingMode::
 		for (i = 0; i<regionWidth; i++)
 		{
 			// what to do about masked pixels
-
 			if ((startX + i) < w && (startY + j) < h)	// check within image bounds
 			{
 				if (!bHasMask || pMask[(startX + i) + (startY + j)*regionHeight] > 0)	// only makes sense where mask is same size as region
 				{
 					c1 = pImage[(startX + i) + (startY + j)*w];
 
-					nextIndex = 1 + i + j*regionHeight;
+					if(bFASTCOOC)
+					{
+						c1 = MAX(0, MIN(cooc->coDIMX-1, cooc->coDIMX/2 + (cooc->averageIntensity - c1)));
+						float dxy = sqrt(i*i+j*j);
+						int d = MIN(cooc->coDIMY-1, int(cooc->coDIMY*(dxy / cooc->maxDist)));
 
-					nextJ = nextIndex / regionHeight;
-					nextI = nextIndex%regionHeight;
-
-					// check against all others
-					for (y = nextJ; y < regionHeight; y++)
-						for (x = nextI; x < regionWidth; x++)
+						if (c1 < cooc->coDIMX && d < cooc->coDIMY)
 						{
-							if ((startX + x) < w && (startY + y) < h)// check within image bounds
+							ind = c1 + d*cooc->coDIMX;
+
+							cooc->coMatrixIntensity[ind] += 1.0;
+
+							sum += 1.0;
+						}
+						else
+							DBOUT("error index out of bounds " << Q_FUNC_INFO << c1 << " vs. " << cooc->coDIMX << "," << d << " vs. " << cooc->coDIMY << std::endl);
+					}
+					else
+					{
+						nextIndex = 1 + i + j*regionHeight;
+
+						nextJ = nextIndex / regionHeight;
+						nextI = nextIndex%regionHeight;
+
+						// check against all others
+						for (y = nextJ; y < regionHeight; y++)
+							for (x = nextI; x < regionWidth; x++)
 							{
-								if (!bHasMask || pMask[(startX + x) + (startY + y)*regionHeight] > 0)
+								if ((startX + x) < w && (startY + y) < h)// check within image bounds
 								{
-									c2 = pImage[(startX + x) + (startY + y)*w];
-
-									int d = max(x - i, y - j);	// maximum distance
-
-									if (c1 < coDIMX && c2 < coDIMY && d < coDIMZ)
+									if (!bHasMask || pMask[(startX + x) + (startY + y)*regionHeight] > 0)
 									{
-										ind = c1 + c2*coDIMX + d*coDIMX*coDIMY; //c1 + NoClusters * (c2 + NoClusters * d); //i + height* (j + width* k)
+										c2 = pImage[(startX + x) + (startY + y)*w];
 
-										coMatrixF[ind] += 1.0;
+										///	int d = max(x - i, y - j);	// maximum distance, city block
+										float dx = (x - i);
+										float dy = (y - j);
+										float dxy = sqrt(dx*dx + dy*dy);
+										int d = MIN(cooc->coDIMZ-1, int(cooc->coDIMZ*(dxy / cooc->maxDist)));
 
-										sum += 1.0;
+										if (c1 < cooc->coDIMX && c2 < cooc->coDIMY && d < cooc->coDIMZ)
+										{
+											ind = c1 + c2*cooc->coDIMX + d*cooc->coDIMX*cooc->coDIMY; //c1 + NoClusters * (c2 + NoClusters * d); //i + height* (j + width* k)
+
+											cooc->coMatrixIntensity[ind] += 1.0;
+
+											sum += 1.0;
+										}
+										else
+											DBOUT("error index out of bounds " << Q_FUNC_INFO << c1 << " vs. " << cooc->coDIMX << "," << c2 << " vs. " << cooc->coDIMY << "," << d << " vs. " << cooc->coDIMZ << std::endl);
 									}
-									else
-										DBOUT("error index out of bounds " << Q_FUNC_INFO << c1 << " vs. " << coDIMX << "," << c2 << " vs. " << coDIMY << "," << d << " vs. " << coDIMZ << std::endl);
 								}
 							}
-						}
+					}
 				}
 			}
 		}
@@ -755,12 +1372,14 @@ float FindTargets::getCoocMatrixGray(targeterImage& m, int* pMask, drawingMode::
 * @return    float
 * Access     public
 */
-float FindTargets::getCoocMatrixHSV2(int* pImage, int* pHue, int w, int h, int* pMask, drawingMode::drawingMode maskType, int startX, int startY, 
-									int regionWidth, int regionHeight, float* coMatrixImage, float* coMatrixHue, int coDIMX, int coDIMY, int coDIMZ)
+float FindTargets::getCoocMatrixHSV(int* pImage, int* pHue, int w, int h, int* pMask, drawingMode::drawingMode maskType, 
+									int startX, int startY, COOCMatrix* cooc, bool bFASTCOOC)
 {
 	int i, j, h1, h2, i1, i2, x, y, indImage, indHue;
 	long ind;
 	float sum = 0;
+	int regionWidth = cooc->regionWidth; 
+	int regionHeight = cooc->regionHeight;
 
 	bool bHasMask = (pMask != nullptr && (maskType == drawingMode::circle || maskType == drawingMode::poly));
 
@@ -776,35 +1395,63 @@ float FindTargets::getCoocMatrixHSV2(int* pImage, int* pHue, int w, int h, int* 
 					i1 = pImage[(startX + i) + (startY + j)*w];
 					h1 = pHue[(startX + i) + (startY + j)*w];
 
-					// check against all others
-					for (y = 0; y < regionHeight; y++)
-						for (x = 0; x < regionWidth; x++)
+					if (bFASTCOOC)
+					{
+						int c1 = MAX(0, MIN(cooc->coDIMX-1, cooc->coDIMX/2 + (cooc->averageIntensity - i1)));
+						int c2 = MAX(0, MIN(cooc->coDIMX-1, cooc->coDIMX/2 + (cooc->averageHue - h1)));
+
+						float dxy = sqrt(i*i + j*j);
+						int d = MIN(cooc->coDIMY-1, int(cooc->coDIMY*(dxy / cooc->maxDist)));
+
+						if (c1 < cooc->coDIMX && d < cooc->coDIMY)
 						{
-							if (i + j*w >= x + y*w)	// should  not compare backwards direction or to itself
-								continue;
+							indImage = c1 + d*cooc->coDIMX;
+							indHue = c2 + d*cooc->coDIMX;
 
-							if ((startX + x) < w && (startY + y) < h)// check within image bounds
+							cooc->coMatrixIntensity[indImage] += 1.0;
+							cooc->coMatrixHue[indHue] += 1.0;
+
+							sum += 1.0;
+						}
+						else
+							DBOUT("error index out of bounds " << Q_FUNC_INFO << c1 << " vs. " << cooc->coDIMX << "," << d << " vs. " << cooc->coDIMY << std::endl);
+					}
+					else
+					{
+						// check against all others
+						for (y = 0; y < regionHeight; y++)
+							for (x = 0; x < regionWidth; x++)
 							{
-								if (!bHasMask || pMask[(startX + x) + (startY + y)*w] > 0)
+								if (i + j*w >= x + y*w)	// should  not compare backwards direction or to itself
+									continue;
+
+								if ((startX + x) < w && (startY + y) < h)// check within image bounds
 								{
-									i2 = pImage[(startX + x) + (startY + y)*w];
-									h2 = pHue[(startX + x) + (startY + y)*w];
-
-									int d = max(x - i, y - j);	// maximum distance
-
-									if (i1 < coDIMX && i2 < coDIMY && h1 < coDIMX && h2 < coDIMY &&	d < coDIMZ)
+									if (!bHasMask || pMask[(startX + x) + (startY + y)*w] > 0)
 									{
-										indImage = i1 + i2*coDIMX + d*coDIMX*coDIMY;
-										indHue   = h1 + h2*coDIMX + d*coDIMX*coDIMY;	// hue indexes differently than intensity!
+										i2 = pImage[(startX + x) + (startY + y)*w];
+										h2 = pHue[(startX + x) + (startY + y)*w];
 
-										coMatrixImage[indImage] += 1.0;
-										coMatrixHue[indHue] += 1.0;
+										//int d = max(x - i, y - j);	// maximum distance
+										float dx = (x - i);
+										float dy = (y - j);
+										float dxy = sqrt(dx*dx + dy*dy);
+										int d = MIN(cooc->coDIMZ-1, int(cooc->coDIMZ*(dxy/cooc->maxDist)));
 
-										sum += 1.0;
+										if (i1 < cooc->coDIMX && i2 < cooc->coDIMY && h1 < cooc->coDIMX && h2 < cooc->coDIMY &&	d < cooc->coDIMZ)
+										{
+											indImage = i1 + i2*cooc->coDIMX + d*cooc->coDIMX*cooc->coDIMY;
+											indHue   = h1 + h2*cooc->coDIMX + d*cooc->coDIMX*cooc->coDIMY;	// hue indexes differently than intensity!
+
+											cooc->coMatrixIntensity[indImage] += 1.0;
+											cooc->coMatrixHue[indHue] += 1.0;
+
+											sum += 1.0;
+										}
+										else
+											DBOUT("error index out of bounds " << Q_FUNC_INFO << i1 << " vs. " << cooc->coDIMX << "," << i2 << " vs. " << cooc->coDIMY
+												<< h1 << " vs. " << cooc->coDIMX << "," << h2 << " vs. " << cooc->coDIMY << "," << d << " vs. " << cooc->coDIMZ << std::endl);
 									}
-									else
-										DBOUT("error index out of bounds " << Q_FUNC_INFO << i1 << " vs. " << coDIMX << "," << i2 << " vs. " << coDIMY
-											<< h1 << " vs. " << coDIMX << "," << h2 << " vs. " << coDIMY << "," << d << " vs. " << coDIMZ << std::endl);
 								}
 							}
 						}
@@ -818,7 +1465,7 @@ float FindTargets::getCoocMatrixHSV2(int* pImage, int* pHue, int w, int h, int* 
 
 /**
 *
-*  Gets cooccurrance matrix of image
+*  Gets cooccurrence matrix of image
 *
 * @author    David Watts
 * @since     2017/03/07
@@ -832,54 +1479,48 @@ float FindTargets::getCoocMatrixHSV2(int* pImage, int* pHue, int w, int h, int* 
 * @return    void
 * Access     public
 */
-void FindTargets::getCoocuranceHistogram(targeterImage& m, float* coMatrixIntensity, float* coMatrixHue, 
-										int regionWidth, int regionHeight, int inc_W, int inc_H, int coDIMX, int coDIMY, int coDIMZ)
+void FindTargets::getCoocuranceHistogram(int* pImage, int* pHue, int* mask, drawingMode::drawingMode maskType, 
+										int w, int h, COOCMatrix* cooc, bool bProcessGrayscale, bool isGrayScale, bool bFASTCOOC)
 {
 #ifdef DEBUGPRINT
 	DBOUT("Function Name: " << Q_FUNC_INFO);
 #endif
 	int i, x, y, stepX = 1, stepY = 1;
 	float sum = 0;
-	int w = m.Cols(), h = m.Rows();
 
-	// ind = x + width * (y + height * z)
-
-	int* mask = m.get1DImage(imageType::mask);
+	int regionWidth = cooc->regionWidth;
+	int regionHeight = cooc->regionHeight;
+	int inc_W = cooc->incrementWidth;
+	int inc_H = cooc->incrementHeight;
 
 	// should not step through target - should get cooc from whole target region - but then larger distances
-	if (HelperFunctions::isGrayImage(m.getImage()))
+	if (isGrayScale || bProcessGrayscale)
 	{
 		for (y = 0; y < h; y += inc_H)
 			for (x = 0; x < w; x += inc_W)
-			{
-				sum += getCoocMatrixGray(m, mask, m.getMaskType(), x, y, regionWidth, regionHeight, coMatrixIntensity, coDIMX, coDIMY, coDIMZ);
-			}
-
+				sum += getCoocMatrixGray(pImage, w, h, mask, maskType, x, y, cooc, bFASTCOOC);
+			
 		// normalise histogram
-		for (i = 0; i < coDIMX*coDIMY*coDIMZ; i++)
-			coMatrixIntensity[i] /= sum;
+		for (i = 0; i < cooc->coDIMX*cooc->coDIMY*cooc->coDIMZ; i++)
+			cooc->coMatrixIntensity[i] /= sum;
 	}
 	else
 	{
 		for (y = 0; y < h; y += inc_H)
 			for (x = 0; x < w; x += inc_W)
-			{
-				sum += getCoocMatrixHSV2(m.get1DImage(imageType::display), m.get1DImage(imageType::hue), m.Cols(), m.Rows(), 
-										mask, m.getMaskType(), x, y, regionWidth, regionHeight,
-										coMatrixIntensity, coMatrixHue, coDIMX, coDIMY, coDIMZ);
-			}
+				sum += getCoocMatrixHSV(pImage, pHue, w, h,	mask, maskType, x, y, cooc, bFASTCOOC);
 
 		// normalise histogram
-		for (i = 0; i<coDIMX*coDIMY*coDIMZ; i++)
+		for (i = 0; i<cooc->coDIMX*cooc->coDIMY*cooc->coDIMZ; i++)
 		{
-			coMatrixIntensity[i] /= sum;
-			coMatrixHue[i] /= sum;
+			cooc->coMatrixIntensity[i] /= sum;
+			cooc->coMatrixHue[i] /= sum;
 		}
 	}
 	
 	DBOUT("training image co-occurrance histogram" << std::endl);
 
-	//printCoocuranceHistogram(coMatrixF, NoClusters, NoClusters, maxD);
+	//printCoocuranceHistogram(cooc->coMatrixIntensity, cooc->coDIMX, cooc->coDIMX, cooc->coDIMZ);
 }
 
 /**
@@ -898,8 +1539,7 @@ void FindTargets::getCoocuranceHistogram(targeterImage& m, float* coMatrixIntens
 * @return    float*
 * Access     public
 */
-float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, int regionHeight, int inc_W, int inc_H, float* coMatrixIntensity_Target, 
-								float* coMatrixHue_Target, int coDIMX, int coDIMY, int coDIMZ, bool bCrossEntropy)
+void FindTargets::findTargets(int* intensityImage, int* hueImage, float* scoreImage, int w_d, int h_d, COOCMatrix* coocTarget, bool bCrossEntropy, bool bIsGray)
 {
 
 #ifdef DEBUGPRINT
@@ -907,23 +1547,30 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 #endif
 	int i, j, x, y;
 	float sum = 0, score = 0;
+	COOCMatrix coocDetect;
 
-	int w = detectionImage.Cols(), h = detectionImage.Rows();
+	// copy settings
+	coocDetect.coMatrixHue = nullptr;
+	coocDetect.coMatrixIntensity = nullptr;
+	coocDetect.coDIMX = coocTarget->coDIMX;
+	coocDetect.coDIMY = coocTarget->coDIMY;
+	coocDetect.coDIMZ = coocTarget->coDIMZ;
+	coocDetect.regionHeight = coocTarget->regionHeight;
+	coocDetect.regionWidth = coocTarget->regionWidth;
+	coocDetect.maxDist = coocTarget->maxDist;
+	coocDetect.incrementWidth = coocTarget->incrementWidth;
+	coocDetect.incrementHeight = coocTarget->incrementHeight;
 
-	long CoocSize =coDIMX*coDIMY*coDIMZ;
-
-	bool bIsGray = HelperFunctions::isGrayImage(detectionImage.getImage());
+	long CoocSize = coocTarget->coDIMX* coocTarget->coDIMY* coocTarget->coDIMZ;
 
 	//if (!bIsGray)
 	//	CoocSize = NoClusters*NoClusters*NoClusters*NoClusters*maxD;
 
-	float* coMatrixIntensity = new float[CoocSize];
-	float* coMatrixHue = nullptr;
+	coocDetect.coMatrixIntensity = new float[CoocSize];
 
 	if(!bIsGray)
-		coMatrixHue = new float[CoocSize];
+		coocDetect.coMatrixHue = new float[CoocSize];
 
-	float* scoreImage = new float[w*h];
 	/*
 	int maskIndex = detectionImage.getFriendArrayIndexOfType(imageType::target);
 
@@ -935,47 +1582,36 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 	{
 	pMaskImage = detectionImage.getGlobalImage(maskIndex);
 	pMask1D = pMaskImage.get1DImage(imageType::mask);
-	maskType = pMaskImage.getMaskType();
+	maskType = pMaskImage->getMaskType();
 	}
 	*/
 
-	int targetIndex = detectionImage.getFriendArrayIndexOfType(imageType::target);
-	cv::Size targetSize;
-
-	if (targetIndex >= 0)
-	{
-		targeterImage& t = detectionImage.getGlobalImage(targetIndex);
-		targetSize = t.Size();
-	}
-
-	for (i = 0; i < w*h; i++)
+	for (i = 0; i < w_d*h_d; i++)
 		scoreImage[i] = 0.0;
 
-	for (y = 0; y < h; y += inc_H)
-		for (x = 0; x < w; x += inc_W)
+	for (y = 0; y < h_d; y += coocTarget->incrementHeight)
+		for (x = 0; x < w_d; x += coocTarget->incrementWidth)
 		{
 			// zero co-occurrence matrix
 			for (i = 0, sum = 0; i<CoocSize; i++)
-				coMatrixIntensity[i] = 0.0;
+				coocDetect.coMatrixIntensity[i] = 0.0;
 
 			//memset(coMatrixF, 0.0, NoClusters*NoClusters*maxD*sizeof(float));
 
 			// no mask - I can't think how to use one properly
 			// a) because of size being different to region 
 			// b) in the case of multiple targets -> multiple masks?!
-			if (HelperFunctions::isGrayImage(detectionImage.getImage()))
+			if (bIsGray)
 			{
-				sum = getCoocMatrixGray(detectionImage, NULL, drawingMode::none, x, y, regionWidth, regionHeight, coMatrixIntensity, coDIMX, coDIMY, coDIMZ);
+				sum = getCoocMatrixGray(intensityImage, w_d, h_d, NULL, drawingMode::none, x, y, &coocDetect);
 			}
 			else
 			{
 				// zero co-occurrence matrix
 				for (i = 0, sum = 0; i < CoocSize; i++)
-					coMatrixHue[i] = 0.0;
+					coocDetect.coMatrixHue[i] = 0.0;
 
-				sum = getCoocMatrixHSV2(detectionImage.get1DImage(imageType::display), detectionImage.get1DImage(imageType::hue), detectionImage.Cols(), detectionImage.Rows(),
-					NULL, detectionImage.getMaskType(), x, y, regionWidth, regionHeight,
-					coMatrixIntensity, coMatrixHue, coDIMX, coDIMY, coDIMZ);
+				sum = getCoocMatrixHSV(intensityImage, hueImage, w_d, h_d, NULL, drawingMode::none, x, y, &coocDetect);
 			}
 			if (sum >0)
 			{
@@ -984,8 +1620,8 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 					// get score by  Kullback–Leibler divergence of cooc matrices
 					for (i = 0, score = 0.0; i < CoocSize; i++)
 					{
-						if(coMatrixIntensity[i]>0 && coMatrixIntensity[i]>0 && sum>0)
-							score += coMatrixIntensity_Target[i] * (log(coMatrixIntensity_Target[i]) / log(coMatrixIntensity[i] / sum));		// Kullback–Leibler divergence P(coMatrixF | coMatrixTestF)
+						if(coocDetect.coMatrixIntensity[i]>0 && coocTarget->coMatrixIntensity[i]>0 && sum>0)
+							score += coocTarget->coMatrixIntensity[i] * (log(coocTarget->coMatrixIntensity[i]) / log(coocDetect.coMatrixIntensity[i] / sum));		// Kullback–Leibler divergence P(coMatrixF | coMatrixTestF)
 					}
 				}
 				else
@@ -995,11 +1631,14 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 					{
 						if (sum > 0)
 						{
-							//score += fmin(coMatrixIntensity[i] / sum, coMatrixIntensity_Target[i]);	//fabs(coMatrixF[i]- coMatrixTestF[i]);		// minimum intersection
-							score += sqrt(float(coMatrixIntensity[i]) / float(sum)*coMatrixIntensity_Target[i]);		// Bhattacharyya distance
+							score += fmin(coocDetect.coMatrixIntensity[i] / sum, coocTarget->coMatrixIntensity[i]);	//fabs(coMatrixF[i]- coMatrixTestF[i]);		// minimum intersection
+							//score += sqrt((coMatrixIntensity[i] / sum) * coMatrixIntensity_Target[i]);		// Bhattacharyya distance
 
-							if(!bIsGray)
-								score += sqrt(float(coMatrixHue[i]) / float(sum)*coMatrixHue_Target[i]);		// Bhattacharyya distance
+							if (!bIsGray)
+							{
+								//score += sqrt((coMatrixHue[i] / sum) * coMatrixHue_Target[i]);		// Bhattacharyya distance
+								score += fmin(coocDetect.coMatrixHue[i] / sum, coocTarget->coMatrixHue[i]);				// minimum intersection of pdfs
+							}
 						}
 					}
 				}
@@ -1014,18 +1653,16 @@ float* FindTargets::findTargets(targeterImage& detectionImage, int regionWidth, 
 				// label image region with score
 				if (score > 0)
 				{
-					for (j = y; j < y + regionHeight; j++)
-						for (i = x; i < x + regionWidth; i++)
+					for (j = y; j < y + coocTarget->regionHeight; j++)
+						for (i = x; i < x + coocTarget->regionWidth; i++)
 						{
-							if (j < h && i < w)
-								scoreImage[i + j*w] += score;
+							if (j < h_d && i < w_d)
+								scoreImage[i + j*w_d] += score;
 						}
 				}
 			}
 			//DBOUT(score << ", ");
 		}
-
-	return scoreImage;
 }
 
 float* FindTargets::ProcessScoreImage(float* scoreImage, int w, int h, cv::Size targetSize, int maxD, int scoreAreaFactor, int ScoreThresholdPercent)
@@ -1079,9 +1716,11 @@ float* FindTargets::ProcessScoreImage(float* scoreImage, int w, int h, cv::Size 
 				RegionScore = (sum / count);// -regionMin;// (sum / count);// / (regionMax - regionMin);
 				val = RegionScore;
 
+			
+
 				//// is region average score above score threshold
 				//if (RegionScore > maxScore*(float(ScoreThresholdPercent) / 100.0))
-				//	val = 255;	// this is target
+				//	val = 255;	// this is target, 
 				//else
 				//	val = 0;	// this is not target
 
@@ -1110,6 +1749,60 @@ float* FindTargets::ProcessScoreImage(float* scoreImage, int w, int h, cv::Size 
 
 /**
 *
+* posterize image based on the equal binning of image histogram
+*
+* @author    David Watts
+* @since     2017/03/07
+*
+* FullName   histClusterEqual
+* Qualifier
+* @param     cv::Mat hueHist
+* @param     int histSize
+* @param     int NoClusters
+* @return    int*
+* Access     public
+*/
+int* FindTargets::histClusterEqual(cv::Mat hueHist, int histSize, int NoClusters)
+{
+	int sum, i;
+	int* pClusterHist = new int[histSize];
+	float Sum = 0;
+
+	for (i = 0; i < histSize; i++)
+	{
+		Sum += hueHist.at<float>(i);
+	}
+
+	Sum /= ((float)NoClusters);
+
+	// label histogram with cluster ID
+	for (i = 0, sum = 0.0; i < histSize; i++)
+		pClusterHist[i] = 0;
+
+	float ct = 0;
+	int cl = 0;
+
+	// 3) now go through clusters and label image
+	for (i = 0; i < histSize; i++)
+	{
+		pClusterHist[i] = cl;
+
+		ct += hueHist.at<float>(i);;
+
+		if (ct > Sum)
+		{
+			ct = 0;
+			cl++;
+		}
+	}
+
+	return pClusterHist;
+}
+
+
+
+/**
+*
 *  Posterities image into NoCluster levels by performing K means clustering of intensity values
 *
 * @author    David Watts
@@ -1124,7 +1817,7 @@ float* FindTargets::ProcessScoreImage(float* scoreImage, int w, int h, cv::Size 
 * @return    std::vector<int*>
 * Access     public
 */
-std::vector<int*> FindTargets::kMeansRGB(cv::Mat img, std::vector<cv::Mat> testImgs, int NoClusters, int maxIterations)
+std::vector<int*> FindTargets::kMeansRGB(cv::Mat img, QVector<cv::Mat> testImgs, int NoClusters, int maxIterations)
 {
 #ifdef DEBUGPRINT
 	DBOUT("Function Name: " << Q_FUNC_INFO << std::endl);

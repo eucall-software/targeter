@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -89,6 +89,10 @@ public:
     QAction *actionBackground_fit;
     QAction *actionEqualise_Image;
     QAction *actionCreate_Image_Mosaic;
+    QAction *actionDefine_Focus_Plane;
+    QAction *actionAnnotate_Shape;
+    QAction *actionTrainTarget;
+    QAction *actionLaplacian;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QSplitter *splitter;
@@ -115,16 +119,16 @@ public:
     QToolBar *toolBarDrawing;
     QToolBar *toolBarZoomPann;
     QToolBar *toolBarImageAnalysis;
-    QToolBar *toolBar;
-    QToolBar *toolBar_2;
-    QToolBar *toolBar_3;
-    QToolBar *toolBar_4;
+    QToolBar *toolBarMicroscope;
+    QToolBar *toolBarCamera;
+    QToolBar *toolBarBinaryOperations;
+    QToolBar *toolBarTargets;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(914, 682);
+        MainWindow->resize(939, 682);
         QIcon icon;
         icon.addFile(QStringLiteral(":/icons/24/targeter.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -370,6 +374,27 @@ public:
         QIcon icon38;
         icon38.addFile(QStringLiteral(":/icons/24/mosaic.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionCreate_Image_Mosaic->setIcon(icon38);
+        actionDefine_Focus_Plane = new QAction(MainWindow);
+        actionDefine_Focus_Plane->setObjectName(QStringLiteral("actionDefine_Focus_Plane"));
+        actionDefine_Focus_Plane->setCheckable(true);
+        QIcon icon39;
+        icon39.addFile(QStringLiteral(":/icons/24/focusPlane.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionDefine_Focus_Plane->setIcon(icon39);
+        actionAnnotate_Shape = new QAction(MainWindow);
+        actionAnnotate_Shape->setObjectName(QStringLiteral("actionAnnotate_Shape"));
+        QIcon icon40;
+        icon40.addFile(QStringLiteral(":/icons/24/annotate.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionAnnotate_Shape->setIcon(icon40);
+        actionTrainTarget = new QAction(MainWindow);
+        actionTrainTarget->setObjectName(QStringLiteral("actionTrainTarget"));
+        QIcon icon41;
+        icon41.addFile(QStringLiteral(":/icons/24/traintarget.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionTrainTarget->setIcon(icon41);
+        actionLaplacian = new QAction(MainWindow);
+        actionLaplacian->setObjectName(QStringLiteral("actionLaplacian"));
+        QIcon icon42;
+        icon42.addFile(QStringLiteral(":/icons/24/laplacian.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionLaplacian->setIcon(icon42);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -412,7 +437,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 824, 87));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 849, 87));
         QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Minimum);
         sizePolicy3.setHorizontalStretch(1);
         sizePolicy3.setVerticalStretch(0);
@@ -462,7 +487,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 914, 21));
+        menuBar->setGeometry(QRect(0, 0, 939, 21));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_File->setToolTipsVisible(true);
@@ -506,18 +531,18 @@ public:
         toolBarImageAnalysis = new QToolBar(MainWindow);
         toolBarImageAnalysis->setObjectName(QStringLiteral("toolBarImageAnalysis"));
         MainWindow->addToolBar(Qt::RightToolBarArea, toolBarImageAnalysis);
-        toolBar = new QToolBar(MainWindow);
-        toolBar->setObjectName(QStringLiteral("toolBar"));
-        MainWindow->addToolBar(Qt::LeftToolBarArea, toolBar);
-        toolBar_2 = new QToolBar(MainWindow);
-        toolBar_2->setObjectName(QStringLiteral("toolBar_2"));
-        MainWindow->addToolBar(Qt::LeftToolBarArea, toolBar_2);
-        toolBar_3 = new QToolBar(MainWindow);
-        toolBar_3->setObjectName(QStringLiteral("toolBar_3"));
-        MainWindow->addToolBar(Qt::RightToolBarArea, toolBar_3);
-        toolBar_4 = new QToolBar(MainWindow);
-        toolBar_4->setObjectName(QStringLiteral("toolBar_4"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar_4);
+        toolBarMicroscope = new QToolBar(MainWindow);
+        toolBarMicroscope->setObjectName(QStringLiteral("toolBarMicroscope"));
+        MainWindow->addToolBar(Qt::LeftToolBarArea, toolBarMicroscope);
+        toolBarCamera = new QToolBar(MainWindow);
+        toolBarCamera->setObjectName(QStringLiteral("toolBarCamera"));
+        MainWindow->addToolBar(Qt::LeftToolBarArea, toolBarCamera);
+        toolBarBinaryOperations = new QToolBar(MainWindow);
+        toolBarBinaryOperations->setObjectName(QStringLiteral("toolBarBinaryOperations"));
+        MainWindow->addToolBar(Qt::RightToolBarArea, toolBarBinaryOperations);
+        toolBarTargets = new QToolBar(MainWindow);
+        toolBarTargets->setObjectName(QStringLiteral("toolBarTargets"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, toolBarTargets);
 
         menuBar->addAction(menu_File->menuAction());
         menuBar->addAction(menuImages->menuAction());
@@ -544,6 +569,7 @@ public:
         menuImages->addAction(actionSet_as_find_targets_image);
         menuImages->addSeparator();
         menuImages->addAction(actionDeleteObject);
+        menuDetection->addAction(actionTrainTarget);
         menuDetection->addAction(actionScoreImage);
         menuDetection->addAction(actionFind_targets);
         menuDetection->addAction(actionSave_Target_Positions);
@@ -592,6 +618,8 @@ public:
         toolBarDrawing->addAction(actionDraw_Rectangular_Region);
         toolBarDrawing->addAction(actionDraw_Circle_Region);
         toolBarDrawing->addAction(actionDraw_Polygon);
+        toolBarDrawing->addAction(actionAnnotate_Shape);
+        toolBarDrawing->addAction(actionGrid_Spacing);
         toolBarDrawing->addSeparator();
         toolBarDrawing->addAction(actionClickTarget);
         toolBarDrawing->addAction(actionReference_fiducial_marks);
@@ -599,7 +627,6 @@ public:
         toolBarDrawing->addSeparator();
         toolBarDrawing->addAction(actionMask_White);
         toolBarDrawing->addAction(actionMask_Black);
-        toolBarDrawing->addAction(actionGrid_Spacing);
         toolBarDrawing->addSeparator();
         toolBarDrawing->addAction(actionCreate_Mask_Image);
         toolBarDrawing->addAction(actionGet_Target_image_region);
@@ -610,24 +637,26 @@ public:
         toolBarImageAnalysis->addAction(actionEqualise_Image);
         toolBarImageAnalysis->addAction(actionEntropyFilter);
         toolBarImageAnalysis->addAction(actionBackground_fit);
-        toolBar->addAction(action_scan_regions);
-        toolBar->addAction(actionCreate_Image_Mosaic);
-        toolBar->addAction(actionRead_Barcode);
-        toolBar->addAction(actionDetect_lines);
-        toolBar->addAction(actionCalibrate_Camera);
-        toolBar->addAction(actionCorrectImage);
-        toolBar_2->addAction(actionProcessFocusStack);
-        toolBar_2->addAction(actionGrab_Video_From_Camera);
-        toolBar_2->addAction(actionGrab_Image_From_Camera);
-        toolBar_3->addAction(actionInvert);
-        toolBar_3->addAction(actionConnected_Components);
-        toolBar_3->addAction(actionFilter_Binary_Objects);
-        toolBar_3->addAction(actionFind_Centers);
-        toolBar_3->addAction(actionMergeImages);
-        toolBar_4->addAction(actionSample_White_Binary_Regions);
-        toolBar_4->addAction(actionScoreImage);
-        toolBar_4->addAction(actionFind_targets);
-        toolBar_4->addAction(actionSave_Target_Positions);
+        toolBarImageAnalysis->addAction(actionLaplacian);
+        toolBarMicroscope->addAction(action_scan_regions);
+        toolBarMicroscope->addAction(actionCreate_Image_Mosaic);
+        toolBarMicroscope->addAction(actionRead_Barcode);
+        toolBarMicroscope->addAction(actionDetect_lines);
+        toolBarMicroscope->addAction(actionCalibrate_Camera);
+        toolBarMicroscope->addAction(actionCorrectImage);
+        toolBarCamera->addAction(actionProcessFocusStack);
+        toolBarCamera->addAction(actionGrab_Video_From_Camera);
+        toolBarCamera->addAction(actionGrab_Image_From_Camera);
+        toolBarBinaryOperations->addAction(actionInvert);
+        toolBarBinaryOperations->addAction(actionConnected_Components);
+        toolBarBinaryOperations->addAction(actionFilter_Binary_Objects);
+        toolBarBinaryOperations->addAction(actionFind_Centers);
+        toolBarBinaryOperations->addAction(actionMergeImages);
+        toolBarTargets->addAction(actionTrainTarget);
+        toolBarTargets->addAction(actionSample_White_Binary_Regions);
+        toolBarTargets->addAction(actionScoreImage);
+        toolBarTargets->addAction(actionFind_targets);
+        toolBarTargets->addAction(actionSave_Target_Positions);
 
         retranslateUi(MainWindow);
 
@@ -827,6 +856,22 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionCreate_Image_Mosaic->setToolTip(QApplication::translate("MainWindow", "Stitch images together to produce an image mosaic", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
+        actionDefine_Focus_Plane->setText(QApplication::translate("MainWindow", "Define Focus Plane", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionDefine_Focus_Plane->setToolTip(QApplication::translate("MainWindow", "Move XY and Z stages until target  in focus, then click once on overview image to define focus Z centre, clicking three times or more in different regions will define focus plane.", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        actionAnnotate_Shape->setText(QApplication::translate("MainWindow", "Annotate Shape", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionAnnotate_Shape->setToolTip(QApplication::translate("MainWindow", "Click to add annotation information to drawn region (eg. what this region represents)", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        actionTrainTarget->setText(QApplication::translate("MainWindow", "Train on Target", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionTrainTarget->setToolTip(QApplication::translate("MainWindow", "Train image analysis algorithm on selected example targets.  ", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        actionLaplacian->setText(QApplication::translate("MainWindow", "laplacian", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionLaplacian->setToolTip(QApplication::translate("MainWindow", "perform laplacian on image", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
         display_image->setText(QString());
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", Q_NULLPTR));
         menuImages->setTitle(QApplication::translate("MainWindow", "Image List", Q_NULLPTR));
@@ -838,17 +883,41 @@ public:
         menuView->setTitle(QApplication::translate("MainWindow", "View", Q_NULLPTR));
         menuDrawing->setTitle(QApplication::translate("MainWindow", "Drawing", Q_NULLPTR));
         menuSegmentation->setTitle(QApplication::translate("MainWindow", "Segmentation", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolbarOpenSave->setToolTip(QApplication::translate("MainWindow", "Open/Save images and XML files", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
         toolBarSettings->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        toolBarSettings->setToolTip(QApplication::translate("MainWindow", "drawing tools", Q_NULLPTR));
+        toolBarSettings->setToolTip(QApplication::translate("MainWindow", "Settings dialog", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         toolBarDrawing->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarDrawing->setToolTip(QApplication::translate("MainWindow", "Controls for drawing on image", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
         toolBarZoomPann->setWindowTitle(QApplication::translate("MainWindow", "toolBar_3", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarZoomPann->setToolTip(QApplication::translate("MainWindow", "Zooming/Panning operations on image", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
         toolBarImageAnalysis->setWindowTitle(QApplication::translate("MainWindow", "toolBar_4", Q_NULLPTR));
-        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
-        toolBar_2->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
-        toolBar_3->setWindowTitle(QApplication::translate("MainWindow", "toolBar_3", Q_NULLPTR));
-        toolBar_4->setWindowTitle(QApplication::translate("MainWindow", "toolBar_4", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarImageAnalysis->setToolTip(QApplication::translate("MainWindow", "Image analysis operations", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        toolBarMicroscope->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarMicroscope->setToolTip(QApplication::translate("MainWindow", "Microscope related operations", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        toolBarCamera->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarCamera->setToolTip(QApplication::translate("MainWindow", "Camera related operations", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        toolBarBinaryOperations->setWindowTitle(QApplication::translate("MainWindow", "toolBar_3", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarBinaryOperations->setToolTip(QApplication::translate("MainWindow", "Binary image analysis operations", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        toolBarTargets->setWindowTitle(QApplication::translate("MainWindow", "toolBar_4", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        toolBarTargets->setToolTip(QApplication::translate("MainWindow", "Target detection operations", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
     } // retranslateUi
 
 };

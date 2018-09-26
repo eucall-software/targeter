@@ -125,6 +125,8 @@ bool StageControlZ::Connect()
 	connectToPort(m_COMPort);
 
 	emit ACTIONCOMPLETED("stage connected");
+
+	return true;
 }
 
 bool StageControlZ::connectToPort(QString port)

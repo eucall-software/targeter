@@ -1,4 +1,4 @@
-#include "device_launch_parameters.h"
+
 
 #include <stdio.h>
 #include <iostream>
@@ -6,10 +6,89 @@
 #include <string.h>
 #include <stdlib.h>
 #include "math.h"
-#include "targetDetectionGPU.cuh"
+#include "targetDetectionGPU.h"
 #include "globals.h"
 
+/*
 texture<int, cudaTextureType2D, cudaReadModeElementType> cuda_texture_image;
+*/
+
+using namespace std;
+
+const double sqrt_2 = 1.4142135;
+
+__global__ void haar_horizontal(float input[], float output[], int o_width, int w)
+{
+	int x_index = blockIdx.x*blockDim.x + threadIdx.x;
+	int y_index = blockIdx.y*blockDim.y + threadIdx.y;
+
+	if (x_index >= (w + 1) / 2 || y_index >= w) return;
+
+	int i_thread_id = y_index*o_width + 2 * x_index;
+	int o_thread_id = y_index*o_width + x_index;
+
+	const double sqrt_2 = 1.4142135;
+	output[o_thread_id] = (input[i_thread_id] + input[i_thread_id + 1]) / sqrt_2;
+	output[o_thread_id + w / 2] = (input[i_thread_id] - input[i_thread_id + 1]) / sqrt_2;
+}
+
+__global__ void haar_vertical(float input[], float output[], int o_width, int w)
+{
+	int x_index = blockIdx.x*blockDim.x + threadIdx.x;
+	int y_index = blockIdx.y*blockDim.y + threadIdx.y;
+
+	if (y_index >= (w + 1) / 2 || x_index >= w) return;
+
+	int p1 = 2 * y_index*o_width + x_index;
+	int p2 = (2 * y_index + 1)*o_width + x_index;
+	int p3 = y_index*o_width + x_index;
+
+	const double sqrt_2 = 1.4142135;
+	output[p3] = (input[p1] + input[p2]) / sqrt_2;
+	output[p3 + o_width*w / 2] = (input[p1] - input[p2]) / sqrt_2;
+}
+
+void cudaScore::haar(float input[], float output[], int o_width, int o_height, int levels)
+{
+	float* d_input;
+	float* d_output;
+
+	int widthstep = o_width * sizeof(float);
+
+	cudaMalloc(&d_input, widthstep*o_height);
+	cudaMalloc(&d_output, widthstep*o_height);
+
+	cudaMemcpy(d_input, input, widthstep*o_height, cudaMemcpyHostToDevice);
+
+	dim3 blocksize(16, 16);
+	dim3 gridsize;
+
+	int w = o_width;
+	gridsize.x = (w + blocksize.x - 1) / blocksize.x;
+	gridsize.y = (w + blocksize.y - 1) / blocksize.y;
+
+	for(int ct = 0; ct<levels; ct++)
+	{
+		haar_horizontal << <gridsize, blocksize >> >(d_input, d_output, o_width, w);
+		haar_vertical << <gridsize, blocksize >> >(d_output, d_input, o_width, w);
+		w /= 2;
+	}
+
+	cudaMemcpy(output, d_input, widthstep*o_height, cudaMemcpyDeviceToHost);
+
+	cudaFree(d_input);
+	cudaFree(d_output);
+}
+
+// compute Haar transform image is square of dimensions size (with power 2)
+void cudaScore::haar2d_gpu(float* input, int size, int levels)
+{
+	int w = size;
+	float* output = new float[size*size];
+
+	haar(input, output, w, w, levels);
+}
+
 
 bool Check_CUDA_Device()
 {
@@ -251,45 +330,75 @@ void mycudaMemsetFloat(float* image, int n)
 * Access     public
 */
 __device__
-void getCoocMatrixGrayGPU(int image_ind_x, int image_ind_y, int width, int height, 
-						int regionWidth, int regionHeight, int* coMatrixRegion, int coDIMX, int coDIMY, int coDIMZ)	
+void getCoocMatrixGrayGPU(int* pImage, int image_ind_x, int image_ind_y, int width, int height,
+						int regionWidth, int regionHeight, float* coMatrixRegion, int averageCluster,
+						int maxDist, int coDIMX, int coDIMY, int coDIMZ, bool bFASTCOOC)	
 {
 	int local_sum = 0;
 	int pixel_index = image_ind_x + image_ind_y*width;
-
+	
 	if (threadIdx.x < regionWidth && threadIdx.y < regionHeight)
 	{
-		int c1 = tex2D(cuda_texture_image, image_ind_x, image_ind_y); // pImage[threadIdx.x + threadIdx.y * regionWidth];
+		int c1 = pImage[image_ind_x + image_ind_y * width]; //tex2D(cuda_texture_image, image_ind_x, image_ind_y); 
 
 		if (c1 >= 0)
 		{
-			int nextIndex = 1 + threadIdx.x + threadIdx.y*regionWidth;
+			if(bFASTCOOC)
+			{
+				float dx = (threadIdx.x);
+				float dy = (threadIdx.y);
 
-			int nextJ = nextIndex / regionWidth;
-			int nextI = nextIndex % regionWidth;
+				float dxy = sqrtf(dx*dx+dy*dy);
+				int d = MIN(coDIMY-1, int(coDIMY*(dxy/maxDist)));
 
-			//printf("rw=%d rh=%d\n", regionWidth, regionHeight);
+				int dC = MIN(coDIMX-1, MAX(0, coDIMX/2 + (averageCluster - c1)));	// offset to handle negative numbers
 
-			// check against all others
-			for (int y = nextJ; y < regionHeight; y++)
-				for (int x = nextI; x < regionWidth; x++)
+				int ind = dC + coDIMX * d;	// 2D indexing
+
+				if (ind < coDIMX*coDIMY)
 				{
-					if (image_ind_x + x < width && image_ind_y + y < height)
+					atomicAdd(&coMatrixRegion[ind], 1.0);
+					atomicAdd(&coMatrixRegion[0], 1.0);	
+				}
+			}
+			else
+			{
+				int nextIndex = 1 + threadIdx.x + threadIdx.y*regionWidth;
+
+				int nextJ = nextIndex / regionWidth;
+				int nextI = nextIndex % regionWidth;
+
+				//printf("rw=%d rh=%d\n", regionWidth, regionHeight);
+
+				// check against all others - the slow part !!!
+				for (int y = nextJ; y < regionHeight; y++)
+					for (int x = nextI; x < regionWidth; x++)
 					{
-						int c2 = tex2D(cuda_texture_image, image_ind_x + x, image_ind_y + y);  //pImage[x + y*regionWidth];
-
-						if (c2 >= 0)
+						if (image_ind_x + x < width && image_ind_y + y < height)
 						{
-							int ind = c1 + coDIMX * (c2 + coDIMY * MAX(x, y));
+							int c2 = pImage[(image_ind_x + x) + (image_ind_y + y)*width];  //tex2D(cuda_texture_image, image_ind_x + x, image_ind_y + y);
 
-							if (ind < coDIMX*coDIMY*coDIMZ)
+							if (c2 >= 0)
 							{
-								atomicAdd(&coMatrixRegion[ind], 1);
-								atomicAdd(&coMatrixRegion[0], 1);	// not needed, can be precomputed as n*(n-1)/2
+								float dx = (x - threadIdx.x);
+								float dy = (y - threadIdx.y);
+
+								float dxy = sqrtf(dx*dx+dy*dy);
+								int d = MIN(coDIMZ-1, int(coDIMZ*(dxy/maxDist)));
+
+								int ind = c1 + coDIMX * (c2 + coDIMY * d);
+
+								if (ind < coDIMX*coDIMY*coDIMZ)
+								{
+									atomicAdd(&coMatrixRegion[ind], 1.0);
+									atomicAdd(&coMatrixRegion[0], 1.0);	
+								}
 							}
 						}
 					}
-				}
+			}
+
+			
 		}
 	}
 }
@@ -311,15 +420,14 @@ void getCoocMatrixGrayGPU(int image_ind_x, int image_ind_y, int width, int heigh
 * Access     public
 */
 __global__
-void scoreTargetsGPU(int w, int h, int regionWidth, int regionHeight, int increment_W, int increment_H,
-					float* coMatrixTarget, float* scoreImage, int* countImage, int coDIMX, int coDIMY, 
-					int coDIMZ, int* ct, bool bCrossEntropy)
+void scoreTargetsGPU(int* cuda_intensity_image, int w, int h, int regionWidth, int regionHeight, int increment_W, int increment_H,
+					float* coMatrixTarget, float* scoreImage, int* countImage, float maxDist, int coDIMX, int coDIMY, 
+					int coDIMZ, int averageCluster, int* ct, bool bCrossEntropy, bool bFASTCOOC)
 {
-	__shared__ int shared_count;
 	__shared__ float shared_score;
 
-	extern __shared__ int sh[];
-	int* sharedCoocRegion = sh;
+	extern __shared__ float sh[];
+	float* sharedCoocRegion = sh;
 	//int* sharedCoocRegion = (int*)sh + regionWidth*regionHeight;
 
 	// index into image and sub tile
@@ -329,19 +437,17 @@ void scoreTargetsGPU(int w, int h, int regionWidth, int regionHeight, int increm
 	// zero shared memory
 	int tid = threadIdx.y*blockDim.x + threadIdx.x;			// get linear thread index
 	int cN = coDIMX*coDIMY*coDIMZ;
+
+	if(bFASTCOOC)
+		cN = coDIMX*coDIMY;
+	
 	int blockSize = blockDim.x * blockDim.y;
 
-	// in the case of sharedCooc having bigger dimensions than the block size
-	// zero remaining part of memory
-	if (tid == 0)
-	{
-		shared_count = 0;
-		shared_score = 0.0;
-	}
-
-	// zero co-occurrence matrix using parralel threads
+	// zero co-occurrence matrix using parallel threads, and loop to fill in rest up to cN
 	for(int i=tid; i<cN; i += blockSize)
 		sharedCoocRegion[i] = 0;
+		
+	__syncthreads();	// all threads in block synchronised
 /*
 	// copy image region into into shared tile memory
 	if (image_ind_x < w && image_ind_y < h)
@@ -349,27 +455,31 @@ void scoreTargetsGPU(int w, int h, int regionWidth, int regionHeight, int increm
 	else
 		sharedTile[threadIdx.x + threadIdx.y*regionWidth] = -1;
 */
-	__syncthreads();
-
+	
 	// create the coocurrence matrices
 
 	// last data point has nothing to check against
 	if (threadIdx.x != regionHeight - 1 && threadIdx.y != regionHeight - 1)
 	{
 		// takes pixel value compares with neighbours
-		getCoocMatrixGrayGPU(image_ind_x, image_ind_y, w, h, regionWidth, regionHeight, sharedCoocRegion, coDIMX, coDIMY, coDIMZ);
+		getCoocMatrixGrayGPU(cuda_intensity_image, image_ind_x, image_ind_y, w, h, regionWidth, regionHeight, sharedCoocRegion, 
+							averageCluster, maxDist, coDIMX, coDIMY, coDIMZ, bFASTCOOC);
 	}
 
 	__syncthreads();
 
 	// loop though coocurance matrices and get score
 	float local_score = 0.0;
-
+		
+	// in the case of sharedCooc having bigger dimensions than the block size
+	// zero remaining part of memory
+	if (tid == 0)
+		shared_score = 0.0;
+	
 	for (int i = tid; i < cN; i += blockSize)
 	{
-		float score_test = coMatrixTarget[i];
-		float score_train = float(sharedCoocRegion[i]) / float(sharedCoocRegion[0]);
-		local_score += sqrt(score_test*score_train);
+		if(i != 0)
+			local_score += fmin(coMatrixTarget[i], sharedCoocRegion[i]/sharedCoocRegion[0]);	// minimum intersection
 	}
 
 	if (local_score>0)
@@ -394,68 +504,76 @@ void scoreTargetsGPU(int w, int h, int regionWidth, int regionHeight, int increm
 	atomicAdd(ct, 1);
 }
 
+/*
 
-__global__
-void cudaEnergy(int* image, int w, int h, double* dev_score)
+cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc(8*sizeof(int), 0, 0, 0, cudaChannelFormatKindSigned);
+
+cudaArray* cuArray;
+cudaMallocArray(&cuArray, &channelDesc, w_d, h_d);
+
+checkCudaErrors(cudaMemcpyToArray(cuArray, 0, 0, intensityImage,  N*sizeof(int), cudaMemcpyHostToDevice));
+
+cuda_texture_image.addressMode[0] = cudaAddressModeClamp;
+cuda_texture_image.addressMode[1] = cudaAddressModeClamp;
+cuda_texture_image.filterMode = cudaFilterModePoint;
+cuda_texture_image.normalized = false;
+
+// bind texture to image
+checkCudaErrors(cudaBindTextureToArray(cuda_texture_image, cuArray, channelDesc));
+*/
+
+bool cudaScore::setupCudaDevice(cudaDeviceProp* deviceProp, int &devID, dim3 gridSize, dim3 blockSize, size_t sharedMemBytes)
 {
-	int i = (blockIdx.y * blockDim.y + threadIdx.y);
-	int j = (blockIdx.x * blockDim.x + threadIdx.x);
+	cudaError_t error = cudaGetDevice(&devID);
 
-	// Test to see if we're testing a valid pixel
-	if (i < w && j < h)
+	if (error != cudaSuccess)
 	{
-		int diff1 = 0, diff2 = 0;
-
-		int val1 = image[i + j*w];
-
-		if ((i + 1) < w)
-			diff1 = val1 - image[(i + 1) + j*w];
-
-		if ((j + 1) < h)
-			diff2 = val1 - image[i + (j + 1)*w];
-		
-		atomicAdd(dev_score, (double)diff1*diff1 + diff2*diff2);
+		DBOUT("cudaGetDevice returned error " << cudaGetErrorString(error) << " :" << error << " line=" << __LINE__ << std::endl);
+		return false;
 	}
-}
 
+	error = cudaGetDeviceProperties(deviceProp, devID);
 
-double getFocusScore(int* image, int w, int h)
-{
-	double score = 0, *cuda_score;
-	int N = w*h;
-	int n2 = ceil(w / 2.0) * ceil(h / 2.0);
-	dim3 gridSize(32, 16);
-	dim3 blockSize(32, n2/32*32*16);
-
-	int* cuda_image;
-
-	cudaMalloc((void **)&cuda_score, sizeof(double));
-	cudaMemcpy(cuda_score, &score, sizeof(double), cudaMemcpyHostToDevice);
-
-	// allocate image
-	cudaMalloc(&cuda_image, w * h * sizeof(int));
-
-	// copy image to cuda image
-	checkCudaErrors(cudaMemcpy(cuda_image, image, w*h*sizeof(int), cudaMemcpyDeviceToHost));
+	if (error != cudaSuccess)
+	{
+		DBOUT("cudaGetDeviceProperties returned error " << cudaGetErrorString(error) << " :" << error << " line=" << __LINE__ << std::endl);
+		return false;
+	}
 	
-	cudaEnergy <<< blockSize, gridSize >>> (cuda_image, w, h, cuda_score);
+	if (deviceProp->computeMode == cudaComputeModeProhibited)
+	{
+		DBOUT("Error: device is running in <Compute Mode Prohibited>, no threads can use ::cudaSetDevice().\n");
+		return false;
+	}
 
-	cudaMemcpy(&score, cuda_score, sizeof(double), cudaMemcpyDeviceToHost);
+	DBOUT("GPU Device " << devID << " - " << deviceProp->name << " with compute capability major=" << deviceProp->major << " minor=" << deviceProp->minor << std::endl);
 
-	cudaFree(cuda_image);
-	cudaFree(cuda_score);
+	const int kb = 1024;
+	DBOUT("  Shared memory per block: " << (int)deviceProp->sharedMemPerBlock / kb << " MB , " << (int)deviceProp->sharedMemPerBlock << " bytes" << std::endl);
+	DBOUT("  Constant memory: " << (int)deviceProp->totalConstMem / kb << " MB" << std::endl);
+	DBOUT("  Registers per Block: " << deviceProp->regsPerBlock << std::endl);
+	DBOUT("  Warp size:        " << deviceProp->warpSize << std::endl);
+	DBOUT("  Maximum Threads per block: " << deviceProp->maxThreadsPerBlock << std::endl);
+	DBOUT("  Max block dimensions: " << deviceProp->maxThreadsDim[0] << ", " << deviceProp->maxThreadsDim[1] << ", " << deviceProp->maxThreadsDim[2] << std::endl);
+	DBOUT("  Max grid dimensions:  " << deviceProp->maxGridSize[0] << ", " << deviceProp->maxGridSize[1] << ", " << deviceProp->maxGridSize[2] << std::endl);
 
-	return score;
+	DBOUT("Requested resources: " << "gridSize.x=" << gridSize.x << " gridSize.y=" << gridSize.y << " blockSize.x=" << blockSize.x << " blockSize.y=" << blockSize.y
+		<< " sharedMemory=" << (int)sharedMemBytes / kb << " MB, " << (int)sharedMemBytes << " bytes" << std::endl);
+
+	return true;
 }
 
-bool cudaScore::FindTargets(int* intensityImage, float* scoreImage, int w_d, int h_d, int regionWidth, int regionHeight, int increment_W, int increment_H, 
-							float* coMatrixTarget, int coDIMX, int coDIMY, int coDIMZ, bool bCrossEntropy)
+bool cudaScore::FindTargets(int* detectionImage, float* scoreImage, int width, int height, COOCMatrix* coocTraining,
+							bool bIntensityImage, bool bCrossEntropy, bool bFASTCOOC)
 {
 	// scan test image calculate intersection value save value to image
-	size_t CoocSize = coDIMX*coDIMY*coDIMZ;
+	size_t CoocSize = coocTraining->coDIMX*coocTraining->coDIMY*coocTraining->coDIMZ;
 
-	dim3 gridSize(((w_d + increment_W - 1) / increment_W), (h_d + increment_H - 1) / increment_H);
-	dim3 blockSize(regionWidth, regionHeight);
+	if(bFASTCOOC)
+		CoocSize = coocTraining->coDIMX*coocTraining->coDIMY;	// 2D matrix
+
+	dim3 gridSize(((width + coocTraining->incrementWidth - 1) / coocTraining->incrementWidth), (height + coocTraining->incrementHeight - 1) / coocTraining->incrementHeight);
+	dim3 blockSize(coocTraining->regionWidth, coocTraining->regionHeight);
 	//size_t regionSizeBytes = regionWidth*regionHeight * sizeof(int);
 	size_t CoocSizeBytes = CoocSize * sizeof(float);
 	size_t sharedMemBytes = CoocSizeBytes;
@@ -467,75 +585,38 @@ bool cudaScore::FindTargets(int* intensityImage, float* scoreImage, int w_d, int
 
 	cudaError_t error;
 	cudaDeviceProp deviceProp;
-	int N = w_d*h_d;
+	int N = width*height;
 
-	error = cudaGetDevice(&devID);
-
-	if (error != cudaSuccess)
-	{
-		DBOUT("cudaGetDevice returned error " << cudaGetErrorString(error) << " :" << error << " line=" << __LINE__ << std::endl);
+	if (!setupCudaDevice(&deviceProp, devID, gridSize, blockSize, sharedMemBytes))
 		return false;
-	}
-
-	error = cudaGetDeviceProperties(&deviceProp, devID);
-
-	if (deviceProp.computeMode == cudaComputeModeProhibited)
-	{
-		DBOUT("Error: device is running in <Compute Mode Prohibited>, no threads can use ::cudaSetDevice().\n");
-		return false;
-	}
-
-	if (error != cudaSuccess)
-	{
-		DBOUT("cudaGetDeviceProperties returned error " << cudaGetErrorString(error) << ", code=" << error << " line=" << __LINE__ << std::endl);
-		return false;
-	}
-	else
-	{
-		DBOUT("GPU Device " << devID << " - " << deviceProp.name << " with compute capability major=" << deviceProp.major << " minor=" << deviceProp.minor << std::endl);
-
-		const int kb = 1024;
-		DBOUT("  Shared memory: "<< (int)deviceProp.sharedMemPerBlock / kb << " MB" << std::endl);
-		DBOUT("  Constant memory: "<< (int)deviceProp.totalConstMem / kb << " MB" << std::endl);
-		DBOUT("  Block registers: "<< deviceProp.regsPerBlock << std::endl);
-		DBOUT("  Warp size:        "<< deviceProp.warpSize << std::endl);
-		DBOUT("  Threads per block: "<< deviceProp.maxThreadsPerBlock << std::endl);
-		DBOUT("  Max block dimensions: "<< deviceProp.maxThreadsDim[0] << ", " << deviceProp.maxThreadsDim[1] << ", " << deviceProp.maxThreadsDim[2] << std::endl);
-		DBOUT("  Max grid dimensions:  "<< deviceProp.maxGridSize[0] << ", " << deviceProp.maxGridSize[1] << ", " << deviceProp.maxGridSize[2] << std::endl);
-
-		DBOUT("Requested resources: " << "gridSize.x=" << gridSize.x << " gridSize.y=" << gridSize.y << " blockSize.x="<< blockSize.x <<" blockSize.y="<<blockSize.y << " sharedMemory="<< (int)sharedMemBytes / kb << " MB" << std::endl);
-	}
 
 	//checkCudaErrors(cudaMemcpy(cuda_intensity_image, intensityImage, w_d * h_d * sizeof(int), cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMemcpy(cuda_target_cooc, coMatrixTarget, CoocSize * sizeof(float), cudaMemcpyHostToDevice));
+	if(bIntensityImage) {
+		checkCudaErrors(cudaMemcpy(cuda_target_cooc, coocTraining->coMatrixIntensity, CoocSize * sizeof(float), cudaMemcpyHostToDevice));
+	}
+	else {
+		checkCudaErrors(cudaMemcpy(cuda_target_cooc, coocTraining->coMatrixHue, CoocSize * sizeof(float), cudaMemcpyHostToDevice));
+	}
 
 	mycudaMemsetFloat << < (N + 255) / 256, 256 >> > (cuda_score_image, N);
 	mycudaMemsetInt << < (N + 255) / 256, 256 >> > (cuda_score_count_image, N);
 
-	cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc(8*sizeof(int), 0, 0, 0, cudaChannelFormatKindSigned);
+	checkCudaErrors(cudaMemcpy(cuda_intensity_image, detectionImage, width * height * sizeof(int), cudaMemcpyHostToDevice));
 
-	cudaArray* cuArray;
-	cudaMallocArray(&cuArray, &channelDesc, w_d, h_d);
+	float maxDist = sqrtf(coocTraining->regionWidth*coocTraining->regionWidth + coocTraining->regionHeight*coocTraining->regionHeight);
 
-	checkCudaErrors(cudaMemcpyToArray(cuArray, 0, 0, intensityImage,  N*sizeof(int), cudaMemcpyHostToDevice));
-
-	cuda_texture_image.addressMode[0] = cudaAddressModeClamp;
-	cuda_texture_image.addressMode[1] = cudaAddressModeClamp;
-	cuda_texture_image.filterMode = cudaFilterModePoint;
-	cuda_texture_image.normalized = false;
-
-	// bind texture to image
-	checkCudaErrors(cudaBindTextureToArray(cuda_texture_image, cuArray, channelDesc));
-
-	scoreTargetsGPU << < gridSize, blockSize, sharedMemBytes >> > (w_d, h_d, regionWidth, regionHeight, increment_W, increment_H,
-		cuda_target_cooc, cuda_score_image, cuda_score_count_image, coDIMX, coDIMY, coDIMZ, dev_count, bCrossEntropy); // gpu
+	scoreTargetsGPU <<< gridSize, blockSize, sharedMemBytes >>>(cuda_intensity_image, width, height, 
+																coocTraining->regionWidth, coocTraining->regionHeight, 
+																coocTraining->incrementWidth, coocTraining->incrementHeight,
+																cuda_target_cooc, cuda_score_image, cuda_score_count_image, maxDist, 
+																coocTraining->coDIMX, coocTraining->coDIMY, coocTraining->coDIMZ, 
+																coocTraining->averageIntensity, dev_count, bCrossEntropy, bFASTCOOC); // gpu
 
 	//cudaDestroyTextureObject(cuda_texture_image);
 	//cudaFreeArray(cuArray);
 
 	cudaMemcpy(&count, dev_count, sizeof(int), cudaMemcpyDeviceToHost);
 
-	cudaFreeArray(cuArray);
 	cudaFree(dev_count);
 
 	if (count != gridSize.x*gridSize.y*blockSize.x*blockSize.y)
@@ -549,13 +630,13 @@ bool cudaScore::FindTargets(int* intensityImage, float* scoreImage, int w_d, int
 
 		checkCudaErrors(cudaPeekAtLastError());
 
-		float* scoreImageTemp = new float[w_d*h_d];
-		int* scoreCountImage = new int[w_d*h_d];
+		float* scoreImageTemp = new float[width*height];
+		int* scoreCountImage = new int[width*height];
 
-		checkCudaErrors(cudaMemcpy(scoreImageTemp, cuda_score_image, w_d*h_d * sizeof(float), cudaMemcpyDeviceToHost));
-		checkCudaErrors(cudaMemcpy(scoreCountImage, cuda_score_count_image, w_d*h_d * sizeof(int), cudaMemcpyDeviceToHost));
+		checkCudaErrors(cudaMemcpy(scoreImageTemp, cuda_score_image, width*height*sizeof(float), cudaMemcpyDeviceToHost));
+		checkCudaErrors(cudaMemcpy(scoreCountImage, cuda_score_count_image, width*height*sizeof(int), cudaMemcpyDeviceToHost));
 
-		for (int i = 0; i < w_d*h_d; i++)
+		for (int i = 0; i < width*height; i++)
 			scoreImage[i] = scoreImageTemp[i] / ((float)scoreCountImage[i]);
 
 		delete[] scoreImageTemp;
@@ -564,6 +645,68 @@ bool cudaScore::FindTargets(int* intensityImage, float* scoreImage, int w_d, int
 	return true;
 }
 
+/*
+cv::Mat cudaScore::FindTargets::detectLawsTextureFeatures(cv::Mat detectionImage, QVector<cv::Mat> lawsHistTarget, QVector<float> biases)
+{
+	int regionSize = 10;
+	int histRange = 128;
+	int histSize = 10;
 
+	// now get detection 
+	cv::Mat im, scoreImage(detectionImage.rows, detectionImage.cols, CV_32FC1);
 
+	// now filter detect image and compare histograms of regions of the image
+	cv::cvtColor(detectionImage, im, CV_BGR2GRAY, 1);
 
+	cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(2.0);
+	clahe->apply(im, im);
+
+	im.convertTo(im, CV_32FC1);
+
+	QMap<QString, cv::Mat> lawsMapDetect = getLawFilteredImages(im);
+
+	QVector<cv::Mat> lawsHistDetect;
+
+	for (int c = 0; c < 8; c++)
+		lawsHistDetect.append(cv::Mat());
+
+	// but this has to be on regions of the detection image
+	for (int i = 0; i < im.cols; i += regionSize)
+		for (int j = 0; j < im.rows; j += regionSize)
+		{
+			int regionSizeI = regionSize;
+			int regionSizeJ = regionSize;
+
+			if (i + regionSize >= im.cols)
+				regionSizeI = im.cols - i;
+			if (j + regionSize >= im.rows)
+				regionSizeJ = im.rows - j;
+
+			// get histograms in this region of the image
+			cv::Rect roi(i, j, regionSizeI, regionSizeJ);
+
+			addHistogram(lawsHistDetect[0], lawsMapDetect["im_SS"](roi), cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, false);
+			addHistogram(lawsHistDetect[1], lawsMapDetect["im_RR"](roi), cv::Mat(), cv::Mat(), cv::Mat(), histSize, histRange, false);
+			addHistogram(lawsHistDetect[2], lawsMapDetect["im_LS"](roi), lawsMapDetect["im_SL"](roi), cv::Mat(), cv::Mat(), histSize, histRange, false);
+			addHistogram(lawsHistDetect[3], lawsMapDetect["im_SR"](roi), lawsMapDetect["im_RS"](roi), cv::Mat(), cv::Mat(), histSize, histRange, false);
+			addHistogram(lawsHistDetect[4], lawsMapDetect["im_EE"](roi), lawsMapDetect["im_EER"](roi), cv::Mat(), cv::Mat(), histSize, histRange, false);
+			addHistogram(lawsHistDetect[5], lawsMapDetect["im_EL"](roi), lawsMapDetect["im_LE"](roi), lawsMapDetect["im_LER"](roi), lawsMapDetect["im_ERL"](roi), histSize, histRange, false);
+			addHistogram(lawsHistDetect[6], lawsMapDetect["im_ES"](roi), lawsMapDetect["im_SE"](roi), lawsMapDetect["im_SER"](roi), lawsMapDetect["im_ERS"](roi), histSize, histRange, false);
+			addHistogram(lawsHistDetect[7], lawsMapDetect["im_ER"](roi), lawsMapDetect["im_RE"](roi), lawsMapDetect["im_RER"](roi), lawsMapDetect["im_ERR"](roi), histSize, histRange, false);
+
+			//score detect region using target histogram	
+			float s = scoreLawsHistogram(lawsHistDetect, lawsHistTarget, biases);
+
+			for (int k = i; k < i + regionSizeI; k++)
+				for (int l = j; l < j + regionSizeJ; l++)
+				{
+					scoreImage.at<float>(l, k) = s;
+				}
+		}
+
+	// create greyscale image of score
+	cv::Mat sim = HelperFunctions::convertFloatToGreyscaleMat(scoreImage);
+
+	return sim;
+}
+*/

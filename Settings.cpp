@@ -1,19 +1,31 @@
 #include <QDir>
+#include <QColor>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include "Settings.h"
 
 Q_DECLARE_METATYPE(QIntColorMap)
 Q_DECLARE_METATYPE(QIntPointMap)
+Q_DECLARE_METATYPE(QList<QVector3D>)
 
 
-SettingsValues::SettingsValues()
+SettingsValues::SettingsValues() : coocMatrix(new COOCMatrix)
 {
+	qRegisterMetaType<QMap<int, QColor>>("QMap<int, QColor>");
+	qRegisterMetaType<QList<QVector3D>>("QList<QVector3D>");
+
 	initialize();
 }
 
-void SettingsValues::initialize()
+void SettingsValues::initialize() 
 {
-	distance = 20;
-	cluster = 20;
+	distance = 10;
+	distanceBins = 10;
+	bProcessGrayscale = true;
+	bPaddTargetImage = true;
+	numWaveletLevels = 3;
+	bCorrectBackGround = true;
+	cluster = 8;
 	algorithmType = algoType::COOC;
 	threshold_max = 255;
 	threshold_min = 0;
@@ -31,6 +43,17 @@ void SettingsValues::initialize()
 	ZeroDistortion = true;
 	FixPrincipalPointCenter = true;
 	FixFocalLength = true;
+	m_FocusThresholdFraction = 0.1;
+
+	m_bOptimiseFocusRange = true;
+	m_bInterpolateFocusPosition = true;
+	m_bUseFocusThreshold = true;
+	m_bUseCoarseFocusRange = true;
+	m_bUseFineFocusRange = true;
+	m_bCenterFocus = true;
+	m_bUseRegisteredFocusPoints = true;
+	m_bShowBestFocusImage = true;
+	m_bDetectTargetsWhileScanning = false;
 
 	CalibrateAlgorithm = calibrateAlgoType::CHESSBOARD;
 	scoreAreaFactor = 100;
@@ -40,8 +63,8 @@ void SettingsValues::initialize()
 
 	mosaicImageCols = 4;
 
-	m_MinFocus=5;
-	m_MaxFocus=8;
+	m_FocusRange=5;
+	m_DefaultFocusPosition=8;
 	m_CoarseFocusStep=0.1;
 	m_FineFocusStep=0.02;
 
@@ -52,7 +75,7 @@ void SettingsValues::initialize()
 	gridSpacingX = 10;
 	gridSpacingY = 10;
 
-	micronsPerPixel = 0.5/816.0;	// measured distance / number of pixels
+	mmPerPixel = 0.5/816.0;	// measured distance / number of pixels
 	imageWidth = 2046;
 	imageHeight = 2046;
 
@@ -66,10 +89,9 @@ void SettingsValues::initialize()
 	focalDistanceOverviewCamera = 35;
 	focalDistanceMicroscopeCamera = 20;
 	fiducialPos = FIDUCIAL::topleft_overview;
-	bLockFiducial = true;
 	samplingType = SAMPLINGTYPE::grid;
-	samplingSpacing = 10;
-	samplingOffset = 0;
+	samplingSpacing = QPoint(10,10);
+	samplingOffset = QPoint(10, 10);
 
 	overviewCameraSN = 21799625;
 	microscopeCameraSN = 21799596;
@@ -79,7 +101,7 @@ void SettingsValues::initialize()
 
 	BarcodeThreshold = 15;
 	BarcodeAutoThreshold = false;
-
+	
 	FocusAlgorithm = FOCUSALGO::DXDY;
 
 	objectColours.insert(0, QColor("red"));
@@ -99,11 +121,16 @@ void SettingsValues::initialize()
 
 	s_BarCodeImageRect = QRect(0, 0, 0, 0);
 
-	for (int i = 0; i < FIDUCIAL::position::bottomright_microscope; i++)
+	if(!bLockFiducial)
 	{
-		fiducial_marks_image[i] = QPointF(-1, -1);
-		fiducial_marks_stage[i] = QVector3D(-1, -1, -1);
+		for (int i = 0; i < FIDUCIAL::position::bottomright_microscope; i++)
+		{
+			fiducial_marks_image[i] = QPointF(-1, -1);
+			fiducial_marks_stage[i] = QVector3D(-1, -1, -1);
+		}
 	}
+
+	bLockFiducial = true;
 
 	s_CommandTextXY = "?version";
 	s_CommandTextZ = "1VE";
@@ -115,11 +142,18 @@ void SettingsValues::initialize()
 	PositionAbsoluteZ = 0;
 	VelocityXY =10;
 	BaudXY = 9600;
+
+	coocMatrix->coDIMX =0;
+	coocMatrix->coDIMY = 0;
+	coocMatrix->coDIMZ = 0;
+	coocMatrix->coMatrixHue = nullptr;
+	coocMatrix->coMatrixIntensity = nullptr;
 	
 }
 
 SettingsValues::~SettingsValues()
 {
+	(coocMatrix).reset();
 }
 /**
 *
@@ -140,6 +174,7 @@ void SettingsValues::serialize(QDataStream& stream)
 	m_settings.setValue("project_Barcode", s_project_Barcode);
 	m_settings.setValue("cluster", cluster);
 	m_settings.setValue("distance", distance);
+	m_settings.setValue("distanceBins", distanceBins);
 	m_settings.setValue("NoClustersThreshold", NoClustersThreshold);
 	m_settings.setValue("threshold_min", threshold_min);
 	m_settings.setValue("threshold_max", threshold_max);
@@ -175,14 +210,24 @@ void SettingsValues::serialize(QDataStream& stream)
 	m_settings.setValue("algorithmType", (int)algorithmType); 
 	m_settings.setValue("overviewCameraSN", overviewCameraSN); 
 	m_settings.setValue("microscopeCameraSN", microscopeCameraSN);
-	m_settings.setValue("micronsPerPixel", micronsPerPixel);
+	m_settings.setValue("mmPerPixel", mmPerPixel);
 	m_settings.setValue("imageWidth", imageWidth);
 	m_settings.setValue("imageheight", imageHeight);
-	m_settings.setValue("MinFocus", m_MinFocus);
-	m_settings.setValue("MaxFocus",m_MaxFocus);
+	m_settings.setValue("DefaultFocusPosition", m_DefaultFocusPosition);
+	m_settings.setValue("FocusRange", m_FocusRange);
+	m_settings.setValue("FocusThresholdFraction", m_FocusThresholdFraction);
 	m_settings.setValue("CoarseFocusStep", m_CoarseFocusStep);
 	m_settings.setValue("FineFocusStep", m_FineFocusStep);
 	m_settings.setValue("FocusAlgorithm", (int)FocusAlgorithm);
+	m_settings.setValue("OptimiseFocusRange",m_bOptimiseFocusRange);
+	m_settings.setValue("InterpolateFocusPosition",  m_bInterpolateFocusPosition);
+	m_settings.setValue("UseFocusThreshold", m_bUseFocusThreshold);
+	m_settings.setValue("UseCoarseFocusRange",m_bUseCoarseFocusRange);
+	m_settings.setValue("UseFineFocusRange",m_bUseFineFocusRange);
+	m_settings.setValue("CenterFocus",m_bCenterFocus);
+	m_settings.setValue("UseRegisteredFocusPoints",m_bUseRegisteredFocusPoints);
+	m_settings.setValue("ShowBestFocusImage", m_bShowBestFocusImage);
+	m_settings.setValue("DetectTargetsWhileScanning", m_bDetectTargetsWhileScanning);
 	m_settings.setValue("focalDistanceOverviewCamera", focalDistanceOverviewCamera); 
 	m_settings.setValue("focalDistanceMicroscopeCamera", focalDistanceMicroscopeCamera); 
 	m_settings.setValue("fiducialPos", fiducialPos);
@@ -201,6 +246,10 @@ void SettingsValues::serialize(QDataStream& stream)
 	m_settings.setValue("BarcodeAutoThreshold", BarcodeAutoThreshold);
 	m_settings.setValue("BarCodeImageRect", s_BarCodeImageRect);
 	m_settings.setValue("LockFiducial", bLockFiducial);
+	m_settings.setValue("PaddTargetImage", bPaddTargetImage);
+	m_settings.setValue("numWaveletLevels", numWaveletLevels);
+	m_settings.setValue("ProcessGrayscale", bProcessGrayscale);
+	m_settings.setValue("CorrectBackGround", bCorrectBackGround);
 
 	m_settings.beginGroup("objectColours");
 	QIntColorMap::const_iterator ic = objectColours.constBegin();
@@ -209,6 +258,16 @@ void SettingsValues::serialize(QDataStream& stream)
 		++ic;
 	}
 	m_settings.endGroup();
+
+	m_settings.beginWriteArray("focusPoints");
+	for (int i = 0; i < focusPoints.length(); i++)
+	{
+		m_settings.setArrayIndex(i);
+		m_settings.setValue("x", focusPoints[i].x());
+		m_settings.setValue("y", focusPoints[i].y());
+		m_settings.setValue("z", focusPoints[i].z());
+	}
+	m_settings.endArray(); 
 
 	// write fiducials
 	m_settings.setValue("overview_stage_position", overviewStagePosition);
@@ -272,6 +331,7 @@ void SettingsValues::deserialize(QDataStream& stream)
 	s_project_Barcode = m_settings.value("project_Barcode").toString();
 	cluster = m_settings.value("cluster").toInt();
 	distance = m_settings.value("distance").toInt();
+	distanceBins = m_settings.value("distanceBins").toInt();
 	NoClustersThreshold = m_settings.value("NoClustersThreshold").toInt();
 	threshold_min = m_settings.value("threshold_min").toInt();
 	threshold_max = m_settings.value("threshold_max").toInt();
@@ -309,18 +369,28 @@ void SettingsValues::deserialize(QDataStream& stream)
 	microscopeCameraSN = m_settings.value("microscopeCameraSN").toInt();
 	imageWidth = m_settings.value("imageWidth").toInt();
 	imageHeight = m_settings.value("imageHeight").toInt();
-	m_MinFocus = m_settings.value("MinFocus").toDouble();
-	m_MaxFocus = m_settings.value("MaxFocus").toDouble();
+	m_FocusRange = m_settings.value("FocusRange").toDouble();
+	m_FocusThresholdFraction = m_settings.value("FocusThresholdFraction").toDouble();
+	m_DefaultFocusPosition = m_settings.value("DefaultFocusPosition").toDouble();
 	m_CoarseFocusStep = m_settings.value("CoarseFocusStep").toDouble();
 	m_FineFocusStep = m_settings.value("FineFocusStep").toDouble();
-	FocusAlgorithm = (FOCUSALGO::algo)m_settings.value("FocusAlgorithm").toInt();
-	micronsPerPixel = m_settings.value("micronsPerPixel").toDouble();
+	FocusAlgorithm = (FOCUSALGO::algo) m_settings.value("FocusAlgorithm").toInt();
+	m_bOptimiseFocusRange = m_settings.value("OptimiseFocusRange").toBool();
+	m_bInterpolateFocusPosition = m_settings.value("InterpolateFocusPosition").toBool();
+	m_bUseFocusThreshold = m_settings.value("UseFocusThreshold").toBool();
+	m_bUseCoarseFocusRange = m_settings.value("UseCoarseFocusRange").toBool();
+	m_bUseFineFocusRange = m_settings.value("UseFineFocusRange").toBool();
+	m_bCenterFocus = m_settings.value("CenterFocus").toBool();
+	m_bUseRegisteredFocusPoints = m_settings.value("UseRegisteredFocusPoints").toBool();
+	m_bShowBestFocusImage = m_settings.value("ShowBestFocusImage").toBool();
+	m_bDetectTargetsWhileScanning = m_settings.value("DetectTargetsWhileScanning").toBool();
+	mmPerPixel = m_settings.value("mmPerPixel").toDouble();
 	focalDistanceOverviewCamera = m_settings.value("focalDistanceOverviewCamera").toInt();
 	focalDistanceMicroscopeCamera = m_settings.value("focalDistanceMicroscopeCamera").toInt();
 	fiducialPos = (FIDUCIAL::position)m_settings.value("fiducialPos").toInt();
 	samplingType = (SAMPLINGTYPE::type)m_settings.value("samplingType").toInt();
-	samplingSpacing = m_settings.value("samplingSpacing").toInt();
-	samplingOffset = m_settings.value("samplingOffset").toInt();
+	samplingSpacing = m_settings.value("samplingSpacing").toPoint();
+	samplingOffset = m_settings.value("samplingOffset").toPoint();
 	XPositionRelativeXY = m_settings.value("XPositionRelativeXY").toDouble();
 	YPositionRelativeXY = m_settings.value("YPositionRelativeXY").toDouble();
 	XPositionAbsoluteXY = m_settings.value("XPositionAbsoluteXY").toDouble();
@@ -333,6 +403,10 @@ void SettingsValues::deserialize(QDataStream& stream)
 	BarcodeAutoThreshold = m_settings.value("BarcodeAutoThreshold").toBool();
 	s_BarCodeImageRect = m_settings.value("BarCodeImageRect").toRect();
 	bLockFiducial = m_settings.value("LockFiducial").toBool();
+	bPaddTargetImage = m_settings.value("PaddTargetImage").toBool();
+	numWaveletLevels = m_settings.value("numWaveletLevels").toInt();
+	bProcessGrayscale = m_settings.value("ProcessGrayscale").toBool();
+	bCorrectBackGround = m_settings.value("CorrectBackGround").toBool();
 
 	m_settings.beginGroup("objectColours");
 	QStringList keysC = m_settings.childKeys();
@@ -342,6 +416,15 @@ void SettingsValues::deserialize(QDataStream& stream)
 		objectColours[atoi(key.toLocal8Bit().data())] = c;
 	}
 	m_settings.endGroup();
+	
+	int size = m_settings.beginReadArray("focusPoints");
+	for (int i = 0; i < size; i++)
+	{
+		m_settings.setArrayIndex(i);
+		QVector3D pos(m_settings.value("x").toFloat(), m_settings.value("y").toFloat(), m_settings.value("z").toFloat());
+		focusPoints.append(pos);
+	}
+	m_settings.endArray();
 
 	// write fiducials
 
@@ -417,6 +500,15 @@ QMap<QString, QVariant> SettingsValues::getProjectInfoMap()
 	map[appendNumber("project_Directory", count)] = s_project_Directory;
 	map[appendNumber("project_Date", count)]= d_project_Date;
 
+	for(int i=0;i<4;i++)
+		for(int j=0;j<4;j++)
+		{
+			QString name = "inv_transformation_map/M" + QString::number(i + 1) + QString::number(j + 1);
+			map[appendNumber(name, count)] = QString::number(m_invTransformationMatrix(i, j));
+			map[appendNumber(name.mid(4), count)] = QString::number(m_transformationMatrix(i,j));	
+		}
+
+
 /*
 	map[appendNumber("overview_stage_position/x", count)] = overviewStagePosition.x();
 	map[appendNumber("overview_stage_position/y", count)] = overviewStagePosition.y();
@@ -462,6 +554,19 @@ void SettingsValues::setProjectInfoMap(QMap<QString, QVariant>& map)
 	s_project_Directory = map["project_Directory"].toString();
 	d_project_Date = map["project_Date"].toDate();
 
+	float mat[16], invMat[16];
+
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			QString name = "inv_transformation_map/M" + QString::number(i + 1) + QString::number(j + 1);
+
+			invMat[j * 4 + i] = map[name].toReal();
+			mat[j * 4 + i] = map[name.mid(4)].toReal();
+		}
+
+	m_invTransformationMatrix = QMatrix4x4(invMat);
+	m_transformationMatrix = QMatrix4x4(mat);
 /*
 	overviewStagePosition = QPoint(map["overview_stage_position/x"].toFloat(), map["overview_stage_position/y"].toFloat());
 

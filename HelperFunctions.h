@@ -9,6 +9,7 @@
 #include "opencv/highgui.h"
 #include <QVector>
 #include <QImage>
+#include <QJsonObject>
 
 
 /**
@@ -18,6 +19,23 @@ class HelperFunctions {
 public:
 
 	static cv::Mat displayHistogram(cv::Mat b_hist, int histSize, int hist_w = 512, int hist_h = 400);
+
+	static cv::Mat convertFloatToGreyscaleMat(cv::Mat im);
+
+	static QVector3D addPointToVector3D(QVector3D vect, QPointF pt);
+
+	static bool pointInPoly(QPolygonF poly, QPointF pt);
+	static bool pointInEllipse(QRectF ellipseRect, QPointF pt);
+
+	static int padd(int n, int levels = 3) 
+	{ 
+		int power = pow(2, levels);
+		return (1 + n/power) * power; 
+	};
+
+	static QSharedPointer<QRect> getPaddRect(QPoint ptStart, QPoint ptEnd, int levels);
+
+	static QJsonObject ObjectFromString(const QString& in);
 
 	static cv::Mat putMatScale(cv::Mat im, bool scale = true, bool bRed = true);
 
@@ -30,7 +48,7 @@ public:
 	static cv::Mat testReturn(cv::Mat& im);
 	
 	static int reflect(int M, int x);
-	static std::string type2str(int type);
+	static QString type2str(int type);
 
 	static bool isGrayImage(const cv::Mat& img);
 
